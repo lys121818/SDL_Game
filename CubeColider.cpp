@@ -53,8 +53,6 @@ void CubeColider::Update(double deltaTime)
 	m_position.m_y += deltaPositionY * m_directionY;
 	m_transform.y = (int)m_position.m_y;
 
-	std::cout << m_directionX << '\n';
-	std::cout << m_directionY << '\n';
 }
 
 void CubeColider::Render(SDL_Renderer* pRenderer)

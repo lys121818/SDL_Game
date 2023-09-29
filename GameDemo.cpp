@@ -6,10 +6,6 @@
 #include <cassert>
 #include "GameDemo.h"
 
-
-
-
-
 ////////////
 // PUBLIC //
 ////////////
@@ -50,11 +46,11 @@ void GameDemo::Run()
 
         m_CurrentTime += deltaTime;
 
-
         quit = ProcessEvents();
         UpdateGameState(deltaTime);
         DisplayOutput();
         
+        std::cout << "Current Time:" << m_CurrentTime << std::endl;
     }
     
 }
@@ -62,15 +58,15 @@ void GameDemo::Run()
 void GameDemo::Destroy()
 {
     // Destroy Renderer.
-    //SDL_DestroyRenderer(m_pRenderer);
+    SDL_DestroyRenderer(m_pRenderer);
 
     // SDL window cleanup
     SDL_DestroyWindow(m_pWindow);
 
     // Delete the vectors I've created
     {
-        // Get size of array
-        
+        m_vpBackgrounds.clear();
+        m_vpGameObjects.clear();
     }
 
     //SDL overall deinit
@@ -89,38 +85,40 @@ bool GameDemo::ProcessEvents()
     SDL_Event evt;
     while (SDL_PollEvent(&evt) != 0)
     {
-        // Quit when true returns
+        switch (evt.type)
+        {
         // KeyBoard Event
-        if (ProcessKeyboardEvent(&evt.key) == true)
-            return true;
+        case SDL_KEYDOWN:
+        case SDL_KEYUP:
+            if (ProcessKeyboardEvent(&evt.key) == true)
+                return true;
+            break;
+
         // Mouse Event
-        if (ProcessMouseEvent(&evt.button) == true)
-            return true;
-        // Window Event
-        if (ProcessWindowEvent(&evt.window) == true)
-            return true;
+        // Quit when true returns
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
+            if (ProcessMouseEvent(&evt.button) == true)
+                return true;
+            break;
+
+        default:
+            // Window Event
+            if (ProcessWindowEvent(&evt.window) == true)
+                return true;
+            break;
+        }
     }
     return false;
 }
 
 void GameDemo::UpdateGameState(double deltatime)
 {
-    std::vector<GameObject*>::iterator iter = m_vpGameObjects.begin();
 
-    // Draw objects.
-    for (iter; iter < m_vpGameObjects.end(); ++iter)
+    // Update GameObjects
+    for (auto& element : m_vpGameObjects)
     {
-        GameObject* pGameObject = *iter;
-        if (pGameObject == nullptr)
-        {
-            // we've reached the end
-            break;
-        }
-        else
-        {
-            // Tell the next GameObject to update.
-            pGameObject->Update(deltatime);
-        }
+        element->Update(deltatime);
     }
 }
 
@@ -129,30 +127,36 @@ void GameDemo::DisplayOutput()
     // Rendering any objects in the game.
 
     // Clear the screen.
-
-    // Set background color.
-    //SDL_SetRenderDrawColor(m_pRenderer, BACKGROUND);
-
     // Execute the clear.
     SDL_RenderClear(m_pRenderer);
 
-    std::vector<GameObject*>::iterator iter = m_vpGameObjects.begin();
-
-    // Draw objects.
-    for (iter; iter < m_vpGameObjects.end(); ++iter)
+    // Render Background
+    for (auto& element : m_vpBackgrounds)
     {
-        GameObject* pGameObject = *iter;
-        if (pGameObject == nullptr)
+        // Only render inside the window size (on visible)
+        if (element->GetTransform().x >= (0- element->GetTransform().w) && 
+            element->GetTransform().x < WINDOWWIDTH  - 10&&   // Window width
+            element->GetTransform().y >= (0 - element->GetTransform().h) && 
+            element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
         {
-            // we've reached the end
-            break;
-        }
-        else
-        {
-            // Tell the next GameObject to update.
-            pGameObject->Render(m_pRenderer);
+            element->Render(m_pRenderer);
         }
     }
+    //Render GameObjects
+    for (auto& element : m_vpGameObjects)
+    {
+        // Only render inside the window size (on visible)
+        if (element->GetTransform().x >= (0 - element->GetTransform().w) &&
+            element->GetTransform().x < WINDOWWIDTH &&   // Window width
+            element->GetTransform().y >= (0 - element->GetTransform().h) &&
+            element->GetTransform().y < WINDOWHEIGHT)    // Window height
+        {
+            element->Render(m_pRenderer);
+        }
+    }
+
+
+
     // Presenting.
     SDL_RenderPresent(m_pRenderer);
 
@@ -201,6 +205,12 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             {
                 m_pPlayer->MoveDown();
                 break;
+            }
+
+            // Shooting
+            case SDLK_SPACE:
+            {
+                // shooting objects when hit spacebar
             }
 
             // Quit
@@ -342,8 +352,8 @@ int GameDemo::CreateWindow()
         "Hello SDL",    // title of the window
         SDL_WINDOWPOS_CENTERED, // x position of the window
         SDL_WINDOWPOS_CENTERED, // y position of the window
-        800,   // width of the window size
-        600,    // height of the window size
+        WINDOWWIDTH,   // width of the window size
+        WINDOWHEIGHT,    // height of the window size
         0    // SDL_WINDOW_RESIZABLE: able to resize size of the window by manually
     );
     // Make sure that the window gets created successfully
@@ -374,15 +384,40 @@ void GameDemo::InitGame()
     // Set GameTime to 0sec
     m_CurrentTime = (double)0.0;
 
-    // Set Background
-    m_pBackground = new ImageObject(m_pRenderer, Vector2{ 0,0 }, BACKGROUND);
     // Add Background to vector m_vpGameObjects
-    AddGameObject(m_pBackground);
-
+    InitBackground();
     // Set Player Object
-    m_pPlayer = new CubeColider(m_pRenderer, Vector2{ 550,550 });
+    m_pPlayer = new CubeColider(m_pRenderer, s_kPlayerStartingPoisition);
     // Add player to vector m_vpGameObjects
     AddGameObject(m_pPlayer);
+}
+
+// Setting the tiles background
+void GameDemo::InitBackground()
+{
+    // Set Background tiles
+    Vector2 tilePosition;
+    // count of tiles needed in width
+    int tilesX = (WINDOWWIDTH / s_kBackgroundWidth);
+    if (WINDOWWIDTH % s_kBackgroundWidth != 0)
+        ++tilesX;   // add extra if it's short
+    // count of tiles needed in height
+    int tilesY = (WINDOWHEIGHT / s_kBackgroundHeight);
+    if (WINDOWHEIGHT % s_kBackgroundHeight != 0)
+        ++tilesY;   // add extra if it's short
+
+    // runs loop size of tiles needed for width
+    for (int x = 0; x < tilesX; ++x)
+    {
+        // runs loop size of tiles needed for height
+        for (int y = 0; y < tilesY; ++y)
+        {
+            // Add tiles to vector
+            tilePosition.m_x = x * s_kBackgroundWidth;
+            tilePosition.m_y = y * s_kBackgroundHeight;
+            m_vpBackgrounds.push_back(new ImageObject(m_pRenderer, tilePosition, s_kBackgroundWidth, s_kBackgroundHeight, BACKGROUND));
+        }
+    }
 }
 
 // Add gameobject to vector

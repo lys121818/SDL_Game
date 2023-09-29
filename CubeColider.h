@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "ColorDefine.h"
+#include "Defines.h"
 #include "Vector2.h"
 class CubeColider : public GameObject
 {
@@ -38,9 +38,13 @@ public:
 
     void Render(SDL_Renderer* pRenderer) override;
 
+    // return position of object
+    Vector2 GetPosition() { return m_position; }
+    // return the transform of object
+    SDL_Rect GetTransform() override { return m_transform; }
+
     // Move object
     void SetPosition(Vector2 position);
-    Vector2 GetPosition() { return m_position; }
 
     // Sprint
     void SprintSpeed() { m_Speed = s_kMaxSpeed; }

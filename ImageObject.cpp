@@ -2,7 +2,7 @@
 #include "SDL_image.h"
 #include <iostream>
 
-ImageObject::ImageObject(SDL_Renderer* pRenderer, Vector2 position, const char* directory)
+ImageObject::ImageObject(SDL_Renderer* pRenderer, Vector2 position, int width, int height, const char* directory)
 	:m_pTexture(nullptr),
 	 m_position(position)
 {
@@ -16,8 +16,8 @@ ImageObject::ImageObject(SDL_Renderer* pRenderer, Vector2 position, const char* 
 	// Generate m_transform from image
 	m_transform.x = m_position.m_x;
 	m_transform.y = m_position.m_y;
-	m_transform.w = 200;
-	m_transform.h = 200;
+	m_transform.w = width;
+	m_transform.h = height;
 	// SDL_Surface -> SDL_Texture
 	m_pTexture = SDL_CreateTextureFromSurface(pRenderer, pImageSurface);
 	if (pImageSurface == nullptr)
