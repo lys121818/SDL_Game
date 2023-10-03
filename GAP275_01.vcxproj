@@ -181,12 +181,18 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="AnimationObject.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CubeColider.cpp" />
     <ClCompile Include="GameDemo.cpp" />
     <ClCompile Include="ImageObject.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="AnimationObject.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="CubeColider.h" />
     <ClInclude Include="GameDemo.h" />

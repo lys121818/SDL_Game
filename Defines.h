@@ -10,8 +10,11 @@
 #define YELLOW  255,255,0,SDL_ALPHA_OPAQUE
 
 // Image directory
-#define BACKGROUND "assets/Space.png"
-#define PLAYER	GREEN
+#define BACKGROUND	"assets/Space.png"
+#define PLAYER		"assets/Pig.bmp"
+#define BULLET		"assets/Globe.gif"
+#define STATIONARY1	"assets/Cat.jpg"
+#define STATIONARY2	"assets/Dice.png"
 
 // Window Size
 #define WINDOWWIDTH 800

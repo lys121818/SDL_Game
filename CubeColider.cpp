@@ -2,62 +2,42 @@
 #include <iostream>
 #include "Vector2.h"
 
-CubeColider::CubeColider(SDL_Renderer* pRenderer, Vector2 position)
+CubeColider::CubeColider(Vector2 position, const char* directory)
 	:m_position(position),
 	 m_directionX(0),
 	 m_directionY(0),
-	 m_pTexture(nullptr)
+	 m_pTexture(nullptr),
+	 m_pName(directory)
 {
-
-
-	// Pipeline: image file -> SDL_Surface -> SDL_Texture
-
-	// image file -> SDL_Surface
-	SDL_Surface* pImageSurface = SDL_LoadBMP("assets/Pig.bmp");
-	if (pImageSurface == nullptr)
-	{
-		std::cout << "Image loading failed Error: " << SDL_GetError() << std::endl;;
-	}
-
-	// SDL_Surface -> SDL_Texture
-	m_pTexture = SDL_CreateTextureFromSurface(pRenderer, pImageSurface);
-	if (pImageSurface == nullptr)
-	{
-		std::cout << "Texture loading failed Error: " << SDL_GetError() << std::endl;;
-	}
 
 	m_transform.x = (int)m_position.m_x;
 	m_transform.y = (int)m_position.m_y;
 	m_transform.w = s_kWidth;
 	m_transform.h = s_kHeight;
 
-	// Free surface from memory as it's no longer needed.
-	SDL_FreeSurface(pImageSurface);
 }
 
 CubeColider::~CubeColider()
 {
-	// Destroy the texture to free it from memory.
-	SDL_DestroyTexture(m_pTexture);
 }
 
-void CubeColider::Update(double deltaTime)
+void CubeColider::Update(double deltatime)
 {
 	// Move Vertical
-	double deltaPositionX = m_Speed * deltaTime;
+	double deltaPositionX = m_Speed * deltatime;
 	m_position.m_x += deltaPositionX * m_directionX;
 	m_transform.x = (int)m_position.m_x;
 
 	// Move Horizontal
-	double deltaPositionY = m_Speed * deltaTime;
+	double deltaPositionY = m_Speed * deltatime;
 	m_position.m_y += deltaPositionY * m_directionY;
 	m_transform.y = (int)m_position.m_y;
 
 }
 
-void CubeColider::Render(SDL_Renderer* pRenderer)
+void CubeColider::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
-	SDL_RenderCopy(pRenderer, m_pTexture, nullptr, &m_transform);
+	SDL_RenderCopy(pRenderer, pTexture, nullptr, &m_transform);
 }
 
 // Move the object

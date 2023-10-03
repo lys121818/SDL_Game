@@ -7,13 +7,15 @@
 #include <vector>
 #include <SDL.h>
 #include <iostream>
+#include <unordered_map>
 #include "Defines.h"
 #include "CubeColider.h"
 #include "GameObject.h"
 #include "ImageObject.h"
+class AnimationObject;
+
 class GameDemo
 {
-
 private:
 	static constexpr size_t s_kMaxGameObjectCount = 10;
 	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ 50,50 };
@@ -32,7 +34,11 @@ private:
 	// Player Object
 	CubeColider* m_pPlayer;
 	
+	AnimationObject* m_pExampleObject;
 
+	// Texture representing the appearance of object
+	//std::vector<SDL_Texture*> m_vpTextures;
+	std::unordered_map<const char*, SDL_Texture*> m_mpTextures;
 	// Vector of gameObjects
 	std::vector<GameObject*> m_vpGameObjects;	//Vector contains pointer of gameobjects
 	// Vector for background tiles
@@ -76,6 +82,12 @@ private:
 
 	// Set background
 	void InitBackground();
+
+	// Load all the images texture before runs
+	void PreLoadImages();
+
+	// Add ImageSurface and Texture
+	void AddImagesToTexture(const char* image);
 
 	// Add additional gameobject to vector
 	void AddGameObject(GameObject* object);

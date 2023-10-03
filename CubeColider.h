@@ -14,6 +14,9 @@ private:
     static constexpr int s_kSpeed = 300;
     static constexpr int s_kMixSpeed = 100;
 
+    // Name Of the Object
+    const char* m_pName;
+
     double m_Speed = 300;
 
     Vector2 m_position;
@@ -25,23 +28,25 @@ private:
     // Transform of the object
     SDL_Rect m_transform;
 
-    // Texture representing the appearance of this object
     SDL_Texture* m_pTexture;
 
 public:
-    CubeColider(SDL_Renderer* pRenderer, Vector2 position);
+    CubeColider(Vector2 position, const char* directory);
     ~CubeColider();
     
 
     // Inherited via GameObject
-    void Update(double deltaTime) override;
+    void Update(double deltatime) override;
 
-    void Render(SDL_Renderer* pRenderer) override;
+    void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
     // return position of object
     Vector2 GetPosition() { return m_position; }
     // return the transform of object
     SDL_Rect GetTransform() override { return m_transform; }
+    
+    // Return Name of the object
+    virtual const char* GetName() override { return m_pName; }
 
     // Move object
     void SetPosition(Vector2 position);

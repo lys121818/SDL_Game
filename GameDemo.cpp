@@ -4,7 +4,10 @@
 #include <time.h>
 #include <chrono>
 #include <cassert>
+#include "SDL_image.h" 
 #include "GameDemo.h"
+#include "Bullet.h"
+#include "AnimationObject.h"
 
 ////////////
 // PUBLIC //
@@ -18,7 +21,8 @@ int GameDemo::Init()
         return failedInit;
     InitGame();
 
-    
+    m_pExampleObject = new AnimationObject(m_pRenderer);
+    AddGameObject(m_pExampleObject);
 	return 0;
 }
 
@@ -49,8 +53,6 @@ void GameDemo::Run()
         quit = ProcessEvents();
         UpdateGameState(deltaTime);
         DisplayOutput();
-        
-        std::cout << "Current Time:" << m_CurrentTime << std::endl;
     }
     
 }
@@ -68,8 +70,12 @@ void GameDemo::Destroy()
         m_vpBackgrounds.clear();
         m_vpGameObjects.clear();
     }
+    // Destory texture when game ends.
+    for (auto iter = m_mpTextures.begin(); iter != m_mpTextures.end(); ++iter)
+    {
+        SDL_DestroyTexture(iter->second);
+    }
 
-    //SDL overall deinit
     SDL_Quit();
 }
 
@@ -114,12 +120,17 @@ bool GameDemo::ProcessEvents()
 
 void GameDemo::UpdateGameState(double deltatime)
 {
+    // currently dont have anything updating in background
+    //for (auto& element : m_vpBackgrounds)
+    //    element->Update(deltatime);
 
     // Update GameObjects
     for (auto& element : m_vpGameObjects)
     {
         element->Update(deltatime);
     }
+    // Update Player Object
+    m_pPlayer->Update(deltatime);
 }
 
 void GameDemo::DisplayOutput()
@@ -131,17 +142,19 @@ void GameDemo::DisplayOutput()
     SDL_RenderClear(m_pRenderer);
 
     // Render Background
-    for (auto& element : m_vpBackgrounds)
-    {
-        // Only render inside the window size (on visible)
-        if (element->GetTransform().x >= (0- element->GetTransform().w) && 
-            element->GetTransform().x < WINDOWWIDTH  - 10&&   // Window width
-            element->GetTransform().y >= (0 - element->GetTransform().h) && 
-            element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
-        {
-            element->Render(m_pRenderer);
-        }
-    }
+    //for (auto& element : m_vpBackgrounds)
+    //{
+    //    // Only render inside the window size (on visible)
+    //    if (element->GetTransform().x >= (0- element->GetTransform().w) && 
+    //        element->GetTransform().x < WINDOWWIDTH  - 10&&   // Window width
+    //        element->GetTransform().y >= (0 - element->GetTransform().h) && 
+    //        element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
+    //    {
+    //        element->Render(m_pRenderer, m_mpTextures[element->GetName()]);
+    //    }
+    //}
+
+
     //Render GameObjects
     for (auto& element : m_vpGameObjects)
     {
@@ -151,9 +164,18 @@ void GameDemo::DisplayOutput()
             element->GetTransform().y >= (0 - element->GetTransform().h) &&
             element->GetTransform().y < WINDOWHEIGHT)    // Window height
         {
-            element->Render(m_pRenderer);
+            element->Render(m_pRenderer, m_mpTextures[element->GetName()]);
         }
     }
+    
+    // Render Player Object
+    //if (m_pPlayer->GetTransform().x >= (0 - m_pPlayer->GetTransform().w) &&
+    //    m_pPlayer->GetTransform().x < WINDOWWIDTH &&   // Window width
+    //    m_pPlayer->GetTransform().y >= (0 - m_pPlayer->GetTransform().h) &&
+    //    m_pPlayer->GetTransform().y < WINDOWHEIGHT)    // Window height
+    //{
+    //    m_pPlayer->Render(m_pRenderer, m_mpTextures[m_pPlayer->GetName()]);
+    //}
 
 
 
@@ -173,6 +195,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Run
             case SDLK_LSHIFT:
             {
+                
                 m_pPlayer->SprintSpeed();
                 break;
             }
@@ -180,6 +203,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Left
             case SDLK_a:
             {
+
                 m_pPlayer->MoveLeft();
                 break;
             }
@@ -187,6 +211,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Right
             case SDLK_d:
             {
+                m_pExampleObject->GetAnimationComponent()->PlayAnimation("run"); 
                 m_pPlayer->MoveRight();
                 break;
 
@@ -211,6 +236,8 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             case SDLK_SPACE:
             {
                 // shooting objects when hit spacebar
+                GameObject* bullet = new Bullet(m_pPlayer->GetPosition(), BULLET);
+                AddGameObject(bullet);
             }
 
             // Quit
@@ -245,6 +272,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Moving Right
             case SDLK_d:
             {
+                m_pExampleObject->GetAnimationComponent()->PlayAnimation("idle");
                 m_pPlayer->StopRight();
                 break;
 
@@ -279,12 +307,10 @@ bool GameDemo::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
         {
             case SDL_BUTTON_LEFT:
             {
-                m_pPlayer->MoveDown();
                 break;
             }
             case SDL_BUTTON_RIGHT:
             {
-                m_pPlayer->MoveUp();
                 break;
             }
         default:
@@ -297,12 +323,10 @@ bool GameDemo::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
         {
             case SDL_BUTTON_LEFT:
             {
-                m_pPlayer->StopDown();
                 break;
             }
             case SDL_BUTTON_RIGHT:
             {
-                m_pPlayer->StopUp();
                 break;
             }
         default:
@@ -316,6 +340,7 @@ bool GameDemo::ProcessWindowEvent(SDL_WindowEvent* pData)
 {
     switch (pData->event)
     {
+        // Quit when Window X button is pressed
         case SDL_WINDOWEVENT_CLOSE:
         {
             return true;
@@ -381,15 +406,27 @@ int GameDemo::CreateWindow()
 
 void GameDemo::InitGame()
 {
+    // Temperary gameobject
+    GameObject* stationary;
     // Set GameTime to 0sec
     m_CurrentTime = (double)0.0;
 
+    // Load images that are being use in the game.
+    PreLoadImages();
     // Add Background to vector m_vpGameObjects
     InitBackground();
+
     // Set Player Object
-    m_pPlayer = new CubeColider(m_pRenderer, s_kPlayerStartingPoisition);
-    // Add player to vector m_vpGameObjects
-    AddGameObject(m_pPlayer);
+    m_pPlayer = new CubeColider(s_kPlayerStartingPoisition,PLAYER);
+
+    // Add GameObjects to m_vpGameObjects
+    stationary = new ImageObject(Vector2{ 600,50 }, 50, 50, STATIONARY1);
+    AddGameObject(stationary);
+
+    stationary = new ImageObject(Vector2{ 50,500 }, 50, 50, STATIONARY2);
+    AddGameObject(stationary);
+
+
 }
 
 // Setting the tiles background
@@ -415,9 +452,51 @@ void GameDemo::InitBackground()
             // Add tiles to vector
             tilePosition.m_x = x * s_kBackgroundWidth;
             tilePosition.m_y = y * s_kBackgroundHeight;
-            m_vpBackgrounds.push_back(new ImageObject(m_pRenderer, tilePosition, s_kBackgroundWidth, s_kBackgroundHeight, BACKGROUND));
+            m_vpBackgrounds.push_back(new ImageObject(tilePosition, s_kBackgroundWidth, s_kBackgroundHeight, BACKGROUND));
         }
     }
+}
+
+// Add all the images that are being load in the game
+void GameDemo::PreLoadImages()
+{
+    // Simple adding by using directory of the image
+    AddImagesToTexture(BACKGROUND);
+    AddImagesToTexture(PLAYER);
+    AddImagesToTexture(BULLET);
+    AddImagesToTexture(STATIONARY1);
+    AddImagesToTexture(STATIONARY2);
+}
+
+// Get directory of image from parameter
+void GameDemo::AddImagesToTexture(const char* image)
+{
+    std::pair<const char*, SDL_Texture*> imageTexture;  //Pair to pass inform to m_mpTextures
+    // Add directory of image as key of texture
+    imageTexture.first = image;
+
+    // Load image
+    SDL_Surface* pImageSurface = IMG_Load(imageTexture.first);
+
+    // Error when it fails to load the image
+    if (pImageSurface == nullptr)
+    {
+        std::cout << "Image loading failed Error: " << SDL_GetError() << std::endl;
+    }
+    // SDL_Surface -> SDL_Texture
+    // Create texture from surface and save in pair
+    imageTexture.second = SDL_CreateTextureFromSurface(m_pRenderer, pImageSurface);
+
+    // Error when it fails to load the texture
+    if (imageTexture.second == nullptr)
+    {
+        std::cout << "Texture loading failed Error: " << SDL_GetError();
+    }
+    // add to mpTextures when image and texture loading is successfully done
+    m_mpTextures.insert(imageTexture);
+    // Free surface from memory as it's no longer needed.
+    SDL_FreeSurface(pImageSurface);
+
 }
 
 // Add gameobject to vector
