@@ -19,7 +19,7 @@ private:
 
 	SDL_Texture* m_pSpriteSheet;	// the sprite sheet itself
 
-	SDL_Rect m_transform;		// object's location on screen
+	SDL_Rect* m_transform;		// object's location on screen
 
 	SDL_Rect m_sourceTransform;	// area of the sprite to render
 
@@ -32,7 +32,7 @@ private:
 	double m_frameTime;
 
 public:
-	AnimationComponent(const char* pSpriteSheetPath, double frameRate, int frameWidth, int frameHeight, int frameCount, SDL_Renderer* pRenderer);
+	AnimationComponent(const char* pSpriteSheetPath, double frameRate, int frameWidth, int frameHeight, SDL_Renderer* pRenderer, SDL_Rect* transform);
 	~AnimationComponent();
 
 	void AddAnimationSequence(std::string name, int firstFrame, int lastFrame);

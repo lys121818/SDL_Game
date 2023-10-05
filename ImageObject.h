@@ -18,7 +18,7 @@ public:
 	void Update(double deltatime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 	SDL_Rect GetTransform() override { return m_transform; }
-	virtual const char* GetName() override { return m_pName; }
+	const char* GetName() override { return m_pName; }
 
 	// return current position of object
 	Vector2 GetPosition() { return m_position; }

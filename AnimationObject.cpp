@@ -1,16 +1,16 @@
 #include "AnimationObject.h"
 
-AnimationObject::AnimationObject(SDL_Renderer* pRenderer)
-	: m_animation("assets/Sprite1.png",12,100,200,7,pRenderer)
+AnimationObject::AnimationObject(SDL_Renderer* pRenderer, Vector2 position, int width, int height)
+	: m_animation("assets/Pumpkin.png",12,100,190,pRenderer,&m_transform),
+	  m_position(position)
 {
 	// Add the animation
-	m_animation.AddAnimationSequence("idle", 0, 0);
-	m_animation.AddAnimationSequence("run", 1, 25);
-	m_animation.AddAnimationSequence("skid", 4, 4);
-	m_animation.AddAnimationSequence("jump", 5, 5);
-
 	// Play the initiali animation
-	m_animation.PlayAnimation("idle");
+	
+	m_transform.x = (int)m_position.m_x;
+	m_transform.y = (int)m_position.m_y;
+	m_transform.w = width;
+	m_transform.h = height;
 }
 
 AnimationObject::~AnimationObject()
@@ -27,9 +27,4 @@ void AnimationObject::Update(double deltatime)
 void AnimationObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
 	m_animation.Render(pRenderer);
-}
-
-SDL_Rect AnimationObject::GetTransform()
-{
-	return SDL_Rect();
 }

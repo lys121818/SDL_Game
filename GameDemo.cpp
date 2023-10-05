@@ -21,8 +21,6 @@ int GameDemo::Init()
         return failedInit;
     InitGame();
 
-    m_pExampleObject = new AnimationObject(m_pRenderer);
-    AddGameObject(m_pExampleObject);
 	return 0;
 }
 
@@ -141,18 +139,18 @@ void GameDemo::DisplayOutput()
     // Execute the clear.
     SDL_RenderClear(m_pRenderer);
 
-    // Render Background
-    //for (auto& element : m_vpBackgrounds)
-    //{
-    //    // Only render inside the window size (on visible)
-    //    if (element->GetTransform().x >= (0- element->GetTransform().w) && 
-    //        element->GetTransform().x < WINDOWWIDTH  - 10&&   // Window width
-    //        element->GetTransform().y >= (0 - element->GetTransform().h) && 
-    //        element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
-    //    {
-    //        element->Render(m_pRenderer, m_mpTextures[element->GetName()]);
-    //    }
-    //}
+    //Render Background
+    for (auto& element : m_vpBackgrounds)
+    {
+        // Only render inside the window size (on visible)
+        if (element->GetTransform().x >= (0- element->GetTransform().w) && 
+            element->GetTransform().x < WINDOWWIDTH  - 10&&   // Window width
+            element->GetTransform().y >= (0 - element->GetTransform().h) && 
+            element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
+        {
+            element->Render(m_pRenderer, m_mpTextures[element->GetName()]);
+        }
+    }
 
 
     //Render GameObjects
@@ -168,14 +166,14 @@ void GameDemo::DisplayOutput()
         }
     }
     
-    // Render Player Object
-    //if (m_pPlayer->GetTransform().x >= (0 - m_pPlayer->GetTransform().w) &&
-    //    m_pPlayer->GetTransform().x < WINDOWWIDTH &&   // Window width
-    //    m_pPlayer->GetTransform().y >= (0 - m_pPlayer->GetTransform().h) &&
-    //    m_pPlayer->GetTransform().y < WINDOWHEIGHT)    // Window height
-    //{
-    //    m_pPlayer->Render(m_pRenderer, m_mpTextures[m_pPlayer->GetName()]);
-    //}
+    //Render Player Object
+    if (m_pPlayer->GetTransform().x >= (0 - m_pPlayer->GetTransform().w) &&
+        m_pPlayer->GetTransform().x < WINDOWWIDTH &&   // Window width
+        m_pPlayer->GetTransform().y >= (0 - m_pPlayer->GetTransform().h) &&
+        m_pPlayer->GetTransform().y < WINDOWHEIGHT)    // Window height
+    {
+        m_pPlayer->Render(m_pRenderer, m_mpTextures[m_pPlayer->GetName()]);
+    }
 
 
 
@@ -203,7 +201,6 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Left
             case SDLK_a:
             {
-
                 m_pPlayer->MoveLeft();
                 break;
             }
@@ -211,7 +208,6 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Right
             case SDLK_d:
             {
-                m_pExampleObject->GetAnimationComponent()->PlayAnimation("run"); 
                 m_pPlayer->MoveRight();
                 break;
 
@@ -236,8 +232,9 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             case SDLK_SPACE:
             {
                 // shooting objects when hit spacebar
-                GameObject* bullet = new Bullet(m_pPlayer->GetPosition(), BULLET);
-                AddGameObject(bullet);
+                //GameObject* bullet = new Bullet(m_pPlayer->GetPosition(), BULLET);
+                //AddGameObject(bullet);
+                m_pPlayer->GetAnimationComponent()->PlayAnimation("jump");
             }
 
             // Quit
@@ -272,7 +269,6 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Moving Right
             case SDLK_d:
             {
-                m_pExampleObject->GetAnimationComponent()->PlayAnimation("idle");
                 m_pPlayer->StopRight();
                 break;
 
@@ -417,7 +413,7 @@ void GameDemo::InitGame()
     InitBackground();
 
     // Set Player Object
-    m_pPlayer = new CubeColider(s_kPlayerStartingPoisition,PLAYER);
+    m_pPlayer = new CubeColider(s_kPlayerStartingPoisition,PLAYER,m_pRenderer);
 
     // Add GameObjects to m_vpGameObjects
     stationary = new ImageObject(Vector2{ 600,50 }, 50, 50, STATIONARY1);

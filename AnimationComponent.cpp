@@ -3,10 +3,11 @@
 #include <iostream>
 AnimationComponent::AnimationComponent(const char* pSpriteSheetPath, 
 	double frameRate, int frameWidth, int frameHeight, 
-	int frameCount, SDL_Renderer* pRenderer)
+	SDL_Renderer* pRenderer , SDL_Rect* transform)
 	: m_kFrameRate(frameRate),
 	  m_pSpriteSheet(nullptr),
-	  m_currentFrame(-1)
+	  m_currentFrame(-1),
+	  m_transform(transform)
 {
 	// Attemp to load the image to a surface.
 	SDL_Surface* pSpriteSheetSurface = IMG_Load(pSpriteSheetPath);
@@ -17,16 +18,13 @@ AnimationComponent::AnimationComponent(const char* pSpriteSheetPath,
 	}
 
 	// Calculate the number of colums.
-	m_numSpriteSheetColums = pSpriteSheetSurface->w / frameWidth;
-
-	// Initialize the tansform.
-	m_transform.x = 0;
-	m_transform.y = 0;
-	m_transform.w = frameWidth;
-	m_transform.h = frameHeight;
+	m_numSpriteSheetColums = pSpriteSheetSurface->w / frameWidth;	// 7
 
 	// Initialize the source transform.
-	m_sourceTransform = m_transform;
+	m_sourceTransform.x = m_transform->x;
+	m_sourceTransform.y = m_transform->y;
+	m_sourceTransform.w = frameWidth;
+	m_sourceTransform.h = frameHeight;
 
 	// Create the texture.
 	m_pSpriteSheet = SDL_CreateTextureFromSurface(pRenderer, pSpriteSheetSurface);
@@ -131,5 +129,5 @@ void AnimationComponent::Update(double deltaTime)
 
 void AnimationComponent::Render(SDL_Renderer* pRenderer)
 {
-	SDL_RenderCopy(pRenderer, m_pSpriteSheet, &m_sourceTransform, &m_transform);
+	SDL_RenderCopy(pRenderer, m_pSpriteSheet, &m_sourceTransform, m_transform);
 }

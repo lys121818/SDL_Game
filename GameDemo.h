@@ -18,7 +18,7 @@ class GameDemo
 {
 private:
 	static constexpr size_t s_kMaxGameObjectCount = 10;
-	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ 50,50 };
+	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ 100,100 };
 	static constexpr int s_kBackgroundWidth = 90;
 	static constexpr int s_kBackgroundHeight = 90;
 
@@ -34,8 +34,6 @@ private:
 	// Player Object
 	CubeColider* m_pPlayer;
 	
-	AnimationObject* m_pExampleObject;
-
 	// Texture representing the appearance of object
 	//std::vector<SDL_Texture*> m_vpTextures;
 	std::unordered_map<const char*, SDL_Texture*> m_mpTextures;

@@ -40,7 +40,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AnimationObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,7 +69,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AnimationObject.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
