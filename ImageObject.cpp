@@ -23,5 +23,6 @@ void ImageObject::Update(double deltatime)
 
 void ImageObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
+
 	SDL_RenderCopy(pRenderer, pTexture, nullptr, &m_transform);
 }

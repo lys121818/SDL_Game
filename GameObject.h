@@ -18,4 +18,3 @@ public:
 	// Return transform of object
 	virtual SDL_Rect GetTransform() = 0;
 };
-

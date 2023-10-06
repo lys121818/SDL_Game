@@ -6,13 +6,14 @@
 
 class CubeColider : public GameObject
 {
+    // Current Animation States
     enum AnimationState
     {
-        idle,
-        walk,
-        run,
-        jump,
-        slide
+        m_idle,
+        m_walk,
+        m_run,
+        m_jump,
+        m_slide
     } m_currentState;
 private:
     // Width
@@ -36,10 +37,11 @@ private:
     // Current direction movement. -1 for down, 1 for up.
     int m_directionY;
 
+    // The direction object is facing
+    bool m_isRight;
     // AnimationComponent to play animation
     AnimationComponent m_animation;
 
-    // Current Animation States
     // SDL
     // Transform of the object
     SDL_Rect m_transform;
@@ -49,7 +51,6 @@ private:
     // Check current state before play animation.
     void CheckCurrentState();
 
-
 public:
     CubeColider(Vector2 position, const char* directory, SDL_Renderer* pRenderer);
     ~CubeColider();
@@ -57,7 +58,6 @@ public:
 
     // Inherited via GameObject
     void Update(double deltatime) override;
-
     void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 
@@ -68,8 +68,6 @@ public:
     SDL_Rect GetTransform() override { return m_transform; }
     // Return Name of the object
     const char* GetName() override { return m_pName; }
-    // return animantion component
-    AnimationComponent* GetAnimationComponent() { return &m_animation; }
 
     //SETTER
     // Change the position of the object 

@@ -3,47 +3,26 @@
 #include <iostream>
 AnimationComponent::AnimationComponent(const char* pSpriteSheetPath, 
 	double frameRate, int frameWidth, int frameHeight, 
-	SDL_Renderer* pRenderer , SDL_Rect* transform)
+	SDL_Rect* transform)
 	: m_kFrameRate(frameRate),
-	  m_pSpriteSheet(nullptr),
+	  //m_pSpriteSheet(nullptr),
 	  m_currentFrame(-1),
 	  m_transform(transform)
 {
-	// Attemp to load the image to a surface.
-	SDL_Surface* pSpriteSheetSurface = IMG_Load(pSpriteSheetPath);
-	// Error check
-	if (pSpriteSheetPath == nullptr)
-	{
-		std::cout << " Image loading failed Error: " << SDL_GetError() << std::endl;
-	}
-
-	// Calculate the number of colums.
-	m_numSpriteSheetColums = pSpriteSheetSurface->w / frameWidth;	// 7
-
 	// Initialize the source transform.
 	m_sourceTransform.x = m_transform->x;
 	m_sourceTransform.y = m_transform->y;
 	m_sourceTransform.w = frameWidth;
 	m_sourceTransform.h = frameHeight;
 
-	// Create the texture.
-	m_pSpriteSheet = SDL_CreateTextureFromSurface(pRenderer, pSpriteSheetSurface);
-	// Error check
-	if (m_pSpriteSheet == nullptr)
-	{
-		std::cout << " Texture loading failed Error: " << SDL_GetError() << std::endl;
-	}
-
-	// Free the surface.
-	SDL_FreeSurface(pSpriteSheetSurface);
+	// Calculate the number of colums.
+	m_numSpriteSheetColums = IMG_Load(pSpriteSheetPath)->w / frameWidth;
 
 	ResetFrameTime();
 }
 
 AnimationComponent::~AnimationComponent()
 {
-	// Destory the texture.
-	SDL_DestroyTexture(m_pSpriteSheet);
 }
 
 void AnimationComponent::AddAnimationSequence(std::string name, int firstFrame, int lastFrame)
@@ -127,7 +106,15 @@ void AnimationComponent::Update(double deltaTime)
 	}
 }
 
-void AnimationComponent::Render(SDL_Renderer* pRenderer)
+void AnimationComponent::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture,bool isRight)
 {
-	SDL_RenderCopy(pRenderer, m_pSpriteSheet, &m_sourceTransform, m_transform);
+	if (isRight)
+	{
+		SDL_RenderCopy(pRenderer, pTexture, &m_sourceTransform, m_transform);
+	}
+	else
+	{
+		SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
+		SDL_RenderCopyEx(pRenderer, pTexture, &m_sourceTransform, m_transform, double(0.0), nullptr, flip);
+	}
 }

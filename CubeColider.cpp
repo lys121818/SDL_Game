@@ -3,7 +3,8 @@
 #include "Vector2.h"
 
 CubeColider::CubeColider(Vector2 position, const char* directory, SDL_Renderer* pRenderer)
-	:m_animation("assets/Pumpkin.png",6,200,300, pRenderer,&m_transform),
+	:m_animation(directory,6,200,300, &m_transform),
+	 m_isRight(true),
 	 m_position(position),
 	 m_directionX(0),
 	 m_directionY(0),
@@ -23,7 +24,7 @@ CubeColider::CubeColider(Vector2 position, const char* directory, SDL_Renderer* 
 	m_transform.h = s_kHeight;
 
 	// defualt animation will be idle
-	m_currentState = idle;
+	m_currentState = m_idle;
 	
 }
 
@@ -49,7 +50,7 @@ void CubeColider::Update(double deltatime)
 
 void CubeColider::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
-	m_animation.Render(pRenderer);
+	m_animation.Render(pRenderer, pTexture, m_isRight);
 }
 // Play the right animation fallowing current state of gameobject
 void CubeColider::AnimationState()
@@ -59,30 +60,30 @@ void CubeColider::AnimationState()
 	// Play animation according to m_crrentState
 	switch (m_currentState)
 	{
-		case CubeColider::idle:
+		case CubeColider::m_idle:
 		{
 			m_animation.PlayAnimation("idle");
 			break;
 		}
-		case CubeColider::walk:
+		case CubeColider::m_walk:
 		{
 			m_animation.PlayAnimation("walk");
 
 			break;
 		}
-		case CubeColider::run:
+		case CubeColider::m_run:
 		{
 			m_animation.PlayAnimation("run");
 
 			break;
 		}
-		case CubeColider::jump:
+		case CubeColider::m_jump:
 		{
 			m_animation.PlayAnimation("jump");
 
 			break;
 		}
-		case CubeColider::slide:
+		case CubeColider::m_slide:
 		{
 			m_animation.PlayAnimation("slide");
 
@@ -97,22 +98,35 @@ void CubeColider::AnimationState()
 // Check current state before play animation.
 void CubeColider::CheckCurrentState()
 {
+	// change direction of player is facing 
+	if (m_directionX > 0)
+	{
+		m_isRight = true;
+	}
+	else if (m_directionX < 0)
+	{
+		m_isRight = false;
+	}
+
 	// if player is going down
 	if (m_directionY > 0)
-		m_currentState = slide;
+	{
+		m_currentState = m_slide;
+	}
 	else if (m_directionX != 0)	// if player is moving x direction
 	{
+		
 		if (m_speed > 300)
 		{
-			m_currentState = run;
+			m_currentState = m_run;
 		}
 		else 
 		{
-			m_currentState = walk;
+			m_currentState = m_walk;
 		}
 	}
 	else
-		m_currentState = idle;
+		m_currentState = m_idle;
 
 }
 

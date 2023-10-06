@@ -8,6 +8,7 @@
 #include "GameDemo.h"
 #include "Bullet.h"
 #include "AnimationObject.h"
+#include "EnemyObject.h"
 
 ////////////
 // PUBLIC //
@@ -127,8 +128,6 @@ void GameDemo::UpdateGameState(double deltatime)
     {
         element->Update(deltatime);
     }
-    // Update Player Object
-    m_pPlayer->Update(deltatime);
 }
 
 void GameDemo::DisplayOutput()
@@ -165,17 +164,6 @@ void GameDemo::DisplayOutput()
             element->Render(m_pRenderer, m_mpTextures[element->GetName()]);
         }
     }
-    
-    //Render Player Object
-    if (m_pPlayer->GetTransform().x >= (0 - m_pPlayer->GetTransform().w) &&
-        m_pPlayer->GetTransform().x < WINDOWWIDTH &&   // Window width
-        m_pPlayer->GetTransform().y >= (0 - m_pPlayer->GetTransform().h) &&
-        m_pPlayer->GetTransform().y < WINDOWHEIGHT)    // Window height
-    {
-        m_pPlayer->Render(m_pRenderer, m_mpTextures[m_pPlayer->GetName()]);
-    }
-
-
 
     // Presenting.
     SDL_RenderPresent(m_pRenderer);
@@ -232,9 +220,6 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             case SDLK_SPACE:
             {
                 // shooting objects when hit spacebar
-                //GameObject* bullet = new Bullet(m_pPlayer->GetPosition(), BULLET);
-                //AddGameObject(bullet);
-                m_pPlayer->GetAnimationComponent()->PlayAnimation("jump");
             }
 
             // Quit
@@ -413,14 +398,15 @@ void GameDemo::InitGame()
     InitBackground();
 
     // Set Player Object
-    m_pPlayer = new CubeColider(s_kPlayerStartingPoisition,PLAYER,m_pRenderer);
-
+    m_pPlayer = new CubeColider(s_kPlayerStartingPoisition,PUMPKIN,m_pRenderer);
+    AddGameObject(m_pPlayer);
     // Add GameObjects to m_vpGameObjects
-    stationary = new ImageObject(Vector2{ 600,50 }, 50, 50, STATIONARY1);
+    stationary = new EnemyObject(Vector2{ 50,50 }, PUMPKIN);
     AddGameObject(stationary);
 
-    stationary = new ImageObject(Vector2{ 50,500 }, 50, 50, STATIONARY2);
+    stationary = new EnemyObject(Vector2{ 50,500 }, PUMPKIN);
     AddGameObject(stationary);
+
 
 
 }
@@ -457,11 +443,14 @@ void GameDemo::InitBackground()
 void GameDemo::PreLoadImages()
 {
     // Simple adding by using directory of the image
+    // IMAGES
     AddImagesToTexture(BACKGROUND);
     AddImagesToTexture(PLAYER);
     AddImagesToTexture(BULLET);
     AddImagesToTexture(STATIONARY1);
     AddImagesToTexture(STATIONARY2);
+    // SPRITES
+    AddImagesToTexture(PUMPKIN);
 }
 
 // Get directory of image from parameter

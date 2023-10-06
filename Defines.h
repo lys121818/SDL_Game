@@ -16,6 +16,9 @@
 #define STATIONARY1	"assets/Cat.jpg"
 #define STATIONARY2	"assets/Dice.png"
 
+// Animation Sprite directory
+#define PUMPKIN		"assets/Pumpkin.png"
+
 // Window Size
 #define WINDOWWIDTH 800
 #define WINDOWHEIGHT 600

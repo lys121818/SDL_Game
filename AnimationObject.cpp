@@ -1,7 +1,7 @@
 #include "AnimationObject.h"
 
 AnimationObject::AnimationObject(SDL_Renderer* pRenderer, Vector2 position, int width, int height)
-	: m_animation("assets/Pumpkin.png",12,100,190,pRenderer,&m_transform),
+	: m_animation("assets/Pumpkin.png",12,100,190,&m_transform),
 	  m_position(position)
 {
 	// Add the animation
@@ -26,5 +26,5 @@ void AnimationObject::Update(double deltatime)
 
 void AnimationObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
-	m_animation.Render(pRenderer);
+	m_animation.Render(pRenderer,pTexture, true);
 }
