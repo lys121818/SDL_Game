@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Vector2.h"
+#include "ImageComponent.h"
 class ImageObject : public GameObject
 {
 	// Name Of the Object
@@ -10,6 +11,9 @@ class ImageObject : public GameObject
 
 	// Position
 	Vector2 m_position;
+
+	// Image Component
+	ImageComponent m_imageComponent;
 
 public:
 	ImageObject(Vector2 position, int width, int height, const char* directory);

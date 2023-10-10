@@ -17,7 +17,10 @@
 #define STATIONARY2	"assets/Dice.png"
 
 // Animation Sprite directory
-#define PUMPKIN		"assets/Pumpkin.png"
+#define PUMPKIN			"assets/Pumpkin.png"
+#define ZOMBIEMALE		"assets/ZombieFemale.png"
+#define ZOMBIEFEMALE	"assets/ZombieMale.png"
+
 
 // Window Size
 #define WINDOWWIDTH 800

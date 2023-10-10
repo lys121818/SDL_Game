@@ -70,10 +70,7 @@ void GameDemo::Destroy()
         m_vpGameObjects.clear();
     }
     // Destory texture when game ends.
-    for (auto iter = m_mpTextures.begin(); iter != m_mpTextures.end(); ++iter)
-    {
-        SDL_DestroyTexture(iter->second);
-    }
+    delete m_pTexture;
 
     SDL_Quit();
 }
@@ -90,7 +87,7 @@ bool GameDemo::ProcessEvents()
     SDL_Event evt;
     while (SDL_PollEvent(&evt) != 0)
     {
-        switch (evt.type)
+        switch ((int)evt.type)
         {
         // KeyBoard Event
         case SDL_KEYDOWN:
@@ -98,7 +95,7 @@ bool GameDemo::ProcessEvents()
             if (ProcessKeyboardEvent(&evt.key) == true)
                 return true;
             break;
-
+        break;
         // Mouse Event
         // Quit when true returns
         case SDL_MOUSEBUTTONDOWN:
@@ -106,7 +103,7 @@ bool GameDemo::ProcessEvents()
             if (ProcessMouseEvent(&evt.button) == true)
                 return true;
             break;
-
+        break;
         default:
             // Window Event
             if (ProcessWindowEvent(&evt.window) == true)
@@ -147,7 +144,7 @@ void GameDemo::DisplayOutput()
             element->GetTransform().y >= (0 - element->GetTransform().h) && 
             element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
         {
-            element->Render(m_pRenderer, m_mpTextures[element->GetName()]);
+            element->Render(m_pRenderer, m_pTexture->GetTexture( element->GetName() ) );
         }
     }
 
@@ -161,7 +158,7 @@ void GameDemo::DisplayOutput()
             element->GetTransform().y >= (0 - element->GetTransform().h) &&
             element->GetTransform().y < WINDOWHEIGHT)    // Window height
         {
-            element->Render(m_pRenderer, m_mpTextures[element->GetName()]);
+            element->Render(m_pRenderer, m_pTexture->GetTexture( element->GetName() ) );
         }
     }
 
@@ -176,7 +173,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 {
     if ((int)pData->state == 1 && (int)pData->repeat == 0)   // Key Press, ignore repeat keys
     {
-        switch (pData->keysym.sym)
+        switch ((int)pData->keysym.sym)
         {
             // Run
             case SDLK_LSHIFT:
@@ -220,6 +217,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             case SDLK_SPACE:
             {
                 // shooting objects when hit spacebar
+                break;
             }
 
             // Quit
@@ -235,7 +233,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
     }
     else if ((int)pData->state == 0) // Key Release
     {
-        switch (pData->keysym.sym)
+        switch ((int)pData->keysym.sym)
         {
             // Stop Run
             case SDLK_LSHIFT:
@@ -284,7 +282,7 @@ bool GameDemo::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
 {
     if ((int)pData->type == SDL_MOUSEBUTTONDOWN)
     {
-        switch (pData->button)
+        switch ((int)pData->button)
         {
             case SDL_BUTTON_LEFT:
             {
@@ -300,7 +298,7 @@ bool GameDemo::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
     }
     else if ((int)pData->type == SDL_MOUSEBUTTONUP)
     {
-        switch (pData->button)
+        switch ((int)pData->button)
         {
             case SDL_BUTTON_LEFT:
             {
@@ -319,12 +317,13 @@ bool GameDemo::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
 // Every events using Window works here
 bool GameDemo::ProcessWindowEvent(SDL_WindowEvent* pData)
 {
-    switch (pData->event)
+    switch ((int)pData->event)
     {
         // Quit when Window X button is pressed
         case SDL_WINDOWEVENT_CLOSE:
         {
             return true;
+            break;
         }
     default:
         break;
@@ -392,19 +391,28 @@ void GameDemo::InitGame()
     // Set GameTime to 0sec
     m_CurrentTime = (double)0.0;
 
+    /// TEXTURE
+    // Create Texture Pointer class
+    m_pTexture = new Textures(m_pRenderer);
     // Load images that are being use in the game.
-    PreLoadImages();
+    m_pTexture->PreloadTextures(1);
+
     // Add Background to vector m_vpGameObjects
     InitBackground();
 
+    /// GAMEOBJECT
     // Set Player Object
-    m_pPlayer = new CubeColider(s_kPlayerStartingPoisition,PUMPKIN,m_pRenderer);
+    m_pPlayer = new CubeColider(s_kPlayerStartingPoisition, PUMPKIN,m_pRenderer);
     AddGameObject(m_pPlayer);
     // Add GameObjects to m_vpGameObjects
-    stationary = new EnemyObject(Vector2{ 50,50 }, PUMPKIN);
+    stationary = new EnemyObject(Vector2{ 200,300 }, ZOMBIEMALE,300);
+    AddGameObject(stationary);
+    stationary = new EnemyObject(Vector2{ 500,50 }, ZOMBIEMALE,0);
     AddGameObject(stationary);
 
-    stationary = new EnemyObject(Vector2{ 50,500 }, PUMPKIN);
+    stationary = new EnemyObject(Vector2{ 400,300 }, ZOMBIEFEMALE, 300);
+    AddGameObject(stationary); 
+    stationary = new EnemyObject(Vector2{ 50,450 }, ZOMBIEFEMALE, 0);
     AddGameObject(stationary);
 
 
@@ -437,51 +445,6 @@ void GameDemo::InitBackground()
             m_vpBackgrounds.push_back(new ImageObject(tilePosition, s_kBackgroundWidth, s_kBackgroundHeight, BACKGROUND));
         }
     }
-}
-
-// Add all the images that are being load in the game
-void GameDemo::PreLoadImages()
-{
-    // Simple adding by using directory of the image
-    // IMAGES
-    AddImagesToTexture(BACKGROUND);
-    AddImagesToTexture(PLAYER);
-    AddImagesToTexture(BULLET);
-    AddImagesToTexture(STATIONARY1);
-    AddImagesToTexture(STATIONARY2);
-    // SPRITES
-    AddImagesToTexture(PUMPKIN);
-}
-
-// Get directory of image from parameter
-void GameDemo::AddImagesToTexture(const char* image)
-{
-    std::pair<const char*, SDL_Texture*> imageTexture;  //Pair to pass inform to m_mpTextures
-    // Add directory of image as key of texture
-    imageTexture.first = image;
-
-    // Load image
-    SDL_Surface* pImageSurface = IMG_Load(imageTexture.first);
-
-    // Error when it fails to load the image
-    if (pImageSurface == nullptr)
-    {
-        std::cout << "Image loading failed Error: " << SDL_GetError() << std::endl;
-    }
-    // SDL_Surface -> SDL_Texture
-    // Create texture from surface and save in pair
-    imageTexture.second = SDL_CreateTextureFromSurface(m_pRenderer, pImageSurface);
-
-    // Error when it fails to load the texture
-    if (imageTexture.second == nullptr)
-    {
-        std::cout << "Texture loading failed Error: " << SDL_GetError();
-    }
-    // add to mpTextures when image and texture loading is successfully done
-    m_mpTextures.insert(imageTexture);
-    // Free surface from memory as it's no longer needed.
-    SDL_FreeSurface(pImageSurface);
-
 }
 
 // Add gameobject to vector

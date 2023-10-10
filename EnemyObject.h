@@ -24,6 +24,7 @@ private:
 	// Name Of the Object
 	const char* m_pName;
 
+	const int m_speed;
 	// time counter for object to change direction when its 0;
 	double m_counter;
 	// Current position
@@ -50,7 +51,7 @@ private:
 	void CheckCurrentState();
 
 public:
-	EnemyObject(Vector2 position, const char* directory);
+	EnemyObject(Vector2 position, const char* directory, const int kspeed);
 	~EnemyObject();
 	// Inherited via GameObject
 	void Update(double deltatime) override;

@@ -6,8 +6,8 @@ Bullet::Bullet(Vector2 position, const char* directory)
 {
     m_transform.w = s_kWidth;
     m_transform.h = s_kHeight;
-    m_transform.x = m_position.m_x;
-    m_transform.y = m_position.m_y;
+    m_transform.x = (int)m_position.m_x;
+    m_transform.y = (int)m_position.m_y;
 
 }
 

@@ -12,6 +12,8 @@
 #include "CubeColider.h"
 #include "GameObject.h"
 #include "ImageObject.h"
+#include "AnimationComponent.h"
+#include "Textures.h"
 class AnimationObject;
 
 class GameDemo
@@ -33,15 +35,20 @@ private:
 
 	// Player Object
 	CubeColider* m_pPlayer;
+
+	// Class that handles Textures
+	Textures* m_pTexture;
 	
 	// Texture representing the appearance of object
 	//std::vector<SDL_Texture*> m_vpTextures;
-	std::unordered_map<const char*, SDL_Texture*> m_mpTextures;
+	//std::unordered_map<const char*, SDL_Texture*> m_mpTextures;
 	// Vector of gameObjects
 	std::vector<GameObject*> m_vpGameObjects;	//Vector contains pointer of gameobjects
 	// Vector for background tiles
 	std::vector<GameObject*> m_vpBackgrounds;
 	
+	std::unordered_map<const char*, AnimationComponent*> m_mpAnimations;
+
 public:
 	// Initializing SDL and return errorCode or 0
 	int Init();

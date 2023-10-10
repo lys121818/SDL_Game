@@ -24,7 +24,7 @@ CubeColider::CubeColider(Vector2 position, const char* directory, SDL_Renderer* 
 	m_transform.h = s_kHeight;
 
 	// defualt animation will be idle
-	m_currentState = m_idle;
+	m_currentState = m_walk;
 	
 }
 
@@ -58,7 +58,7 @@ void CubeColider::AnimationState()
 	// Check current state before play the animation
 	CheckCurrentState();
 	// Play animation according to m_crrentState
-	switch (m_currentState)
+	switch ((int)m_currentState)
 	{
 		case CubeColider::m_idle:
 		{
@@ -112,6 +112,10 @@ void CubeColider::CheckCurrentState()
 	if (m_directionY > 0)
 	{
 		m_currentState = m_slide;
+	}
+	else if (m_directionY < 0)
+	{
+		m_currentState = m_jump;
 	}
 	else if (m_directionX != 0)	// if player is moving x direction
 	{

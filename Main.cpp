@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 {
     GameDemo game;
     int errorCode = game.Init();
-// Add the program body starting from here
+    // Add the program body starting from here
 
     if (errorCode == 0)
     {

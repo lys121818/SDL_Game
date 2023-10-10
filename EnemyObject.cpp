@@ -1,7 +1,8 @@
 #include "EnemyObject.h"
 #include <iostream>
-EnemyObject::EnemyObject(Vector2 position, const char* directory)
+EnemyObject::EnemyObject(Vector2 position, const char* directory, const int kspeed)
     : m_animation(directory, 6, 200, 300, &m_transform),
+	  m_speed(kspeed),
 	  m_isRight(true),
 	  m_directionX(1),
 	  m_position(position),
@@ -9,11 +10,11 @@ EnemyObject::EnemyObject(Vector2 position, const char* directory)
 	  m_counter(s_kSetCounter)
 {
 	// Set animation sequence before game start.
-	m_animation.AddAnimationSequence("idle", 0, 9);
-	m_animation.AddAnimationSequence("walk", 10, 19);
-	m_animation.AddAnimationSequence("run", 20, 27);
-	m_animation.AddAnimationSequence("jump", 30, 39);
-	m_animation.AddAnimationSequence("slide", 40, 49);
+	m_animation.AddAnimationSequence("idle", 0, 14);
+	m_animation.AddAnimationSequence("walk", 20, 29);
+	m_animation.AddAnimationSequence("attack", 30, 37);
+
+	
 
 	// initialize starting transform information for player
 	m_transform.x = (int)m_position.m_x;
@@ -32,7 +33,6 @@ EnemyObject::~EnemyObject()
 
 void EnemyObject::Update(double deltatime)
 {
-	std::cout << m_counter << std::endl;
 	// counter times decrease
 	m_counter -= deltatime;
 	// change direction when timer is 0
@@ -43,7 +43,7 @@ void EnemyObject::Update(double deltatime)
 		m_directionX *= -1;	// change the direction by multiply negative value
 	}
 	
-	double deltaPosition = deltatime * s_kSpeed;
+	double deltaPosition = deltatime * m_speed;
 	m_position.m_x += deltaPosition * m_directionX;
 	m_transform.x = (int)m_position.m_x;
 
@@ -62,7 +62,7 @@ void EnemyObject::AnimationState()
 	// Check current state before play the animation
 	CheckCurrentState();
 	// Play animation according to m_crrentState
-	switch (m_currentState)
+	switch ((int)m_currentState)
 	{
 	case EnemyObject::m_idle:
 	{
@@ -72,24 +72,6 @@ void EnemyObject::AnimationState()
 	case EnemyObject::m_walk:
 	{
 		m_animation.PlayAnimation("walk");
-
-		break;
-	}
-	case EnemyObject::m_run:
-	{
-		m_animation.PlayAnimation("run");
-
-		break;
-	}
-	case EnemyObject::m_jump:
-	{
-		m_animation.PlayAnimation("jump");
-
-		break;
-	}
-	case EnemyObject::m_slide:
-	{
-		m_animation.PlayAnimation("slide");
 
 		break;
 	}
@@ -112,17 +94,10 @@ void EnemyObject::CheckCurrentState()
 	{
 		m_isRight = false;
 	}
-	if (m_directionX != 0)	// if player is moving x direction
+	if (m_speed > 0)	// if player is moving x direction
 	{
 
-		if (s_kSpeed > 300)
-		{
-			m_currentState = m_run;
-		}
-		else
-		{
-			m_currentState = m_walk;
-		}
+		m_currentState = m_walk;
 	}
 	else
 		m_currentState = m_idle;
