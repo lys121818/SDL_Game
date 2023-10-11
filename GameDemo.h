@@ -14,7 +14,8 @@
 #include "ImageObject.h"
 #include "AnimationComponent.h"
 #include "Textures.h"
-class AnimationObject;
+#include "CollisionReferee.h"
+class CollidableMovingObject;
 
 class GameDemo
 {
@@ -36,8 +37,13 @@ private:
 	// Player Object
 	CubeColider* m_pPlayer;
 
+	CollidableMovingObject* m_pDemoObject;
+
 	// Class that handles Textures
 	Textures* m_pTexture;
+
+	// Referee to manage active colliders.
+	CollisionReferee m_collisionReferee;
 	
 	// Texture representing the appearance of object
 	//std::vector<SDL_Texture*> m_vpTextures;

@@ -9,7 +9,8 @@
 #include "Bullet.h"
 #include "AnimationObject.h"
 #include "EnemyObject.h"
-
+#include "CollidableMovingObject.h"
+#include "CollidableStaticObject.h"
 ////////////
 // PUBLIC //
 ////////////
@@ -171,6 +172,28 @@ void GameDemo::DisplayOutput()
 // Every events using keyboards works here
 bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 {
+    switch (pData->state)
+    {
+    case SDL_PRESSED:
+        switch (pData->keysym.scancode)
+        {
+        case SDL_SCANCODE_W:
+            m_pDemoObject->TryMove(Vector2{ 0,-1 });
+            break;
+        case SDL_SCANCODE_A:
+            m_pDemoObject->TryMove(Vector2{ -1,0 });
+            break;
+        case SDL_SCANCODE_S:
+            m_pDemoObject->TryMove(Vector2{ 0,1 });
+            break;
+        case SDL_SCANCODE_D:
+            m_pDemoObject->TryMove(Vector2{ 1,0 });
+        default:
+            break;
+        }
+    default:
+        break;
+    }
     if ((int)pData->state == 1 && (int)pData->repeat == 0)   // Key Press, ignore repeat keys
     {
         switch ((int)pData->keysym.sym)
@@ -186,14 +209,14 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Left
             case SDLK_a:
             {
-                m_pPlayer->MoveLeft();
+                //m_pPlayer->MoveLeft();
                 break;
             }
 
             // Move Right
             case SDLK_d:
             {
-                m_pPlayer->MoveRight();
+                //m_pPlayer->MoveRight();
                 break;
 
             }
@@ -201,7 +224,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Up
             case SDLK_w:
             {
-                m_pPlayer->MoveUp();
+                //m_pPlayer->MoveUp();
                 break;
 
             }
@@ -209,7 +232,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Down
             case SDLK_s:
             {
-                m_pPlayer->MoveDown();
+                //m_pPlayer->MoveDown();
                 break;
             }
 
@@ -238,21 +261,21 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Run
             case SDLK_LSHIFT:
             {
-                m_pPlayer->NormalSpeed();
+                //m_pPlayer->NormalSpeed();
                 break;
             }
 
             // Stop Moving Left
             case SDLK_a:
             {
-                m_pPlayer->StopLeft();
+                //m_pPlayer->StopLeft();
                 break;
             }
 
             // Stop Moving Right
             case SDLK_d:
             {
-                m_pPlayer->StopRight();
+                //m_pPlayer->StopRight();
                 break;
 
             }
@@ -260,14 +283,14 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Moving Up
             case SDLK_w:
             {
-                m_pPlayer->StopUp();
+                //m_pPlayer->StopUp();
                 break;
             }
 
             // Stop Moving Down
             case SDLK_s:
             {
-                m_pPlayer->StopDown();
+                //m_pPlayer->StopDown();
                 break;
 
             }
@@ -401,9 +424,15 @@ void GameDemo::InitGame()
     InitBackground();
 
     /// GAMEOBJECT
+    // DEMO
+    m_pDemoObject = new CollidableMovingObject(SDL_Rect{ 50,50,50,50 }, &m_collisionReferee, BULLET);
+    AddGameObject(m_pDemoObject);
+
+    stationary = new CollidableStaticObject(SDL_Rect{ 100,100,50,50 }, &m_collisionReferee, STATIONARY2);
+    AddGameObject(stationary);
     // Set Player Object
-    m_pPlayer = new CubeColider(s_kPlayerStartingPoisition, PUMPKIN,m_pRenderer);
-    AddGameObject(m_pPlayer);
+    //m_pPlayer = new CubeColider(s_kPlayerStartingPoisition, PUMPKIN,m_pRenderer);
+    //AddGameObject(m_pPlayer);
     // Add GameObjects to m_vpGameObjects
     stationary = new EnemyObject(Vector2{ 200,300 }, ZOMBIEMALE,300);
     AddGameObject(stationary);

@@ -184,6 +184,10 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="AnimationObject.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CollidableMovingObject.cpp" />
+    <ClCompile Include="CollidableStaticObject.cpp" />
+    <ClCompile Include="ColliderComponent.cpp" />
+    <ClCompile Include="CollisionReferee.cpp" />
     <ClCompile Include="CubeColider.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="GameDemo.cpp" />
@@ -196,6 +200,10 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AnimationObject.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CollidableMovingObject.h" />
+    <ClInclude Include="CollidableStaticObject.h" />
+    <ClInclude Include="ColliderComponent.h" />
+    <ClInclude Include="CollisionReferee.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="CubeColider.h" />
     <ClInclude Include="EnemyObject.h" />
