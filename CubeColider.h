@@ -3,9 +3,19 @@
 #include "Defines.h"
 #include "Vector2.h"
 #include "AnimationComponent.h"
+#include "ColliderComponent.h"
 
 class CubeColider : public GameObject
 {
+private:
+    struct PlayerStatus
+    {
+    public:
+        std::string m_name; // Player Name
+        int m_health;       // Player Health
+        double m_speed;     // Player Speed
+        bool m_isRight;     // side player is facing
+    };
     // Current Animation States
     enum AnimationState
     {
@@ -26,7 +36,7 @@ private:
     static constexpr int s_kMixSpeed = 100;
 
     // Name Of the Object
-    const char* m_pName;
+    const char* m_pSpriteName;
     // Current Speed
     double m_speed = 300;
     // Current position
@@ -42,6 +52,7 @@ private:
     // AnimationComponent to play animation
     AnimationComponent m_animation;
 
+    ColliderComponent m_collider;
     // SDL
     // Transform of the object
     SDL_Rect m_transform;
@@ -52,7 +63,7 @@ private:
     void CheckCurrentState();
 
 public:
-    CubeColider(Vector2 position, const char* directory, SDL_Renderer* pRenderer);
+    CubeColider(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, SDL_Renderer* pRenderer);
     ~CubeColider();
     
 
@@ -67,7 +78,7 @@ public:
     // return the transform of object
     SDL_Rect GetTransform() override { return m_transform; }
     // Return Name of the object
-    const char* GetName() override { return m_pName; }
+    const char* GetTextureName() override { return m_pSpriteName; }
 
     //SETTER
     // Change the position of the object 
@@ -88,6 +99,9 @@ public:
     void StopRight() { --m_directionX; }
     void StopUp() { ++m_directionY; }
     void StopDown() { --m_directionY; }
+
+private:
+    bool TryMove(Vector2 deltaPosition);
 
 };
 

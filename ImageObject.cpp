@@ -4,7 +4,7 @@
 
 ImageObject::ImageObject(Vector2 position, int width, int height, const char* directory)
 	: m_position(position),
-	  m_pName(directory),
+	  m_pSpriteName(directory),
 	  m_imageComponent(directory, &m_transform)
 {
 	// Generate m_transform from image

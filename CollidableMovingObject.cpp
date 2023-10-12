@@ -2,7 +2,7 @@
 #include <iostream>
 
 CollidableMovingObject::CollidableMovingObject(SDL_Rect transform, CollisionReferee* pReferee, const char* name)
-	:m_name(name),
+	:m_pSpriteName(name),
 	 m_transform(transform),
 	 m_collider(this,transform,pReferee),
 	 m_image(name,&m_transform)
@@ -26,7 +26,14 @@ void CollidableMovingObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTextu
 void CollidableMovingObject::OnCollision(ColliderComponent* pCollider)
 {
 	// TODO
-	const char* colliderName = pCollider->GetOwner()->GetName();
+	// Show right action of this object when it collide or collision with other object
+	// Will it get Name? 
+	// Should I tag each object with string?
+
+
+	// Get name from collider which had collision with owner object
+	const char* colliderName = pCollider->GetOwner()->GetTextureName();
+	// Print the name of the object which is collision with.
 	std::cout << "Collided with " << colliderName << std::endl;
 }
 

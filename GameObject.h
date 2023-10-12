@@ -14,8 +14,12 @@ public:
 	// Gets called by the main loop each frame to render this object.
 	virtual void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) {}
 
+	// Return Name of the Texture
+	virtual const char* GetTextureName() { return "UnNamed"; }
+
 	// Return Name of the object
 	virtual const char* GetName() { return "UnNamed"; }
+
 
 	// Callbeck for when a collision occurs.
 	virtual void OnCollision(ColliderComponent* pCollider) {}

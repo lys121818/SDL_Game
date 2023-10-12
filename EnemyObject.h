@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "AnimationComponent.h"
+#include "ColliderComponent.h"
+#include <iostream>
 class EnemyObject : public GameObject
 {
 	// Current Animation States
@@ -22,7 +24,7 @@ private:
 	// Speed
 	static constexpr int s_kSpeed = 500;
 	// Name Of the Object
-	const char* m_pName;
+	const char* m_pSpriteName;
 
 	const int m_speed;
 	// time counter for object to change direction when its 0;
@@ -40,9 +42,26 @@ private:
 	// AnimationComponent to play animation
 	AnimationComponent m_animation;
 
+	// Collider
+	ColliderComponent m_collider;
+
 	// SDL
 	// Transform of the object
 	SDL_Rect m_transform;
+
+
+public:
+	EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int kspeed);
+	~EnemyObject();
+	// Inherited via GameObject
+	void Update(double deltatime) override;
+	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
+	SDL_Rect GetTransform() override { return m_transform; }
+	// Return Name of the object
+	const char* GetTextureName() override { return m_pSpriteName; }
+
+	// Return Name of the object
+	virtual const char* GetName() { return "UnNamed"; }
 
 private:
 	// Play the right animation fallowing current state of gameobject
@@ -50,16 +69,7 @@ private:
 	// Check current state before play animation.
 	void CheckCurrentState();
 
-public:
-	EnemyObject(Vector2 position, const char* directory, const int kspeed);
-	~EnemyObject();
-	// Inherited via GameObject
-	void Update(double deltatime) override;
-	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
-	SDL_Rect GetTransform() override { return m_transform; }
-	// Return Name of the object
-	const char* GetName() override { return m_pName; }
-
-
+	// Movement of the object
+	bool TryMove(Vector2 deltaPosition);
 };
 

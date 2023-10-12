@@ -16,6 +16,8 @@ private:
 	// Poisition and dimensions.
 	SDL_Rect m_transform;
 
+	Vector2 m_position;
+
 	// Pointer to referee for registering and collision checking.
 	CollisionReferee* m_pReferee;
 public:
@@ -31,8 +33,13 @@ public:
 	// Updates position.
 	void SetPosition(Vector2 newPosition);
 
+	// Updates size
+	void SetSize(Vector2 newSize);
 	// Attempts to move by the given amount.
 	// Return whether the collision was successful.
 	bool TryMove(Vector2 deltaPosition);
+
+	// Draw colliderbox for test purpose
+	void DrawColliderBox(SDL_Renderer* pRenderer);
 };
 

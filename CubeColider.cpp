@@ -2,14 +2,17 @@
 #include <iostream>
 #include "Vector2.h"
 
-CubeColider::CubeColider(Vector2 position, const char* directory, SDL_Renderer* pRenderer)
-	:m_animation(directory,6,200,300, &m_transform),
+CubeColider::CubeColider(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, SDL_Renderer* pRenderer)
+	:m_transform(transform),
+	 m_animation(directory,6,200,300, &m_transform),
+	 m_collider(this, transform, pReferee),
 	 m_isRight(true),
-	 m_position(position),
 	 m_directionX(0),
 	 m_directionY(0),
-	 m_pName(directory)
+	 m_pSpriteName(directory)
 {
+	m_position.m_x = transform.x;
+	m_position.m_y = transform.y;
 	// Set animation sequence before game start.
 	m_animation.AddAnimationSequence("idle", 0, 9);
 	m_animation.AddAnimationSequence("walk", 10, 19);
@@ -24,7 +27,7 @@ CubeColider::CubeColider(Vector2 position, const char* directory, SDL_Renderer* 
 	m_transform.h = s_kHeight;
 
 	// defualt animation will be idle
-	m_currentState = m_walk;
+	m_currentState = m_idle;
 	
 }
 
@@ -34,15 +37,18 @@ CubeColider::~CubeColider()
 
 void CubeColider::Update(double deltatime)
 {
-	// Move Vertical
-	double deltaPositionX = m_speed * deltatime;
-	m_position.m_x += deltaPositionX * m_directionX;
-	m_transform.x = (int)m_position.m_x;
+	// Move deltaPosition
+	double deltaPosition = m_speed * deltatime;
+	Vector2 deltaDirection
+	{ 
+		deltaPosition * (double)m_directionX, // Move Horizontal
+		deltaPosition * (double)m_directionY  // Move Vertical
+	};
 
-	// Move Horizontal
-	double deltaPositionY = m_speed * deltatime;
-	m_position.m_y += deltaPositionY * m_directionY;
-	m_transform.y = (int)m_position.m_y;
+	if (m_directionX != 0 || m_directionY != 0)
+	{
+		TryMove(deltaDirection);
+	}
 
 	m_animation.Update(deltatime);
 	AnimationState();
@@ -50,6 +56,7 @@ void CubeColider::Update(double deltatime)
 
 void CubeColider::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
+	m_collider.DrawColliderBox(pRenderer);
 	m_animation.Render(pRenderer, pTexture, m_isRight);
 }
 // Play the right animation fallowing current state of gameobject
@@ -132,11 +139,45 @@ void CubeColider::CheckCurrentState()
 	else
 		m_currentState = m_idle;
 
+	if (m_currentState == m_slide)
+	{
+		//m_collider.SetPosition(Vector2{ m_position.m_x,m_position.m_y + s_kHeight / 2.1 });
+		//m_collider.SetSize(Vector2{ s_kWidth,s_kHeight / 2.1 });
+	}
+	else
+	{
+		//m_collider.SetPosition(Vector2{ m_position.m_x,m_position.m_y});
+		//m_collider.SetSize(Vector2{ s_kWidth,s_kHeight});
+	}
+
 }
+
 
 // Move the object
 void CubeColider::SetPosition(Vector2 position)
 {
 	m_position.m_x = position.m_x;
 	m_position.m_y = position.m_y;
+}
+
+/////////////
+// PRIVATE //
+/////////////
+
+bool CubeColider::TryMove(Vector2 deltaPosition)
+{
+	bool didMove = m_collider.TryMove(deltaPosition);
+
+	// If the collider successfully moved, update all components.
+	if (didMove)
+	{
+		// Horizontal Movement
+		m_position.m_x += deltaPosition.m_x;
+		m_transform.x = (int)m_position.m_x;
+		// Vertical Movement
+		m_position.m_y += deltaPosition.m_y;
+		m_transform.y = (int)m_position.m_y;
+	}
+	// Return whether the movement was successful.
+	return didMove;
 }

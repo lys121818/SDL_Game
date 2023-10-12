@@ -2,7 +2,7 @@
 
 Bullet::Bullet(Vector2 position, const char* directory)
     : m_position(position),
-      m_pName(directory)
+      m_pSpriteName(directory)
 {
     m_transform.w = s_kWidth;
     m_transform.h = s_kHeight;

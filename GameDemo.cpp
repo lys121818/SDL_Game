@@ -67,8 +67,8 @@ void GameDemo::Destroy()
 
     // Delete the vectors I've created
     {
-        m_vpBackgrounds.clear();
-        m_vpGameObjects.clear();
+        DestoryGameObjects(m_vpBackgrounds);
+        DestoryGameObjects(m_vpGameObjects);
     }
     // Destory texture when game ends.
     delete m_pTexture;
@@ -125,6 +125,7 @@ void GameDemo::UpdateGameState(double deltatime)
     for (auto& element : m_vpGameObjects)
     {
         element->Update(deltatime);
+        //element->GetTransform();
     }
 }
 
@@ -145,7 +146,7 @@ void GameDemo::DisplayOutput()
             element->GetTransform().y >= (0 - element->GetTransform().h) && 
             element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
         {
-            element->Render(m_pRenderer, m_pTexture->GetTexture( element->GetName() ) );
+            element->Render(m_pRenderer, m_pTexture->GetTexture( element->GetTextureName() ) );
         }
     }
 
@@ -159,7 +160,7 @@ void GameDemo::DisplayOutput()
             element->GetTransform().y >= (0 - element->GetTransform().h) &&
             element->GetTransform().y < WINDOWHEIGHT)    // Window height
         {
-            element->Render(m_pRenderer, m_pTexture->GetTexture( element->GetName() ) );
+            element->Render(m_pRenderer, m_pTexture->GetTexture( element->GetTextureName() ) );
         }
     }
 
@@ -172,28 +173,6 @@ void GameDemo::DisplayOutput()
 // Every events using keyboards works here
 bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 {
-    switch (pData->state)
-    {
-    case SDL_PRESSED:
-        switch (pData->keysym.scancode)
-        {
-        case SDL_SCANCODE_W:
-            m_pDemoObject->TryMove(Vector2{ 0,-1 });
-            break;
-        case SDL_SCANCODE_A:
-            m_pDemoObject->TryMove(Vector2{ -1,0 });
-            break;
-        case SDL_SCANCODE_S:
-            m_pDemoObject->TryMove(Vector2{ 0,1 });
-            break;
-        case SDL_SCANCODE_D:
-            m_pDemoObject->TryMove(Vector2{ 1,0 });
-        default:
-            break;
-        }
-    default:
-        break;
-    }
     if ((int)pData->state == 1 && (int)pData->repeat == 0)   // Key Press, ignore repeat keys
     {
         switch ((int)pData->keysym.sym)
@@ -209,14 +188,14 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Left
             case SDLK_a:
             {
-                //m_pPlayer->MoveLeft();
+                m_pPlayer->MoveLeft();
                 break;
             }
 
             // Move Right
             case SDLK_d:
             {
-                //m_pPlayer->MoveRight();
+                m_pPlayer->MoveRight();
                 break;
 
             }
@@ -224,7 +203,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Up
             case SDLK_w:
             {
-                //m_pPlayer->MoveUp();
+                m_pPlayer->MoveUp();
                 break;
 
             }
@@ -232,7 +211,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Down
             case SDLK_s:
             {
-                //m_pPlayer->MoveDown();
+                m_pPlayer->MoveDown();
                 break;
             }
 
@@ -261,21 +240,21 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Run
             case SDLK_LSHIFT:
             {
-                //m_pPlayer->NormalSpeed();
+                m_pPlayer->NormalSpeed();
                 break;
             }
 
             // Stop Moving Left
             case SDLK_a:
             {
-                //m_pPlayer->StopLeft();
+                m_pPlayer->StopLeft();
                 break;
             }
 
             // Stop Moving Right
             case SDLK_d:
             {
-                //m_pPlayer->StopRight();
+                m_pPlayer->StopRight();
                 break;
 
             }
@@ -283,14 +262,14 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Moving Up
             case SDLK_w:
             {
-                //m_pPlayer->StopUp();
+                m_pPlayer->StopUp();
                 break;
             }
 
             // Stop Moving Down
             case SDLK_s:
             {
-                //m_pPlayer->StopDown();
+                m_pPlayer->StopDown();
                 break;
 
             }
@@ -424,24 +403,34 @@ void GameDemo::InitGame()
     InitBackground();
 
     /// GAMEOBJECT
+    /*
     // DEMO
     m_pDemoObject = new CollidableMovingObject(SDL_Rect{ 50,50,50,50 }, &m_collisionReferee, BULLET);
     AddGameObject(m_pDemoObject);
 
     stationary = new CollidableStaticObject(SDL_Rect{ 100,100,50,50 }, &m_collisionReferee, STATIONARY2);
     AddGameObject(stationary);
+    */
+
     // Set Player Object
-    //m_pPlayer = new CubeColider(s_kPlayerStartingPoisition, PUMPKIN,m_pRenderer);
-    //AddGameObject(m_pPlayer);
+    // Player ColliderBox Setting
+    SDL_Rect playerTransform{ 
+        s_kPlayerStartingPoisition.m_x, // X position of collider box
+        s_kPlayerStartingPoisition.m_y, // Y position of collider box
+        s_kPlayerStartingSize.m_x,      // Width of collider box
+        s_kPlayerStartingSize.m_y       // Height of collider box
+    };
+    m_pPlayer = new CubeColider(playerTransform,&m_collisionReferee, PUMPKIN,m_pRenderer);
+    AddGameObject(m_pPlayer);
     // Add GameObjects to m_vpGameObjects
-    stationary = new EnemyObject(Vector2{ 200,300 }, ZOMBIEMALE,300);
+    stationary = new EnemyObject( SDL_Rect{ 200,300,100,150 }, &m_collisionReferee, ZOMBIEMALE,300);
     AddGameObject(stationary);
-    stationary = new EnemyObject(Vector2{ 500,50 }, ZOMBIEMALE,0);
+    stationary = new EnemyObject( SDL_Rect{ 500,50,100,150 }, &m_collisionReferee, ZOMBIEMALE,0);
     AddGameObject(stationary);
 
-    stationary = new EnemyObject(Vector2{ 400,300 }, ZOMBIEFEMALE, 300);
+    stationary = new EnemyObject(SDL_Rect{ 400,300,100,150 }, &m_collisionReferee, ZOMBIEFEMALE, 0);
     AddGameObject(stationary); 
-    stationary = new EnemyObject(Vector2{ 50,450 }, ZOMBIEFEMALE, 0);
+    stationary = new EnemyObject(SDL_Rect{ 50,450,100,150 }, &m_collisionReferee, ZOMBIEFEMALE, 0);
     AddGameObject(stationary);
 
 
@@ -473,6 +462,15 @@ void GameDemo::InitBackground()
             tilePosition.m_y = y * s_kBackgroundHeight;
             m_vpBackgrounds.push_back(new ImageObject(tilePosition, s_kBackgroundWidth, s_kBackgroundHeight, BACKGROUND));
         }
+    }
+}
+
+// Destory the elements in vector of GameObject
+void GameDemo::DestoryGameObjects(std::vector<GameObject*> vector)
+{
+    for (auto& element : vector)
+    {
+        delete element;
     }
 }
 

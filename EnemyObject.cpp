@@ -1,12 +1,13 @@
 #include "EnemyObject.h"
 #include <iostream>
-EnemyObject::EnemyObject(Vector2 position, const char* directory, const int kspeed)
-    : m_animation(directory, 6, 200, 300, &m_transform),
+EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int kspeed)
+    : m_transform(transform),
+	  m_animation(directory, 6, 200, 300, &m_transform),
+	  m_collider(this, transform,pReferee),
 	  m_speed(kspeed),
 	  m_isRight(true),
 	  m_directionX(1),
-	  m_position(position),
-	  m_pName(directory),
+	  m_pSpriteName(directory),
 	  m_counter(s_kSetCounter)
 {
 	// Set animation sequence before game start.
@@ -14,6 +15,8 @@ EnemyObject::EnemyObject(Vector2 position, const char* directory, const int kspe
 	m_animation.AddAnimationSequence("walk", 20, 29);
 	m_animation.AddAnimationSequence("attack", 30, 37);
 
+	m_position.m_x = transform.x;
+	m_position.m_y = transform.y;
 	
 
 	// initialize starting transform information for player
@@ -44,8 +47,12 @@ void EnemyObject::Update(double deltatime)
 	}
 	
 	double deltaPosition = deltatime * m_speed;
-	m_position.m_x += deltaPosition * m_directionX;
-	m_transform.x = (int)m_position.m_x;
+	// if it's moving
+	if (m_speed > 0)
+	{
+		// Check if it's able to move
+		TryMove(Vector2{ deltaPosition * (double)m_directionX,0 });
+	}
 
 	m_animation.Update(deltatime);
 	AnimationState();
@@ -53,7 +60,9 @@ void EnemyObject::Update(double deltatime)
 
 void EnemyObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
+	m_collider.DrawColliderBox(pRenderer);
 	m_animation.Render(pRenderer, pTexture, m_isRight);
+
 }
 
 // Play the right animation fallowing current state of gameobject
@@ -105,3 +114,23 @@ void EnemyObject::CheckCurrentState()
 }
 
 
+
+bool EnemyObject::TryMove(Vector2 deltaPosition)
+{
+	// Have the collider component try to move.
+	bool didMove = m_collider.TryMove(deltaPosition);
+
+	// If the collider successfully moved, update all components.
+	if (didMove)
+	{
+		m_position.m_x += deltaPosition.m_x;
+		m_transform.x = (int)m_position.m_x;
+	}
+	else
+	{
+		std::cout << "Collide!" << std::endl;
+	}
+
+	// Return whether the movement was successful.
+	return didMove;
+}

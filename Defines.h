@@ -1,7 +1,6 @@
 #pragma once
 
 // Colors
-
 #define BLACK   0,0,0,SDL_ALPHA_OPAQUE
 #define WHITE	255,255,255,SDL_ALPHA_OPAQUE
 #define RED     255,0,0,SDL_ALPHA_OPAQUE
@@ -18,8 +17,8 @@
 
 // Animation Sprite directory
 #define PUMPKIN			"assets/Pumpkin.png"
-#define ZOMBIEMALE		"assets/ZombieFemale.png"
-#define ZOMBIEFEMALE	"assets/ZombieMale.png"
+#define ZOMBIEMALE		"assets/ZombieMale.png"
+#define ZOMBIEFEMALE	"assets/ZombieFemale.png"
 
 
 // Window Size

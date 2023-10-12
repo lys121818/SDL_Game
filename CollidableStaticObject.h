@@ -10,7 +10,7 @@ class CollidableStaticObject : public GameObject
 {
 private:
 	// Name of image
-	const char* m_name;
+	const char* m_pSpriteName;
 
 	// Position and dimensions.
 	SDL_Rect m_transform;
@@ -27,7 +27,10 @@ public:
 	~CollidableStaticObject();
 
 	// Return Name of the object
-	virtual const char* GetName() { return m_name; }
+	virtual const char* GetTextureName() { return m_pSpriteName; }
+
+	// Return Name of the object
+	virtual const char* GetName() { return "UnNamed"; }
 
 	// Gets called by the main loop each frame to render this object.
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;

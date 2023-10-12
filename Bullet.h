@@ -7,7 +7,7 @@ private:
 	static constexpr int s_kHeight = 10;
 	static constexpr int s_kWidth = 10;
 
-	const char* m_pName;
+	const char* m_pSpriteName;
 	// Transform of the object
 	SDL_Rect m_transform;
 
@@ -19,7 +19,7 @@ public:
 	// Inherited via GameObject
 	void Update(double deltatime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
-	virtual const char* GetName() override { return m_pName; }
+	virtual const char* GetTextureName() override { return m_pSpriteName; }
 
 	SDL_Rect GetTransform() override { return m_transform; }
 };

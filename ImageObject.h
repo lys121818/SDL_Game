@@ -5,7 +5,7 @@
 class ImageObject : public GameObject
 {
 	// Name Of the Object
-	const char* m_pName;
+	const char* m_pSpriteName;
 	// Transform of the object
 	SDL_Rect m_transform;
 
@@ -22,7 +22,10 @@ public:
 	void Update(double deltatime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 	SDL_Rect GetTransform() override { return m_transform; }
-	const char* GetName() override { return m_pName; }
+	const char* GetTextureName() override { return m_pSpriteName; }
+
+	// Return Name of the object
+	virtual const char* GetName() { return "UnNamed"; }
 
 	// return current position of object
 	Vector2 GetPosition() { return m_position; }

@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{db514d7d-de73-4894-b231-0ed3a9ddf5e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Struct">
+      <UniqueIdentifier>{4dd69b5c-51b6-4981-bd02-35fb17954d3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -80,9 +83,6 @@
     <ClInclude Include="Defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CubeColider.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
@@ -118,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="CollidableMovingObject.h">
       <Filter>Header Files\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Header Files\Struct</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
