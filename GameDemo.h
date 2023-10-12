@@ -21,7 +21,7 @@ class GameDemo
 {
 private:
 	static constexpr size_t s_kMaxGameObjectCount = 10;
-	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ 100,100 };
+	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ 400,300 };
 	static constexpr Vector2 s_kPlayerStartingSize = Vector2{ 100,150 };
 	static constexpr int s_kBackgroundWidth = 90;
 	static constexpr int s_kBackgroundHeight = 90;

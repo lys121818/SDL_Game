@@ -20,6 +20,8 @@
 #define ZOMBIEMALE		"assets/ZombieMale.png"
 #define ZOMBIEFEMALE	"assets/ZombieFemale.png"
 
+// Index of Collision Number
+#define COLLISIONINDEX	10
 
 // Window Size
 #define WINDOWWIDTH 800

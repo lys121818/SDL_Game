@@ -3,10 +3,11 @@
 #include "CollisionReferee.h"
 #include "Defines.h"
 
-ColliderComponent::ColliderComponent(GameObject* pOwner, SDL_Rect transform, CollisionReferee* pReferee)
+ColliderComponent::ColliderComponent(GameObject* pOwner, SDL_Rect transform, CollisionReferee* pReferee, Type type)
 	: m_pOwner(pOwner),
 	  m_transform(transform),
-	  m_pReferee(pReferee)
+	  m_pReferee(pReferee),
+	  m_type(type)
 {
 	if (pReferee != nullptr)
 	{
@@ -52,7 +53,9 @@ bool ColliderComponent::TryMove(Vector2 deltaPosition)
 	m_transform.y = (int)m_position.m_y;
 
 	// Perform the collision check.
-	bool didCollide = m_pReferee->CheckForCollisionAndNotify(this);
+	bool didCollide = m_pReferee->CheckForColliderAndNotify(this);
+
+
 
 	// If the move was invalid, undo it.
 	if (didCollide)
@@ -66,6 +69,20 @@ bool ColliderComponent::TryMove(Vector2 deltaPosition)
 	
 	// Return whether the move was successful.
 	return !didCollide;
+}
+
+bool ColliderComponent::CollisionCheck()
+{
+	bool onCollision = false;
+
+	// return when pReferee is not assigned
+	if (m_pReferee == nullptr)
+	{
+		return onCollision;
+	}
+	onCollision = m_pReferee->CheckForCollisionAndNotify(this);
+
+	return onCollision;
 }
 
 // Draw colliderbox for test purpose

@@ -21,7 +21,10 @@ public:
 	// Inherited via GameObject
 	void Update(double deltatime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
+
+	// GETTER
 	SDL_Rect GetTransform() override { return m_transform; }
+
 	const char* GetTextureName() override { return m_pSpriteName; }
 
 	// Return Name of the object

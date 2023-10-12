@@ -9,8 +9,6 @@
 #include "Bullet.h"
 #include "AnimationObject.h"
 #include "EnemyObject.h"
-#include "CollidableMovingObject.h"
-#include "CollidableStaticObject.h"
 ////////////
 // PUBLIC //
 ////////////
@@ -112,7 +110,7 @@ bool GameDemo::ProcessEvents()
             break;
         }
     }
-    return false;
+    return m_pPlayer->FinishGame();
 }
 
 void GameDemo::UpdateGameState(double deltatime)
@@ -127,6 +125,7 @@ void GameDemo::UpdateGameState(double deltatime)
         element->Update(deltatime);
         //element->GetTransform();
     }
+
 }
 
 void GameDemo::DisplayOutput()
@@ -403,37 +402,26 @@ void GameDemo::InitGame()
     InitBackground();
 
     /// GAMEOBJECT
-    /*
-    // DEMO
-    m_pDemoObject = new CollidableMovingObject(SDL_Rect{ 50,50,50,50 }, &m_collisionReferee, BULLET);
-    AddGameObject(m_pDemoObject);
-
-    stationary = new CollidableStaticObject(SDL_Rect{ 100,100,50,50 }, &m_collisionReferee, STATIONARY2);
-    AddGameObject(stationary);
-    */
-
     // Set Player Object
     // Player ColliderBox Setting
     SDL_Rect playerTransform{ 
-        s_kPlayerStartingPoisition.m_x, // X position of collider box
-        s_kPlayerStartingPoisition.m_y, // Y position of collider box
-        s_kPlayerStartingSize.m_x,      // Width of collider box
-        s_kPlayerStartingSize.m_y       // Height of collider box
+        (int)s_kPlayerStartingPoisition.m_x, // X position of collider box
+        (int)s_kPlayerStartingPoisition.m_y, // Y position of collider box
+        (int)s_kPlayerStartingSize.m_x,      // Width of collider box
+        (int)s_kPlayerStartingSize.m_y       // Height of collider box
     };
-    m_pPlayer = new CubeColider(playerTransform,&m_collisionReferee, PUMPKIN,m_pRenderer);
+    m_pPlayer = new CubeColider(playerTransform,&m_collisionReferee, PUMPKIN,m_pRenderer,Type::m_Player);
     AddGameObject(m_pPlayer);
     // Add GameObjects to m_vpGameObjects
-    stationary = new EnemyObject( SDL_Rect{ 200,300,100,150 }, &m_collisionReferee, ZOMBIEMALE,300);
+    stationary = new EnemyObject( SDL_Rect{ 500,400,100,150 }, &m_collisionReferee, ZOMBIEMALE,0, Type::m_Enemy);
     AddGameObject(stationary);
-    stationary = new EnemyObject( SDL_Rect{ 500,50,100,150 }, &m_collisionReferee, ZOMBIEMALE,0);
+    stationary = new EnemyObject( SDL_Rect{ 500,100,100,150 }, &m_collisionReferee, ZOMBIEMALE,0, Type::m_DamageZone);
     AddGameObject(stationary);
 
-    stationary = new EnemyObject(SDL_Rect{ 400,300,100,150 }, &m_collisionReferee, ZOMBIEFEMALE, 0);
+    stationary = new EnemyObject(SDL_Rect{ 100,400,100,150 }, &m_collisionReferee, ZOMBIEFEMALE, 0, Type::m_HealingZone);
     AddGameObject(stationary); 
-    stationary = new EnemyObject(SDL_Rect{ 50,450,100,150 }, &m_collisionReferee, ZOMBIEFEMALE, 0);
+    stationary = new EnemyObject(SDL_Rect{ 100,100,100,150 }, &m_collisionReferee, ZOMBIEFEMALE, 0, Type::m_Wall);
     AddGameObject(stationary);
-
-
 
 }
 

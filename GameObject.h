@@ -20,7 +20,6 @@ public:
 	// Return Name of the object
 	virtual const char* GetName() { return "UnNamed"; }
 
-
 	// Callbeck for when a collision occurs.
 	virtual void OnCollision(ColliderComponent* pCollider) {}
 

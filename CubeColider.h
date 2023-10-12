@@ -4,18 +4,10 @@
 #include "Vector2.h"
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
-
 class CubeColider : public GameObject
 {
 private:
-    struct PlayerStatus
-    {
-    public:
-        std::string m_name; // Player Name
-        int m_health;       // Player Health
-        double m_speed;     // Player Speed
-        bool m_isRight;     // side player is facing
-    };
+
     // Current Animation States
     enum AnimationState
     {
@@ -25,6 +17,7 @@ private:
         m_jump,
         m_slide
     } m_currentState;
+
 private:
     // Width
     static constexpr int s_kWidth = 100;
@@ -35,21 +28,43 @@ private:
     static constexpr int s_kSpeed = 300;
     static constexpr int s_kMixSpeed = 100;
 
+    static constexpr int s_KMaxHealth = 100;
+
+    static constexpr int s_kMaxImmuneTime= 1;
+
+    // true when Game Over
+    bool m_isGame;
+
     // Name Of the Object
     const char* m_pSpriteName;
+
     // Current Speed
-    double m_speed = 300;
+    double m_speed;
+
+    // Immune Time
+    double m_immuneTime;
+
+    // Current player Health
+    int m_health;
+
     // Current position
     Vector2 m_position;
 
-    // Current direction movement. -1 for left, 1for right.
-    int m_directionX;
-    // Current direction movement. -1 for down, 1 for up.
-    int m_directionY;
+    // Current direction.x movement. -1 for left, 1for right.
+    // Current direction.y movement. -1 for down, 1 for up.
+    Vector2 m_direction;
 
     // The direction object is facing
     bool m_isRight;
-    // AnimationComponent to play animation
+
+    // True if it's on collision
+    bool m_isOnCollision;
+
+    // Player Immune time
+    bool m_isImmune;
+
+
+    // AnimationComponent to play animation	
     AnimationComponent m_animation;
 
     ColliderComponent m_collider;
@@ -63,7 +78,7 @@ private:
     void CheckCurrentState();
 
 public:
-    CubeColider(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, SDL_Renderer* pRenderer);
+    CubeColider(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, SDL_Renderer* pRenderer, Type type);
     ~CubeColider();
     
 
@@ -71,6 +86,8 @@ public:
     void Update(double deltatime) override;
     void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
+    // On Collision action
+    virtual void OnCollision(ColliderComponent* pCollider);
 
     //GETTER
     // return position of object
@@ -84,24 +101,34 @@ public:
     // Change the position of the object 
     void SetPosition(Vector2 position);
 
+    //void SetTrigger(bool isTrigger) { m_isOnCollision = isTrigger; }
     // Moving
     // Sprint
     void SprintSpeed() { m_speed = s_kMaxSpeed; }
     void NormalSpeed() { m_speed = s_kSpeed; }
     void SlowSpeed() { m_speed = s_kMixSpeed; }
 
-    void MoveLeft() { --m_directionX; }
-    void MoveRight() { ++m_directionX; }
-    void MoveUp() { --m_directionY; }
-    void MoveDown() { ++m_directionY; }
+    void MoveLeft() { --m_direction.m_x; }
+    void MoveRight() { ++m_direction.m_x; }
+    void MoveUp() { --m_direction.m_y; }
+    void MoveDown() { ++m_direction.m_y; }
 
-    void StopLeft() { ++m_directionX; }
-    void StopRight() { --m_directionX; }
-    void StopUp() { ++m_directionY; }
-    void StopDown() { --m_directionY; }
+    void StopLeft() { ++m_direction.m_x; }
+    void StopRight() { --m_direction.m_x; }
+    void StopUp() { ++m_direction.m_y; }
+    void StopDown() { --m_direction.m_y; }
 
+    bool FinishGame() { return m_isGame; }
 private:
     bool TryMove(Vector2 deltaPosition);
 
+    // Event happen with collision
+    void CollisionEvent(ColliderComponent* pCollider);
+    // Event happen with collider
+    void ColliderEvent(ColliderComponent* pCollider);
+
+    void GetDamaged(int amount);
+
+    void ImmuneTime(double deltaTime);
 };
 

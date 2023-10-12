@@ -23,5 +23,8 @@ public:
 	// Finds all colliders that overlap and notify them of any collision.
 	// Returns whether or not a collision occurred.
 	bool CheckForCollisionAndNotify(ColliderComponent* pColliderToCheck);
+
+	//Check if the object collision with collider
+	bool CheckForColliderAndNotify(ColliderComponent* pColliderToCheck);
 };
 

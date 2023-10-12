@@ -2,9 +2,11 @@
 #include "GameObject.h"
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
+#include "Type.h"
 #include <iostream>
 class EnemyObject : public GameObject
 {
+
 	// Current Animation States
 	enum AnimationState
 	{
@@ -26,9 +28,9 @@ private:
 	// Name Of the Object
 	const char* m_pSpriteName;
 
+	// Current Speed of the object
 	const int m_speed;
-	// time counter for object to change direction when its 0;
-	double m_counter;
+
 	// Current position
 	Vector2 m_position;
 
@@ -38,6 +40,8 @@ private:
 
 	// The direction object is facing
 	bool m_isRight;
+
+
 
 	// AnimationComponent to play animation
 	AnimationComponent m_animation;
@@ -51,18 +55,22 @@ private:
 
 
 public:
-	EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int kspeed);
+	EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int kspeed, Type type);
 	~EnemyObject();
 	// Inherited via GameObject
 	void Update(double deltatime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
+
+	// GETTER
 	SDL_Rect GetTransform() override { return m_transform; }
 	// Return Name of the object
 	const char* GetTextureName() override { return m_pSpriteName; }
 
 	// Return Name of the object
-	virtual const char* GetName() { return "UnNamed"; }
+	virtual const char* GetName() { return "Enemy"; }
 
+	// On Collision action
+	virtual void OnCollision(ColliderComponent* pCollider);
 private:
 	// Play the right animation fallowing current state of gameobject
 	void AnimationState();
