@@ -16,10 +16,10 @@ class ImageObject : public GameObject
 	ImageComponent m_imageComponent;
 
 public:
-	ImageObject(Vector2 position, int width, int height, const char* directory);
+	ImageObject(Vector2 position, int width, int height, const char* directory, const int index);
 	~ImageObject();
 	// Inherited via GameObject
-	void Update(double deltatime) override;
+	void Update(double deltaTime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 	// GETTER
@@ -32,6 +32,9 @@ public:
 
 	// return current position of object
 	Vector2 GetPosition() { return m_position; }
+
+private:
+	void SetImage(const int index);
 
 };
 

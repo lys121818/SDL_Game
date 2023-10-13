@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <SDL.h>
 
 class ColliderComponent;
 ////////////////////////////////////////////////////////////////////////////
@@ -26,5 +27,9 @@ public:
 
 	//Check if the object collision with collider
 	bool CheckForColliderAndNotify(ColliderComponent* pColliderToCheck);
+
+private:
+	bool AABBCollisionCheck(SDL_Rect& colliderATransform, SDL_Rect& colliderBTransform);
+
 };
 

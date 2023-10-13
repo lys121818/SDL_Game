@@ -45,37 +45,11 @@ CubeColider::~CubeColider()
 {
 }
 
-void CubeColider::Update(double deltatime)
+void CubeColider::Update(double deltaTime)
 {
-	// Move deltaPosition
-	double deltaPosition = m_speed * deltatime;
-	Vector2 deltaDirection
-	{ 
-		deltaPosition * m_direction.m_x, // Move Horizontal
-		deltaPosition * m_direction.m_y  // Move Vertical
-	};
+	UpdateGameEvent(deltaTime);
+	UpdateAnimationEvent(deltaTime);
 
-	// If object is moving, check to if it's trying to move into 
-	if (m_direction.m_x != 0 || m_direction.m_y != 0)
-	{
-		TryMove(deltaDirection);
-	}
-	if (m_isImmune)
-		ImmuneTime(deltatime);
-
-	if (m_isOnCollision)
-	{
-		// Collision Enter and Update Happens
-		m_isOnCollision = m_collider.CollisionCheck();
-
-		if (!m_isOnCollision)
-		{
-			std::cout << "Collision Exit: " << std::endl;
-		}
-	}
-
-	m_animation.Update(deltatime);
-	AnimationState();
 }
 
 void CubeColider::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
@@ -208,10 +182,7 @@ void CubeColider::OnCollision(ColliderComponent* pCollider)
 		if (pCollider->GetType() == Type::m_Enemy)
 		{
 			ColliderEvent(pCollider);
-			//std::cout << pCollider->GetOwner()->GetTextureName() << std::endl;
 		}
-		std::cout << pCollider->GetOwner()->GetTextureName() << std::endl;
-
 	}
 
 }
@@ -227,11 +198,41 @@ void CubeColider::SetPosition(Vector2 position)
 // PRIVATE //
 /////////////
 
+///////////////////////
+// GAME UPDATE EVENT //////////////////////////////////
+// All the update function for game events runs here //
+void CubeColider::UpdateGameEvent(double deltaTime)
+{
+	// Move deltaPosition
+	double deltaPosition = m_speed * deltaTime;
+	Vector2 deltaDirection
+	{
+		deltaPosition * m_direction.m_x, // Move Horizontal
+		deltaPosition * m_direction.m_y  // Move Vertical
+	};
+
+	// If object is moving, check to if it's trying to move into 
+	// Check if object is moving and move when it's able to move
+	// chekc for Horizontal
+	if (m_direction.m_x != 0)
+		TryMove(Vector2{ deltaDirection.m_x,0 });
+	// chekc for Vertical
+	if(m_direction.m_y != 0)
+		TryMove(Vector2{ 0,deltaDirection.m_y });
+
+	// decrease time
+	if (m_isImmune)
+		ImmuneTime(deltaTime);
+
+	// If the object is on collision to something check and play the event
+	if (m_isOnCollision)
+		CheckForCollision();
+}
+
 bool CubeColider::TryMove(Vector2 deltaPosition)
 {
 	bool didMove = m_collider.TryMove(deltaPosition);
 
-	// If the collider successfully moved, update all components.
 	if (didMove)
 	{
 		// Horizontal Movement
@@ -244,6 +245,58 @@ bool CubeColider::TryMove(Vector2 deltaPosition)
 
 	// Return whether the movement was successful.
 	return didMove;
+}
+
+void CubeColider::ImmuneTime(double deltaTime)
+{
+	if (m_immuneTime <= 0)
+	{
+		m_isImmune = false;
+		m_immuneTime = s_kMaxImmuneTime;
+		return;
+	}
+	//std::cout << "ImmuneTime: " << m_immuneTime << std::endl;
+	m_immuneTime -= deltaTime;
+
+}
+
+void CubeColider::GetDamaged(int amount)
+{
+	m_health -= amount;
+	if (m_health <= 0)
+	{
+		std::cout << "You died \n";
+		m_isGame = true;
+	}
+	else if (m_health > s_KMaxHealth)
+	{
+		std::cout << "Your Health is already Full \n";
+		m_health = s_KMaxHealth;
+	}
+}
+
+
+////////////////////////////
+// ANIMATION UPDATE EVENT //////////////////////////////////
+// All the update function for Animation events runs here //
+void CubeColider::UpdateAnimationEvent(double deltaTime)
+{
+	m_animation.Update(deltaTime);
+	AnimationState();
+}
+
+
+/////////////////////////////
+// OBJECT COLLISION EVENTS //
+void CubeColider::CheckForCollision()
+{
+	m_isOnCollision = m_collider.CollisionCheck();
+
+	// Event when collision Exit
+	if (!m_isOnCollision)
+	{
+		std::cout << "Collision Exit" << std::endl;
+	}
 }
 
 void CubeColider::CollisionEvent(ColliderComponent* pCollider)
@@ -286,26 +339,24 @@ void CubeColider::CollisionEvent(ColliderComponent* pCollider)
 
 void CubeColider::ColliderEvent(ColliderComponent* pCollider)
 {
-}
-
-void CubeColider::ImmuneTime(double deltaTime)
-{
-	if (m_immuneTime <= 0)
+	assert(pCollider->GetType() < COLLISIONINDEX);
+	switch (pCollider->GetType())
 	{
-		m_isImmune = false;
-		m_immuneTime = s_kMaxImmuneTime;
-		return;
+		case m_Enemy:
+		{
+			if (!m_isImmune)
+			{
+				GetDamaged(10);
+				m_isImmune = true;
+				std::cout << "Health: " << m_health << std::endl;
+			}
+			break;
+		}
+	
+		default:
+			break;
+
 	}
-	//std::cout << "ImmuneTime: " << m_immuneTime << std::endl;
-	m_immuneTime -= deltaTime;
-
 }
 
-void CubeColider::GetDamaged(int amount)
-{
-	m_health -= amount;
-	if (m_health <= 0)
-		m_isGame = true;
-	else if (m_health > s_KMaxHealth)
-		m_health = s_KMaxHealth;
-}
+

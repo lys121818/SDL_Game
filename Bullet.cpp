@@ -15,10 +15,10 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::Update(double deltatime)
+void Bullet::Update(double deltaTime)
 {
     // bullet will always move toward up
-    double deltaPosition = s_kSpeed * deltatime;
+    double deltaPosition = s_kSpeed * deltaTime;
     m_position.m_y += deltaPosition * -1;
     m_transform.y = (int)m_position.m_y;
 

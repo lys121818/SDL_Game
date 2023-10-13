@@ -1,0 +1,8 @@
+Image Sprites
+- Tiles: 	128 * 128
+- Objects: 	64 * 64
+
+Animation Sprites
+- Pumpkin 	200 * 300
+- ZombieFemale 	200 * 300
+- ZombieMale 	200 * 300

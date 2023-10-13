@@ -28,6 +28,9 @@
     <Filter Include="Header Files\Struct">
       <UniqueIdentifier>{4dd69b5c-51b6-4981-bd02-35fb17954d3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Defines">
+      <UniqueIdentifier>{56a2375f-57c4-4f9e-9b1c-243ae1842158}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -66,18 +69,12 @@
     <ClCompile Include="ColliderComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameDemo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CubeColider.h">
@@ -114,10 +111,13 @@
       <Filter>Header Files\Struct</Filter>
     </ClInclude>
     <ClInclude Include="Type.h">
-      <Filter>Header Files\Struct</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionComponent.h">
-      <Filter>Header Files\Components</Filter>
+    <ClInclude Include="Defines.h">
+      <Filter>Header Files\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSetting.h">
+      <Filter>Header Files\Defines</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

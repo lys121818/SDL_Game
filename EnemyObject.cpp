@@ -33,9 +33,9 @@ EnemyObject::~EnemyObject()
 
 }
 
-void EnemyObject::Update(double deltatime)
+void EnemyObject::Update(double deltaTime)
 {
-	double deltaPosition = deltatime * m_speed;
+	double deltaPosition = deltaTime * m_speed;
 	// if it's moving
 	if (m_speed > 0)
 	{
@@ -45,7 +45,7 @@ void EnemyObject::Update(double deltatime)
 	if (m_position.m_x < 0)
 		OnCollision(&m_collider);
 
-	m_animation.Update(deltatime);
+	m_animation.Update(deltaTime);
 	AnimationState();
 }
 
@@ -58,7 +58,6 @@ void EnemyObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 
 void EnemyObject::OnCollision(ColliderComponent* pCollider)
 {
-	
 	m_isRight = !m_isRight;		// change direction it's looking
 	m_directionX *= -1;	// change the direction by multiply negative value
 }

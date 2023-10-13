@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Defines.h"
+#include "GameSetting.h"
 #include "Vector2.h"
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
@@ -20,17 +21,21 @@ private:
 
 private:
     // Width
-    static constexpr int s_kWidth = 100;
+    static constexpr int s_kWidth = (int)PLAYERWIDTH;
+
     // Height
-    static constexpr int s_kHeight = 150;
+    static constexpr int s_kHeight = (int)PLAYERHEIGHT;
+
     // Speed
-    static constexpr int s_kMaxSpeed = 500;
-    static constexpr int s_kSpeed = 300;
-    static constexpr int s_kMixSpeed = 100;
+    static constexpr int s_kMaxSpeed = (int)PLAYERMAXSPEED;
+    static constexpr int s_kSpeed    = (int)PLAYERSPEED;
+    static constexpr int s_kMixSpeed = (int)PLAYERMINSPEED;
 
-    static constexpr int s_KMaxHealth = 100;
+    // Health
+    static constexpr int s_KMaxHealth = PLAYERMAXHEALTH;
 
-    static constexpr int s_kMaxImmuneTime= 1;
+    // Immune system time
+    static constexpr int s_kMaxImmuneTime= IMMUNETIME;
 
     // true when Game Over
     bool m_isGame;
@@ -83,7 +88,7 @@ public:
     
 
     // Inherited via GameObject
-    void Update(double deltatime) override;
+    void Update(double deltaTime) override;
     void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
     // On Collision action
@@ -120,7 +125,17 @@ public:
 
     bool FinishGame() { return m_isGame; }
 private:
+    // All the update function for game events runs here
+    void UpdateGameEvent(double deltaTime);
+
+    // All the update function for Animation events runs here
+    void UpdateAnimationEvent(double deltaTime);
+
+    // Check if it's able to move
     bool TryMove(Vector2 deltaPosition);
+
+    // Check if the object is on collision
+    void CheckForCollision();
 
     // Event happen with collision
     void CollisionEvent(ColliderComponent* pCollider);
@@ -130,5 +145,6 @@ private:
     void GetDamaged(int amount);
 
     void ImmuneTime(double deltaTime);
+
 };
 

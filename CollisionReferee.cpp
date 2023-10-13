@@ -51,12 +51,6 @@ bool CollisionReferee::CheckForCollisionAndNotify(ColliderComponent* pColliderTo
 	// Get pColliderToCheck's transform.
 	SDL_Rect colliderTransform = pColliderToCheck->GetTransform();
 
-	// Calculate bounds.
-	int left = colliderTransform.x;
-	int right = left + colliderTransform.w;
-	int top = colliderTransform.y;
-	int bottom = top + colliderTransform.h;
-
 	// Check agains every active collider.
 	for(ColliderComponent* pOtherCollider : m_activeColliders)
 	{
@@ -66,22 +60,10 @@ bool CollisionReferee::CheckForCollisionAndNotify(ColliderComponent* pColliderTo
 		//Get other collider's transform.
 		SDL_Rect otherColliderTransform = pOtherCollider->GetTransform();
 
-		// Calculate the bounds of the other collider.
-		int otherLeft = otherColliderTransform.x;
-		int otherRight = otherLeft + otherColliderTransform.w;
-		int otherTop = otherColliderTransform.y;
-		int otherBottom = otherTop + otherColliderTransform.h;
-
-		// Check if they overlap horizontally.
-		bool xOverlap = left < otherRight && right > otherLeft;
-
-		// Check if they overlap vertically.
-		bool yOverlap = top < otherBottom && bottom > otherTop;
-
 		// If both x and y are true, they collide.
-		if(xOverlap && yOverlap)
+		if(AABBCollisionCheck(colliderTransform, otherColliderTransform))
 		{
-			// Only return true when it's collider to collider
+			// Allocate a bool for whether any collisions have occurred.
 			didCollide = true;
 
 			// A collision has occured.
@@ -104,12 +86,6 @@ bool CollisionReferee::CheckForColliderAndNotify(ColliderComponent* pColliderToC
 	// Get pColliderToCheck's transform.
 	SDL_Rect colliderTransform = pColliderToCheck->GetTransform();
 
-	// Calculate bounds.
-	int left = colliderTransform.x;
-	int right = left + colliderTransform.w;
-	int top = colliderTransform.y;
-	int bottom = top + colliderTransform.h;
-
 	// Check agains every active collider.
 	for (ColliderComponent* pOtherCollider : m_activeColliders)
 	{
@@ -120,19 +96,9 @@ bool CollisionReferee::CheckForColliderAndNotify(ColliderComponent* pColliderToC
 		SDL_Rect otherColliderTransform = pOtherCollider->GetTransform();
 
 		// Calculate the bounds of the other collider.
-		int otherLeft = otherColliderTransform.x;
-		int otherRight = otherLeft + otherColliderTransform.w;
-		int otherTop = otherColliderTransform.y;
-		int otherBottom = otherTop + otherColliderTransform.h;
-
-		// Check if they overlap horizontally.
-		bool xOverlap = left < otherRight && right > otherLeft;
-
-		// Check if they overlap vertically.
-		bool yOverlap = top < otherBottom && bottom > otherTop;
 
 		// If both x and y are true, they collide.
-		if (xOverlap && yOverlap)
+		if (AABBCollisionCheck(colliderTransform,otherColliderTransform))
 		{
 			pColliderToCheck->GetOwner()->OnCollision(pOtherCollider);	// notify object A
 			pOtherCollider->GetOwner()->OnCollision(pColliderToCheck);	// notify object B
@@ -151,4 +117,25 @@ bool CollisionReferee::CheckForColliderAndNotify(ColliderComponent* pColliderToC
 
 	// Return whether any collision occurred.
 	return didCollide;
+}
+
+bool CollisionReferee::AABBCollisionCheck(SDL_Rect& colliderATransform, SDL_Rect& colliderBTransform)
+{
+	int left_A = colliderATransform.x;
+	int right_A = left_A + colliderATransform.w;
+	int top_A = colliderATransform.y;
+	int bottom_A = top_A + colliderATransform.h;
+
+	int left_B = colliderBTransform.x;
+	int right_B = left_B + colliderBTransform.w;
+	int top_B = colliderBTransform.y;
+	int bottom_B = top_B + colliderBTransform.h;
+
+	// Check if they overlap horizontally.
+	bool xOverlap = left_A < right_B && right_A > left_B;
+
+	// Check if they overlap vertically.
+	bool yOverlap = top_A < bottom_B && bottom_A > top_B;
+
+	return xOverlap && yOverlap;
 }

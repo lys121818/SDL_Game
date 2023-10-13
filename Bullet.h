@@ -17,7 +17,7 @@ public:
 	Bullet(Vector2 position, const char* directory);
 	~Bullet();
 	// Inherited via GameObject
-	void Update(double deltatime) override;
+	void Update(double deltaTime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 	virtual const char* GetTextureName() override { return m_pSpriteName; }
 

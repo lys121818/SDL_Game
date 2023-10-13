@@ -17,9 +17,9 @@ AnimationObject::~AnimationObject()
 {
 }
 
-void AnimationObject::Update(double deltatime)
+void AnimationObject::Update(double deltaTime)
 {
-	m_animation.Update(deltatime);
+	m_animation.Update(deltaTime);
 
 	// other behavior goes here
 }

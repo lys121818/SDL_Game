@@ -9,7 +9,7 @@ public:
 	virtual ~GameObject() {}
 
 	// Gets called by the main loop each frame to update this object's state.
-	virtual void Update(double deltatime) {}
+	virtual void Update(double deltaTime) {}
 
 	// Gets called by the main loop each frame to render this object.
 	virtual void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) {}

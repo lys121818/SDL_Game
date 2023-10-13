@@ -9,22 +9,27 @@
 #include <iostream>
 #include <unordered_map>
 #include "Defines.h"
+#include "GameSetting.h"
 #include "CubeColider.h"
 #include "GameObject.h"
 #include "ImageObject.h"
 #include "AnimationComponent.h"
 #include "Textures.h"
 #include "CollisionReferee.h"
-class CollidableMovingObject;
 
 class GameDemo
 {
 private:
-	static constexpr size_t s_kMaxGameObjectCount = 10;
-	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ 400,300 };
-	static constexpr Vector2 s_kPlayerStartingSize = Vector2{ 100,150 };
-	static constexpr int s_kBackgroundWidth = 90;
-	static constexpr int s_kBackgroundHeight = 90;
+	// Max value of gameobject to be create
+	static constexpr size_t s_kMaxGameObjectCount = MAXGAMEOBJECT;
+
+	// Player Information on start
+	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ PLAYERPOSITION };
+	static constexpr Vector2 s_kPlayerStartingSize = Vector2{ PLAYERSIZEVECTOR2 };
+
+	// Background information on start
+	static constexpr int s_kBackgroundWidth = BACKGROUNDTILESIZE;
+	static constexpr int s_kBackgroundHeight = BACKGROUNDTILESIZE;
 
 	// Game Playing Timer
 	double m_CurrentTime;
@@ -38,7 +43,6 @@ private:
 	// Player Object
 	CubeColider* m_pPlayer;
 
-	CollidableMovingObject* m_pDemoObject;
 
 	// Class that handles Textures
 	Textures* m_pTexture;
@@ -46,6 +50,8 @@ private:
 	// Referee to manage active colliders.
 	CollisionReferee m_collisionReferee;
 	
+
+
 	// Texture representing the appearance of object
 	//std::vector<SDL_Texture*> m_vpTextures;
 	//std::unordered_map<const char*, SDL_Texture*> m_mpTextures;
@@ -75,7 +81,7 @@ private:
 	void DisplayOutput();
 
 	// Updates the state of the game simulation based on the passage of time and any events that were detected.
-	void UpdateGameState(double deltatime);
+	void UpdateGameState(double deltaTime);
 
 	// PROCESSING EVENT
 	// Every events using keyboards works here

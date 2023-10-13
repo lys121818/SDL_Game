@@ -14,7 +14,7 @@ public:
 	~AnimationObject();
 
 	// Inherited via GameObject
-	void Update(double deltatime) override;
+	void Update(double deltaTime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 	SDL_Rect GetTransform() override { return m_transform; }
 

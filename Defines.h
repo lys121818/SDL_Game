@@ -15,10 +15,15 @@
 #define STATIONARY1	"assets/Cat.jpg"
 #define STATIONARY2	"assets/Dice.png"
 
+// Image Sprite directory
+#define TILES		"assets/Tiles.png"			// 128 * 128
+#define OBJECTS		"assets/Objects.png"		// 64 * 64
+
 // Animation Sprite directory
-#define PUMPKIN			"assets/Pumpkin.png"
-#define ZOMBIEMALE		"assets/ZombieMale.png"
-#define ZOMBIEFEMALE	"assets/ZombieFemale.png"
+#define PUMPKIN			"assets/Pumpkin.png"		// 200 * 300
+#define ZOMBIEMALE		"assets/ZombieMale.png"		// 200 * 300
+#define ZOMBIEFEMALE	"assets/ZombieFemale.png"	// 200 * 300
+
 
 // Index of Collision Number
 #define COLLISIONINDEX	10

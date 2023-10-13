@@ -28,7 +28,11 @@ void Textures::PreloadTextures(size_t sceneNumber)
         AddImagesToTexture(STATIONARY1);
         AddImagesToTexture(STATIONARY2);
 
-        // SPRITES
+        // IMAGE SPRITES
+        AddImagesToTexture(TILES);      
+        AddImagesToTexture(OBJECTS);       
+
+        // ANIMATION SPRITES
         AddImagesToTexture(PUMPKIN);
         AddImagesToTexture(ZOMBIEMALE);
         AddImagesToTexture(ZOMBIEFEMALE);

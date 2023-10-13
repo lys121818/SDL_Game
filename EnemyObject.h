@@ -1,4 +1,5 @@
 #pragma once
+#include "GameSetting.h"
 #include "GameObject.h"
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
@@ -17,14 +18,15 @@ class EnemyObject : public GameObject
 		m_slide
 	} m_currentState;
 private:
-	static constexpr double s_kSetCounter = (double)1.0;
-
 	// Width
-	static constexpr int s_kWidth = 100;
+	static constexpr int s_kWidth = ENEMYWIDTH;
+
 	// Height
-	static constexpr int s_kHeight = 150;
+	static constexpr int s_kHeight = ENEMYHEIGHT;
+
 	// Speed
-	static constexpr int s_kSpeed = 500;
+	static constexpr int s_kSpeed = ENEMYSPEED;
+
 	// Name Of the Object
 	const char* m_pSpriteName;
 
@@ -38,7 +40,7 @@ private:
 	// Current direction movement. -1 for left, 1for right.
 	int m_directionX;
 
-	// The direction object is facing
+	// The direction object is facing true when it's facing right
 	bool m_isRight;
 
 
@@ -58,7 +60,7 @@ public:
 	EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int kspeed, Type type);
 	~EnemyObject();
 	// Inherited via GameObject
-	void Update(double deltatime) override;
+	void Update(double deltaTime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 	// GETTER
