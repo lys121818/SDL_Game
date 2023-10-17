@@ -187,14 +187,14 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Left
             case SDLK_a:
             {
-                m_pPlayer->MoveLeft();
+                m_pPlayer->TryMove(Vector2{ LEFT });
                 break;
             }
 
             // Move Right
             case SDLK_d:
             {
-                m_pPlayer->MoveRight();
+                m_pPlayer->TryMove(Vector2{ RIGHT });
                 break;
 
             }
@@ -202,7 +202,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Up
             case SDLK_w:
             {
-                m_pPlayer->MoveUp();
+                m_pPlayer->TryMove(Vector2{ UP });
                 break;
 
             }
@@ -210,7 +210,7 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Down
             case SDLK_s:
             {
-                m_pPlayer->MoveDown();
+                m_pPlayer->TryMove(Vector2{ DOWN });
                 break;
             }
 
@@ -246,14 +246,14 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Moving Left
             case SDLK_a:
             {
-                m_pPlayer->StopLeft();
+                m_pPlayer->TryMove(Vector2{ STOPLEFT });
                 break;
             }
 
             // Stop Moving Right
             case SDLK_d:
             {
-                m_pPlayer->StopRight();
+                m_pPlayer->TryMove(Vector2{ STOPRIGHT });
                 break;
 
             }
@@ -261,14 +261,14 @@ bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Moving Up
             case SDLK_w:
             {
-                m_pPlayer->StopUp();
+                m_pPlayer->TryMove(Vector2{ STOPUP });
                 break;
             }
 
             // Stop Moving Down
             case SDLK_s:
             {
-                m_pPlayer->StopDown();
+                m_pPlayer->TryMove(Vector2{ STOPDOWN });
                 break;
 
             }
@@ -459,7 +459,7 @@ void GameDemo::InitBackground()
     // read from the text file and apply to tiles
     // 
     // runs loop size of tiles needed for width
-    for (int y = 0; y < tilesX; ++y)
+    for (int y = 0; y < tilesY; ++y)
     {
         // runs loop size of tiles needed for height
         for (int x = 0; x < tilesX; ++x)
@@ -467,7 +467,10 @@ void GameDemo::InitBackground()
             // Add tiles to vector
             tilePosition.m_x = x * s_kBackgroundWidth;
             tilePosition.m_y = y * s_kBackgroundHeight;
-            m_vpBackgrounds.push_back(new ImageObject(tilePosition, s_kBackgroundWidth, s_kBackgroundHeight, TILES,3)); // tile index goes in here
+            if(y % (tilesY -1) == 0 || x % (tilesX - 1) == 0)
+                m_vpBackgrounds.push_back(new ImageObject(tilePosition,&m_collisionReferee, s_kBackgroundWidth, s_kBackgroundHeight, OBJECTS, 0, Type::m_Wall)); // tile index goes in here
+            else
+                m_vpBackgrounds.push_back(new ImageObject(tilePosition, &m_collisionReferee, s_kBackgroundWidth, s_kBackgroundHeight, TILES,3,Type::m_BackGround)); // tile index goes in here
         }
     }
     

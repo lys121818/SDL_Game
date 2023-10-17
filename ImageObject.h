@@ -2,8 +2,12 @@
 #include "GameObject.h"
 #include "Vector2.h"
 #include "ImageComponent.h"
+#include "ColliderComponent.h"
+#include "CollisionReferee.h"
 class ImageObject : public GameObject
 {
+	Status m_status;
+
 	// Name Of the Object
 	const char* m_pSpriteName;
 	// Transform of the object
@@ -15,8 +19,10 @@ class ImageObject : public GameObject
 	// Image Component
 	ImageComponent m_imageComponent;
 
+	ColliderComponent m_collider;
+
 public:
-	ImageObject(Vector2 position, int width, int height, const char* directory, const int index);
+	ImageObject(Vector2 position, CollisionReferee* pReferee, int width, int height, const char* directory, const int index, Type type);
 	~ImageObject();
 	// Inherited via GameObject
 	void Update(double deltaTime) override;
@@ -32,6 +38,8 @@ public:
 
 	// return current position of object
 	Vector2 GetPosition() { return m_position; }
+
+	virtual Status GetStatus() override { return m_status; }
 
 private:
 	void SetImage(const int index);

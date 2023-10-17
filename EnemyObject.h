@@ -4,10 +4,13 @@
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
 #include "Type.h"
+#include "Status.h"
+#include "MovingComponent.h"
 #include <iostream>
+
 class EnemyObject : public GameObject
 {
-
+private:
 	// Current Animation States
 	enum AnimationState
 	{
@@ -17,39 +20,34 @@ class EnemyObject : public GameObject
 		m_jump,
 		m_slide
 	} m_currentState;
+
+	Status m_status;
+
 private:
 	// Width
-	static constexpr int s_kWidth = ENEMYWIDTH;
+	static constexpr int s_kWidth = (int)ENEMYWIDTH;
 
 	// Height
-	static constexpr int s_kHeight = ENEMYHEIGHT;
+	static constexpr int s_kHeight = (int)ENEMYHEIGHT;
 
 	// Speed
-	static constexpr int s_kSpeed = ENEMYSPEED;
+	static constexpr int s_kSpeed = (int)ENEMYSPEED;
 
 	// Name Of the Object
 	const char* m_pSpriteName;
 
-	// Current Speed of the object
-	const int m_speed;
-
-	// Current position
-	Vector2 m_position;
-
 	// Default setting is 1(right)
 	// Current direction movement. -1 for left, 1for right.
 	int m_directionX;
-
-	// The direction object is facing true when it's facing right
-	bool m_isRight;
-
-
 
 	// AnimationComponent to play animation
 	AnimationComponent m_animation;
 
 	// Collider
 	ColliderComponent m_collider;
+
+	// Movement
+	MovingComponent m_movingComponent;
 
 	// SDL
 	// Transform of the object
@@ -73,6 +71,11 @@ public:
 
 	// On Collision action
 	virtual void OnCollision(ColliderComponent* pCollider);
+
+	virtual void TryMove(Vector2 deltaPosition) override;
+
+	virtual Status GetStatus() override { return m_status; }
+
 private:
 	// Play the right animation fallowing current state of gameobject
 	void AnimationState();
@@ -80,6 +83,5 @@ private:
 	void CheckCurrentState();
 
 	// Movement of the object
-	bool TryMove(Vector2 deltaPosition);
 };
 

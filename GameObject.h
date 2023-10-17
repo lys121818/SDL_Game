@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "Vector2.h"
+#include "Status.h"
 
 class ColliderComponent;
 class GameObject
@@ -22,6 +23,10 @@ public:
 
 	// Callbeck for when a collision occurs.
 	virtual void OnCollision(ColliderComponent* pCollider) {}
+
+	virtual void TryMove(Vector2 deltaDirection) {}
+
+	virtual Status GetStatus() = 0;
 
 	// Return transform of object
 	virtual SDL_Rect GetTransform() = 0;

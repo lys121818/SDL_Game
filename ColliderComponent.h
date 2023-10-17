@@ -11,7 +11,6 @@ class CollisionReferee;
 class ColliderComponent
 {
 private:
-	Type m_type;
 	// Pointer to GameObject that owns this collider.
 	GameObject* m_pOwner;
 
@@ -23,7 +22,7 @@ private:
 	// Pointer to referee for registering and collision checking.
 	CollisionReferee* m_pReferee;
 public:
-	ColliderComponent(GameObject* pOwner, SDL_Rect transform, CollisionReferee* pReferee, Type type);
+	ColliderComponent(GameObject* pOwner, SDL_Rect transform, CollisionReferee* pReferee);
 	~ColliderComponent();
 
 	// Return pointer to this collider's owner.
@@ -31,9 +30,6 @@ public:
 
 	// Return position and dimensions.
 	SDL_Rect GetTransform() { return m_transform; }
-
-	// Return Type of the collider
-	Type GetType() { return m_type; }
 
 	// Updates position.
 	void SetPosition(Vector2 newPosition);
@@ -45,7 +41,7 @@ public:
 	bool TryMove(Vector2 deltaPosition);
 
 	// Check for collision Check
-	bool CollisionCheck();
+	bool CollisionCheck(ColliderComponent* collider);
 
 	// Draw colliderbox for test purpose
 	void DrawColliderBox(SDL_Renderer* pRenderer);

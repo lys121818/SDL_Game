@@ -31,3 +31,13 @@
 // Window Size
 #define WINDOWWIDTH 800
 #define WINDOWHEIGHT 600
+
+// Vector2 direction
+#define RIGHT	1,0
+#define LEFT	-1,0
+#define DOWN	0,1
+#define UP		0,-1
+#define STOPRIGHT	LEFT
+#define STOPLEFT	RIGHT
+#define STOPDOWN	UP
+#define STOPUP		DOWN

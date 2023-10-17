@@ -2,12 +2,12 @@
 #include "ColliderComponent.h"
 #include "CollisionReferee.h"
 #include "Defines.h"
+#include "GameObject.h"
 
-ColliderComponent::ColliderComponent(GameObject* pOwner, SDL_Rect transform, CollisionReferee* pReferee, Type type)
+ColliderComponent::ColliderComponent(GameObject* pOwner, SDL_Rect transform, CollisionReferee* pReferee)
 	: m_pOwner(pOwner),
 	  m_transform(transform),
-	  m_pReferee(pReferee),
-	  m_type(type)
+	  m_pReferee(pReferee)
 {
 	if (pReferee != nullptr)
 	{
@@ -71,7 +71,8 @@ bool ColliderComponent::TryMove(Vector2 deltaPosition)
 	return !didCollide;
 }
 
-bool ColliderComponent::CollisionCheck()
+
+bool ColliderComponent::CollisionCheck(ColliderComponent* collider)
 {
 	bool onCollision = false;
 
@@ -80,7 +81,7 @@ bool ColliderComponent::CollisionCheck()
 	{
 		return onCollision;
 	}
-	onCollision = m_pReferee->CheckForCollisionAndNotify(this);
+	onCollision = m_pReferee->AABBCollisionCheck(this,collider);
 
 	return onCollision;
 }

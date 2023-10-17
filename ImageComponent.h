@@ -25,6 +25,7 @@ public:
 	void AddImageFrame(std::string name, int frameX, int frameY, int frameWidth, int frameHeight);
 	void SetImageFrame(std::string name);
 
+
 private:
 	void Destroy();
 

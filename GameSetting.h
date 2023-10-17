@@ -6,7 +6,7 @@
 #define MAXGAMEOBJECT 10	// Max range of gameobject to be create
 
 // PLAYER SETTINGS
-#define PLAYERPOSITION 400.0, 300.0	// Starting position of the player
+#define PLAYERPOSITION 600.0, 300.0	// Starting position of the player
 
 #define PLAYERSIZE		50.0		// Starting size of the player
 #define PLAYERWIDTH		PLAYERSIZE	// Starting size of the player width

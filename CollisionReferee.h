@@ -21,15 +21,11 @@ public:
 	// Unregister a collider.
 	void RemoveActiveCollider(ColliderComponent* pCollider);
 
-	// Finds all colliders that overlap and notify them of any collision.
-	// Returns whether or not a collision occurred.
-	bool CheckForCollisionAndNotify(ColliderComponent* pColliderToCheck);
-
 	//Check if the object collision with collider
 	bool CheckForColliderAndNotify(ColliderComponent* pColliderToCheck);
 
+	bool AABBCollisionCheck(ColliderComponent* colliderA, ColliderComponent* colliderB);
 private:
-	bool AABBCollisionCheck(SDL_Rect& colliderATransform, SDL_Rect& colliderBTransform);
 
 };
 

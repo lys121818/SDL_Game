@@ -6,7 +6,8 @@ enum Type
 	m_Enemy,
 	m_Wall,
 
-	m_DamageZone = COLLISIONINDEX,
+	m_BackGround = COLLISIONINDEX,
+	m_DamageZone,
 	m_HealingZone,
 	m_WinZone,
 };
