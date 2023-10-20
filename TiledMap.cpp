@@ -1,5 +1,6 @@
 #include "TiledMap.h"
 #include "ImageObject.h"
+#include "Type.h"
 
 TiledMap::TiledMap()
 {
@@ -43,7 +44,7 @@ void TiledMap::Delete()
 void TiledMap::TileSettings(CollisionReferee* pReferee)
 {
     // Set Background tiles
-    Vector2 tilePosition;
+    Vector2 tilePosition{0.0,0.0};
 
     // count of tiles needed in width
     int maxTilesX = (WINDOWWIDTH / s_kBackgroundWidth);
@@ -90,17 +91,17 @@ void TiledMap::TileSettings(CollisionReferee* pReferee)
                 {
                     // left corner
                     if(x == 0)
-                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 0, Type::m_Ground)); // tile index goes in here
+                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 0, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
                     // right corner
                     else if(x == maxTilesX - 1)
-                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 2, Type::m_Ground)); // tile index goes in here
+                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 2, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
 
                     // bottom
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, Type::m_Ground)); // tile index goes in here
+                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
 
                 }
                 else
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 8, Type::m_Wall)); // tile index goes in here
+                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 8, (size_t)Type::m_Wall, "Wall")); // tile index goes in here
 
 
             }
@@ -108,27 +109,27 @@ void TiledMap::TileSettings(CollisionReferee* pReferee)
             {
                 // left corner
                 if (x == 0)
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 0, Type::m_Ground)); // tile index goes in here
+                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 0, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
                 // right corner
                 else if (x == maxTilesX - 1)
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 2, Type::m_Ground)); // tile index goes in here
+                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 2, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
 
                 // bottom
-                m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, Type::m_Ground)); // tile index goes in here
+                m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
 
             }
             else if (y == 13 && (x >= 25))
             {
-                m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, Type::m_Ground)); // tile index goes in here
+                m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
 
             }
             else if (y == 5 && (x == 10 || x == 15))
             {
-                m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 8, Type::m_Wall)); // tile index goes in here
+                m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 8, (size_t)Type::m_Wall, "Wall")); // tile index goes in here
 
             }
             else
-                m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 3, Type::m_BackGround)); // tile index goes in here
+                m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 3, (size_t)Type::m_BackGround, "Sky")); // tile index goes in here
         }
     }
 

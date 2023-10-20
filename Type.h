@@ -1,10 +1,8 @@
 #pragma once
-#include "Defines.h"
+#include "GameSetting.h"
 
-// Index of Collision Number
-#define COLLISIONINDEX	10
 
-enum Type
+enum class Type
 {
 	m_Player,
 	m_Enemy,

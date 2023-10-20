@@ -1,8 +1,10 @@
 #include "ImageObject.h"
 #include "SDL_image.h"
 #include <iostream>
+#include "Type.h"
 
-ImageObject::ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int frame, Type type, const char* name)
+
+ImageObject::ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int frame, size_t type, const char* name)
 	: m_transform(transform),
 	  m_pSpriteName(directory),
 	  m_imageComponent(directory, &m_transform),
@@ -16,7 +18,7 @@ ImageObject::ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const c
 	m_status.m_position.m_y = m_transform.y;
 
 	// Remove collider if it's background
-	if(m_status.m_type == m_BackGround)
+	if(m_status.m_type == (size_t)Type::m_BackGround)
 		m_collider.SetCollider(false);
 
 
@@ -50,18 +52,18 @@ void ImageObject::SetImage(const int frame)
 		{
 			switch (frame)
 			{	
-					case 0:
-						m_imageComponent.SetImageFrame("Ground1");
-						break;
-					case 1:
-						m_imageComponent.SetImageFrame("Ground2");
-						break;
-					case 2:
-						m_imageComponent.SetImageFrame("Ground3");
-						break;
-					case 3:
-						m_imageComponent.SetImageFrame("Sky");
-						break;
+				case 0:
+					m_imageComponent.SetImageFrame("Ground1");
+					break;
+				case 1:
+					m_imageComponent.SetImageFrame("Ground2");
+					break;
+				case 2:
+					m_imageComponent.SetImageFrame("Ground3");
+					break;
+				case 3:
+					m_imageComponent.SetImageFrame("Sky");
+					break;
 
 			default:
 				break;
@@ -108,6 +110,8 @@ void ImageObject::SetImage(const int frame)
 					m_imageComponent.SetImageFrame("Rock");
 					break;
 
+				default:
+					break;
 			}
 		}
 	}
