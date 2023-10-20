@@ -3,17 +3,23 @@
 #include "Vector2.h"
 #include <SDL.h>
 
+//==================================================================================================//
+/// MOVING COMPONENT
+/// This is the Component for GameObject to change the transform on moving
+//==================================================================================================//
+
+
 class MovingComponent
 {
 private:
+	// The collider of the Game Object
 	ColliderComponent* m_objectCollider;
 
+	// Transform of Game Object
 	SDL_Rect* m_transform;
 
+	// Position to check if the move is valid
 	Vector2 m_position;
-	Vector2 m_direction;
-	bool m_isRight;
-	double m_speed;
 
 
 public:

@@ -2,41 +2,23 @@
 #include "SDL_image.h"
 #include <iostream>
 
-ImageObject::ImageObject(Vector2 position, CollisionReferee* pReferee,  int width, int height, const char* directory, const int frame, Type type)
-	: m_position(position),
+ImageObject::ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int frame, Type type, const char* name)
+	: m_transform(transform),
 	  m_pSpriteName(directory),
 	  m_imageComponent(directory, &m_transform),
 	  m_collider(this,m_transform,pReferee)
 {
-	// TODO:
-	// get position from status
-	// Check if collision refferee has same amount of active collider
-	
-	// Generate m_transform from image
-	m_transform.x = (int)m_position.m_x;
-	m_transform.y = (int)m_position.m_y;
-	m_transform.w = width;
-	m_transform.h = height;
+	m_status.m_type = type;
+	m_status.m_name = name;
 
-	//DEFAULT SETTING
-	if (directory == TILES)
-	{
-		m_imageComponent.AddImageFrame("Ground1", 0, 0, 128, 128);
-		m_imageComponent.AddImageFrame("Ground2", 1, 0, 128, 128);
-		m_imageComponent.AddImageFrame("Ground3", 2, 0, 128, 128);
+	// Position of the image
+	m_status.m_position.m_x = m_transform.x;
+	m_status.m_position.m_y = m_transform.y;
 
-		m_imageComponent.AddImageFrame("Sky", 5, 2, 128, 128);
-		m_status.m_type == Type::m_BackGround;
-		
-	}
-	else if (directory == OBJECTS)
-	{
-		m_imageComponent.AddImageFrame("Box", 0, 2, 64, 64);
-		m_status.m_type == Type::m_Wall;
-	}
+	// Remove collider if it's background
+	if(m_status.m_type == m_BackGround)
+		m_collider.SetCollider(false);
 
-	// Status
-	//m_status.m_type = Type::m_Wall;
 
 	SetImage(frame);
 }
@@ -52,7 +34,6 @@ void ImageObject::Update(double deltaTime)
 void ImageObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
 	m_imageComponent.Render(pRenderer, pTexture);
-	//SDL_RenderCopy(pRenderer, pTexture, nullptr, &m_transform);
 }
 
 void ImageObject::SetImage(const int frame)
@@ -91,7 +72,42 @@ void ImageObject::SetImage(const int frame)
 			switch (frame)
 			{
 				case 0:
+					m_imageComponent.SetImageFrame("SmallBush1");
+					break;
+				case 1:
+					m_imageComponent.SetImageFrame("SmallBush2");
+					break;
+				case 2:
+					m_imageComponent.SetImageFrame("BigBush1");
+					break;
+				case 3:
+					m_imageComponent.SetImageFrame("BigBush2");
+					break;
+				case 4:
+					m_imageComponent.SetImageFrame("Tree1");
+					break;
+				case 5:
+					m_imageComponent.SetImageFrame("Tree2");
+					break;
+				case 6:
+					m_imageComponent.SetImageFrame("Mushroom1");
+					break;
+				case 7:
+					m_imageComponent.SetImageFrame("Mushroom2");
+					break;
+				case 8:
 					m_imageComponent.SetImageFrame("Box");
+					break;
+				case 9:
+					m_imageComponent.SetImageFrame("Sign1");
+					break;
+				case 10:
+					m_imageComponent.SetImageFrame("Sign2");
+					break;
+				case 11:
+					m_imageComponent.SetImageFrame("Rock");
+					break;
+
 			}
 		}
 	}

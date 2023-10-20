@@ -22,7 +22,7 @@ class ImageObject : public GameObject
 	ColliderComponent m_collider;
 
 public:
-	ImageObject(Vector2 position, CollisionReferee* pReferee, int width, int height, const char* directory, const int index, Type type);
+	ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int index, Type type, const char* name = "UnNamed");
 	~ImageObject();
 	// Inherited via GameObject
 	void Update(double deltaTime) override;

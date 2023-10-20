@@ -45,12 +45,6 @@
     <ClCompile Include="ImageObject.cpp">
       <Filter>Source Files\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationObject.cpp">
-      <Filter>Source Files\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyObject.cpp">
       <Filter>Source Files\GameObject</Filter>
     </ClCompile>
@@ -72,6 +66,9 @@
     <ClCompile Include="MovingComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="TiledMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameDemo.h">
@@ -84,12 +81,6 @@
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ImageObject.h">
-      <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationObject.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="EnemyObject.h">
@@ -127,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="MovingComponent.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TiledMap.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

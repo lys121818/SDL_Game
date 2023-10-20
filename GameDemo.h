@@ -16,6 +16,7 @@
 #include "AnimationComponent.h"
 #include "Textures.h"
 #include "CollisionReferee.h"
+#include "TiledMap.h"
 
 class GameDemo
 {
@@ -27,9 +28,7 @@ private:
 	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ PLAYERPOSITION };
 	static constexpr Vector2 s_kPlayerStartingSize = Vector2{ PLAYERSIZEVECTOR2 };
 
-	// Background information on start
-	static constexpr int s_kBackgroundWidth = BACKGROUNDTILESIZE;
-	static constexpr int s_kBackgroundHeight = BACKGROUNDTILESIZE;
+
 
 	// Game Playing Timer
 	double m_CurrentTime;
@@ -43,6 +42,8 @@ private:
 	// Player Object
 	CubeColider* m_pPlayer;
 
+	// Tile Map
+	TiledMap* m_pTiledMap;
 
 	// Class that handles Textures
 	Textures* m_pTexture;
@@ -57,8 +58,6 @@ private:
 	//std::unordered_map<const char*, SDL_Texture*> m_mpTextures;
 	// Vector of gameObjects
 	std::vector<GameObject*> m_vpGameObjects;	//Vector contains pointer of gameobjects
-	// Vector for background tiles
-	std::vector<GameObject*> m_vpBackgrounds;
 	
 	std::unordered_map<const char*, AnimationComponent*> m_mpAnimations;
 
@@ -97,9 +96,6 @@ private:
 
 	// Init Game settings
 	void InitGame();
-
-	// Set background
-	void InitBackground();
 
 	// Load all the images texture before runs
 	void DestoryGameObjects(std::vector<GameObject*> vector);

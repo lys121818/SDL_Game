@@ -25,6 +25,7 @@ public:
 	bool CheckForColliderAndNotify(ColliderComponent* pColliderToCheck);
 
 	bool AABBCollisionCheck(ColliderComponent* colliderA, ColliderComponent* colliderB);
+
 private:
 
 };

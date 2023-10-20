@@ -6,8 +6,6 @@
 #include <cassert>
 #include "SDL_image.h" 
 #include "GameDemo.h"
-#include "Bullet.h"
-#include "AnimationObject.h"
 #include "EnemyObject.h"
 ////////////
 // PUBLIC //
@@ -65,11 +63,13 @@ void GameDemo::Destroy()
 
     // Delete the vectors I've created
     {
-        DestoryGameObjects(m_vpBackgrounds);
+        m_pTiledMap->Delete();
         DestoryGameObjects(m_vpGameObjects);
     }
+
     // Destory texture when game ends.
     delete m_pTexture;
+    delete m_pTiledMap;
 
     SDL_Quit();
 }
@@ -115,15 +115,10 @@ bool GameDemo::ProcessEvents()
 
 void GameDemo::UpdateGameState(double deltaTime)
 {
-    // currently dont have anything updating in background
-    //for (auto& element : m_vpBackgrounds)
-    //    element->Update(deltatime);
-
     // Update GameObjects
     for (auto& element : m_vpGameObjects)
     {
         element->Update(deltaTime);
-        //element->GetTransform();
     }
 
 }
@@ -134,21 +129,10 @@ void GameDemo::DisplayOutput()
 
     // Clear the screen.
     // Execute the clear.
+    SDL_SetRenderDrawColor(m_pRenderer, BLACK);
     SDL_RenderClear(m_pRenderer);
 
-    //Render Background
-    for (auto& element : m_vpBackgrounds)
-    {
-        // Only render inside the window size (on visible)
-        if (element->GetTransform().x >= (0- element->GetTransform().w) && 
-            element->GetTransform().x < WINDOWWIDTH  - 10&&   // Window width
-            element->GetTransform().y >= (0 - element->GetTransform().h) && 
-            element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
-        {
-            element->Render(m_pRenderer, m_pTexture->GetTexture( element->GetTextureName() ) );
-        }
-    }
-
+    m_pTiledMap->Render(m_pRenderer, m_pTexture);
 
     //Render GameObjects
     for (auto& element : m_vpGameObjects)
@@ -387,6 +371,7 @@ int GameDemo::CreateWindow()
 
 void GameDemo::InitGame()
 {
+
     // Temperary gameobject
     GameObject* stationary;
     // Set GameTime to 0sec
@@ -398,9 +383,9 @@ void GameDemo::InitGame()
     // Load images that are being use in the game.
     m_pTexture->PreloadTextures(1);
 
-    /// BACKGROUND
-    // Add Background to vector m_vpGameObjects
-    InitBackground();
+    /// TILEMAP
+    m_pTiledMap = new TiledMap();
+    m_pTiledMap->Init(&m_collisionReferee);
 
     /// GAMEOBJECT
     // Set Player Object
@@ -411,70 +396,44 @@ void GameDemo::InitGame()
         (int)s_kPlayerStartingSize.m_x,      // Width of collider box
         (int)s_kPlayerStartingSize.m_y       // Height of collider box
     };
-    m_pPlayer = new CubeColider(playerTransform,&m_collisionReferee, PUMPKIN,m_pRenderer,Type::m_Player);
+    m_pPlayer = new CubeColider(playerTransform,&m_collisionReferee, m_pRenderer,Type::m_Player);
     AddGameObject(m_pPlayer);
 
     // Add GameObjects to m_vpGameObjects
-    SDL_Rect enemyTransform;
-    enemyTransform.w = (int)ENEMYWIDTH;
-    enemyTransform.h = (int)ENEMYHEIGHT;
+    SDL_Rect objectTransform;
+    objectTransform.w = (int)ENEMYWIDTH;
+    objectTransform.h = (int)ENEMYHEIGHT;
 
     // Setting starting position of the enemy
-    enemyTransform.x = 500; // X
-    enemyTransform.y = 400; // Y
-    stationary = new EnemyObject(enemyTransform, &m_collisionReferee, ZOMBIEMALE,0, Type::m_Enemy);
-    AddGameObject(stationary);
-
-    enemyTransform.x = 500;
-    enemyTransform.y = 100;
-    stationary = new EnemyObject(enemyTransform, &m_collisionReferee, ZOMBIEMALE,0, Type::m_DamageZone);
-    AddGameObject(stationary);
-
-    enemyTransform.x = 100;
-    enemyTransform.y = 400;
-    stationary = new EnemyObject(enemyTransform, &m_collisionReferee, ZOMBIEFEMALE, 0, Type::m_HealingZone);
+    objectTransform.x = 100;
+    objectTransform.y = 50;
+    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEFEMALE, 0, Type::m_Enemy, "Zombie_Female");
     AddGameObject(stationary); 
 
-    enemyTransform.x = 100;
-    enemyTransform.y = 100;
-    stationary = new EnemyObject(enemyTransform, &m_collisionReferee, ZOMBIEFEMALE, 0, Type::m_Wall);
+    objectTransform.x = 650; // X
+    objectTransform.y = 50; // Y
+    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE,0, Type::m_Enemy,"Zombie_Male");
     AddGameObject(stationary);
 
-}
+    // Stationary
+    objectTransform.w = 30;
+    objectTransform.h = 30;
 
-// Setting the tiles background
-void GameDemo::InitBackground()
-{
-    // Set Background tiles
-    Vector2 tilePosition;
-    // count of tiles needed in width
-    int tilesX = (WINDOWWIDTH / s_kBackgroundWidth);
-    if (WINDOWWIDTH % s_kBackgroundWidth != 0)
-        ++tilesX;   // add extra if it's short
-    // count of tiles needed in height
-    int tilesY = (WINDOWHEIGHT / s_kBackgroundHeight);
-    if (WINDOWHEIGHT % s_kBackgroundHeight != 0)
-        ++tilesY;   // add extra if it's short
-    // TODO
-    // read from the text file and apply to tiles
-    // 
-    // runs loop size of tiles needed for width
-    for (int y = 0; y < tilesY; ++y)
-    {
-        // runs loop size of tiles needed for height
-        for (int x = 0; x < tilesX; ++x)
-        {
-            // Add tiles to vector
-            tilePosition.m_x = x * s_kBackgroundWidth;
-            tilePosition.m_y = y * s_kBackgroundHeight;
-            if(y % (tilesY -1) == 0 || x % (tilesX - 1) == 0)
-                m_vpBackgrounds.push_back(new ImageObject(tilePosition,&m_collisionReferee, s_kBackgroundWidth, s_kBackgroundHeight, OBJECTS, 0, Type::m_Wall)); // tile index goes in here
-            else
-                m_vpBackgrounds.push_back(new ImageObject(tilePosition, &m_collisionReferee, s_kBackgroundWidth, s_kBackgroundHeight, TILES,3,Type::m_BackGround)); // tile index goes in here
-        }
-    }
-    
+    objectTransform.x = 500;
+    objectTransform.y = 540;
+    stationary = new ImageObject(objectTransform, &m_collisionReferee, OBJECTS, 6, m_DamageZone, "Damage Zone");
+    AddGameObject(stationary);
 
+
+    objectTransform.x = 100;
+    objectTransform.y = 540;
+    stationary = new ImageObject(objectTransform, &m_collisionReferee, OBJECTS, 7, m_HealingZone, "Healing Zone");
+    AddGameObject(stationary);
+
+    objectTransform.x = 750;
+    objectTransform.y = 360;
+    stationary = new ImageObject(objectTransform, &m_collisionReferee, OBJECTS, 9, m_WinZone, "Win Zone");
+    AddGameObject(stationary);
 }
 
 // Destory the elements in vector of GameObject

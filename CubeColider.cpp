@@ -3,47 +3,50 @@
 #include "Vector2.h"
 #include <assert.h>
 
-CubeColider::CubeColider(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, SDL_Renderer* pRenderer, Type type)
-	:m_transform(transform),
+CubeColider::CubeColider(SDL_Rect transform, CollisionReferee* pReferee, SDL_Renderer* pRenderer, Type type, const char* directory)
+	:
+	 m_transform(transform),
+	 m_isGame(false),
 	 m_animation(directory, 6, 200, 300, &m_transform),
 	 m_collider(this, transform, pReferee),
 	 m_pSpriteName(directory),
 	 m_isImmune(false),
-	 m_isGame(false),
+	 m_immuneTime(s_kMaxImmuneTime),
+	 m_direction(Vector2{0.0, 0.0}),
 	 m_otherCollider(nullptr),
 	 m_movingComponent(&m_transform,Vector2{PLAYERPOSITION}, &m_collider)
 {
-	
-	// Player Starting Settings
-	m_direction = Vector2 {0.0, 0.0};
+	/// STATUS
+	m_status.m_name = "Player";
+	m_status.m_type = type;
+	m_status.m_position.m_x = transform.x;
+	m_status.m_position.m_y = transform.y;
+	m_status.m_health = s_KMaxHealth;	// Player Speed
+	m_status.m_speed = s_kSpeed;		// Player Health
+	m_status.m_isGrounded = false;
+	m_status.m_isOnCollision = false;
+	m_status.m_isRight = false;
 
-	m_immuneTime = s_kMaxImmuneTime;// player Immune time with an event
+	/// TRANSFORM
+	// Position
+	m_transform.x = (int)m_status.m_position.m_x;
+	m_transform.y = (int)m_status.m_position.m_y;
 
-	// Set starting position of object moving component
+	// Size
+	m_transform.w = s_kWidth;
+	m_transform.h = s_kHeight;
 
-	// Set animation sequence before game start.
+	/// ANIMATION
+	// Animation sequence
 	m_animation.AddAnimationSequence("idle", 0, 9);
 	m_animation.AddAnimationSequence("walk", 10, 19);
 	m_animation.AddAnimationSequence("run", 20, 27);
 	m_animation.AddAnimationSequence("jump", 30, 39);
 	m_animation.AddAnimationSequence("slide", 40, 49);
-	
-	// initialize starting transform information for player
-	m_transform.x = transform.x;
-	m_transform.y = transform.y;
-	m_transform.w = s_kWidth;
-	m_transform.h = s_kHeight;
 
-	// defualt animation will be idle
+	// Animation Default setting
 	m_currentState = m_idle;
 	
-	//Starting Status
-	m_status.m_name = "Player";
-	m_status.m_type = type;
-	m_status.m_health = s_KMaxHealth;	// Player Speed
-	m_status.m_speed = s_kSpeed;		// Player Health
-	m_status.m_isOnCollision = false;
-	m_status.m_isRight = false;
 
 }
 
@@ -51,23 +54,31 @@ CubeColider::~CubeColider()
 {
 }
 
+/*-----------
+//  PUBLIC  //
+-----------*/
+
 void CubeColider::Update(double deltaTime)
 {
+	// All the Updates of Game Event
 	UpdateGameEvent(deltaTime);
+
+	// All the Update of Animation Event
 	UpdateAnimationEvent(deltaTime);
 
 }
 
 void CubeColider::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
-	m_collider.DrawColliderBox(pRenderer);
 	m_animation.Render(pRenderer, pTexture, m_status.m_isRight);
 }
+
 // Play the right animation fallowing current state of gameobject
 void CubeColider::AnimationState()
 {
 	// Check current state before play the animation
 	CheckCurrentState();
+
 	// Play animation according to m_crrentState
 	switch ((int)m_currentState)
 	{
@@ -109,7 +120,7 @@ void CubeColider::AnimationState()
 // Check current state before play animation.
 void CubeColider::CheckCurrentState()
 {
-	// change direction of player is facing 
+	// change direction of player is facing
 	if (m_direction.m_x > 0)
 	{
 		m_status.m_isRight = true;
@@ -126,6 +137,7 @@ void CubeColider::CheckCurrentState()
 	}
 	else if (m_direction.m_y < 0)
 	{
+		m_status.m_isGrounded = false;
 		m_currentState = m_jump;
 	}
 	else if (m_direction.m_x != 0)	// if player is moving x direction
@@ -143,20 +155,16 @@ void CubeColider::CheckCurrentState()
 	else
 		m_currentState = m_idle;
 
-	if (m_currentState == m_slide)
-	{
-		//m_collider.SetPosition(Vector2{ m_position.m_x,m_position.m_y + s_kHeight / 2.1 });
-		//m_collider.SetSize(Vector2{ s_kWidth,s_kHeight / 2.1 });
-	}
-	else
-	{
-		//m_collider.SetPosition(Vector2{ m_position.m_x,m_position.m_y});
-		//m_collider.SetSize(Vector2{ s_kWidth,s_kHeight});
-	}
-
 }
 
+// Gravity mechanics
+void CubeColider::Gravity(double deltaTime)
+{
 
+	m_movingComponent.TryMove(deltaTime, GRAVITYPOWER, Vector2{ 0,1 });
+}
+
+// On Collision Event
 void CubeColider::OnCollision(ColliderComponent* pCollider)
 {
 	// Get status of colliding object
@@ -165,64 +173,67 @@ void CubeColider::OnCollision(ColliderComponent* pCollider)
 	// if it's collision
 	if (targetStaus.m_type >= COLLISIONINDEX)
 	{
+		// Set current triggered object
 		m_otherCollider = pCollider;
-
 
 		// collision enter
 		if (!m_status.m_isOnCollision)
 		{
 			m_status.m_isOnCollision = true;
-			std::cout << "Collision Enter Type number: " << targetStaus.m_type << std::endl;
-
+			CollisionEnter();
 		}
 		// collision update
 		else if (m_status.m_isOnCollision)
 		{
 			//std::cout << "Collision Update" << std::endl;
 			// Collision Event Happens
-			CollisionEvent(pCollider);
+			CollisionEvent();
 		}
 
 	}
 	// if it's collider
 	else
 	{
-		if (targetStaus.m_type == Type::m_Enemy)
-		{
-			ColliderEvent(pCollider);
-		}
+		ColliderEvent(pCollider);
 	}
 
  }
+
+/*-----------
+// PRIVATE //
+-----------*/
 
 ///////////////////////
 // GAME UPDATE EVENT //////////////////////////////////
 // All the update function for game events runs here //
 void CubeColider::UpdateGameEvent(double deltaTime)
 {
-	// Move deltaPosition
-	
-	// Check if object is moving and move when it's able to move
-	
-	// chekc for Horizontal
+	// Moving System
+	// check for Horizontal
 	if (m_direction.m_x != 0)
 		m_movingComponent.TryMove(deltaTime, m_status.m_speed, Vector2{ m_direction.m_x,0 });
-	// chekc for Vertical
+
+	// check for Vertical
 	if(m_direction.m_y != 0)
 		m_movingComponent.TryMove(deltaTime, m_status.m_speed, Vector2{ 0,m_direction.m_y });
+	
+	// Gravity System
+	if (!m_status.m_isGrounded)
+		Gravity(deltaTime);
 
-	// decrease time
+	// Immune System
 	if (m_isImmune)
 		ImmuneTime(deltaTime);
 
-	// If the object is on collision to something check and play the event
+	// On Collision System
 	if (m_otherCollider != nullptr)
 	{
-		//std::cout << "not Empty " << deltaTime << std::endl;
 		CheckForCollision();
 	}
+
 }
 
+// Move to the direction
 void CubeColider::TryMove(Vector2 deltaDirection)
 {
 	m_direction.m_x += deltaDirection.m_x;
@@ -244,12 +255,16 @@ void CubeColider::ImmuneTime(double deltaTime)
 
 void CubeColider::GetDamaged(int amount)
 {
+	// decrease the health by amount of damage its given
 	m_status.m_health -= amount;
+
+	// Game Over
 	if (m_status.m_health <= 0)
 	{
 		std::cout << "You died \n";
 		m_isGame = true;
 	}
+	// Over Healed
 	else if (m_status.m_health > s_KMaxHealth)
 	{
 		std::cout << "Your Health is already Full \n";
@@ -258,39 +273,95 @@ void CubeColider::GetDamaged(int amount)
 }
 
 
-////////////////////////////
-// ANIMATION UPDATE EVENT //////////////////////////////////
-// All the update function for Animation events runs here //
-void CubeColider::UpdateAnimationEvent(double deltaTime)
-{
-	m_animation.Update(deltaTime);
-	AnimationState();
-}
-
-
 /////////////////////////////
 // OBJECT COLLISION EVENTS //
 void CubeColider::CheckForCollision()
 {
+	// Check if it's on collision with targeted object
 	if(m_otherCollider != nullptr)
 		m_status.m_isOnCollision = m_collider.CollisionCheck(m_otherCollider);
 
-	// Event when collision Exit
+	// Collision Exit Event
 	if (!m_status.m_isOnCollision)
 	{
 		m_otherCollider = nullptr;
 		std::cout << "Collision Exit" << std::endl;
 	}
+	// Collision Update
 	else
-		OnCollision(m_otherCollider);
+	{
+		CollisionEvent();
+	}
 }
 
-void CubeColider::CollisionEvent(ColliderComponent* pCollider)
+void CubeColider::ColliderEvent(ColliderComponent* pCollider)
 {
-	// Get status of colliding object
 	Status targetStaus = pCollider->GetOwner()->GetStatus();
 
+	// Only Collidable Object
+	assert(targetStaus.m_type < COLLISIONINDEX);
+
+	// Colliding Event
+	switch (targetStaus.m_type)
+	{
+		case m_Enemy:
+		{
+			if (!m_isImmune)
+			{
+				GetDamaged(10);
+				m_isImmune = true;
+				std::cout << "Health: " << m_status.m_health << std::endl;
+			}
+			break;
+		}
+		case m_Ground:
+		{
+			if (!m_status.m_isGrounded)
+			{
+				std::cout << "Ground! " << std::endl;
+				m_status.m_isGrounded = true;
+			}
+			break;
+		}
+	
+		default:
+		{
+
+			break;
+		}
+	}
+}
+
+void CubeColider::CollisionEnter()
+{
+	Status triggerStatus = m_otherCollider->GetOwner()->GetStatus();
+	std::cout << "Entered the Collision Triger with: " << triggerStatus.m_name << std::endl;
+
+	// On Enter Trigger Event
+	switch (triggerStatus.m_type)
+	{
+		case m_WinZone:
+		{
+			std::cout << "You Have Entered the Win Zone!" << std::endl;
+			break;
+		}
+
+		default:
+		{
+			break;
+		}
+	}
+}
+
+void CubeColider::CollisionEvent()
+{
+	// Get status of colliding object
+	Status targetStaus = m_otherCollider->GetOwner()->GetStatus();
+
+	// Not collidable Collision Object
 	assert(targetStaus.m_type >= COLLISIONINDEX);
+
+	// Trigger Event
 	switch (targetStaus.m_type)
 	{
 		case m_DamageZone:
@@ -326,28 +397,18 @@ void CubeColider::CollisionEvent(ColliderComponent* pCollider)
 	}
 }
 
-void CubeColider::ColliderEvent(ColliderComponent* pCollider)
+void CubeColider::CollisionExit()
 {
-	Status targetStaus = pCollider->GetOwner()->GetStatus();
 
-	assert(targetStaus.m_type < COLLISIONINDEX);
-	switch (targetStaus.m_type)
-	{
-		case m_Enemy:
-		{
-			if (!m_isImmune)
-			{
-				GetDamaged(10);
-				m_isImmune = true;
-				std::cout << "Health: " << m_status.m_health << std::endl;
-			}
-			break;
-		}
-	
-		default:
-			break;
-
-	}
 }
 
 
+////////////////////////////
+// ANIMATION UPDATE EVENT //////////////////////////////////
+// All the update function for Animation events runs here //
+void CubeColider::UpdateAnimationEvent(double deltaTime)
+{
+	m_animation.Update(deltaTime);
+
+	AnimationState();
+}

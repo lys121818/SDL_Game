@@ -3,14 +3,21 @@
 #include "Vector2.h"
 #include "Type.h"
 
+
+//==================================================================================================//
+/// COLLIDER COMPONENT
+/// This is the Component for GameObject to have collider box of its own.
+//==================================================================================================//
+
+/// FORWARD DECLARE
 class GameObject;
 class CollisionReferee;
-////////////////////////////////////////////////////////////////////////////
-// An anti-aligened bounding box (AABB) collider.
-////////////////////////////////////////////////////////////////////////////
+
 class ColliderComponent
 {
+
 private:
+
 	// Pointer to GameObject that owns this collider.
 	GameObject* m_pOwner;
 
@@ -21,8 +28,13 @@ private:
 
 	// Pointer to referee for registering and collision checking.
 	CollisionReferee* m_pReferee;
+
 public:
-	ColliderComponent(GameObject* pOwner, SDL_Rect transform, CollisionReferee* pReferee);
+	ColliderComponent(
+		GameObject* pOwner,
+		SDL_Rect transform,				// GameObject Transform
+		CollisionReferee* pReferee
+	);
 	~ColliderComponent();
 
 	// Return pointer to this collider's owner.
@@ -36,6 +48,7 @@ public:
 
 	// Updates size
 	void SetSize(Vector2 newSize);
+
 	// Attempts to move by the given amount.
 	// Return whether the collision was successful.
 	bool TryMove(Vector2 deltaPosition);
@@ -45,5 +58,8 @@ public:
 
 	// Draw colliderbox for test purpose
 	void DrawColliderBox(SDL_Renderer* pRenderer);
+
+	// Set Collision box active or disactive
+	void SetCollider(bool isActive);
 };
 
