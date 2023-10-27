@@ -27,7 +27,7 @@ private:
 	const double m_kFrameRate;	
 
 	// Frames in a single row
-	int m_numSpriteSheetColums;	
+	int m_numSpriteSheetColums;
 
 	// Object's location on screen
 	SDL_Rect* m_transform;		

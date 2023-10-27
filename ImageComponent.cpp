@@ -17,9 +17,6 @@ ImageComponent::~ImageComponent()
 	Destroy();
 }
 
-void ImageComponent::Update(double deltaTime)
-{
-}
 
 void ImageComponent::Render(SDL_Renderer* pRenderer, SDL_Texture* ptexture)
 {
@@ -74,7 +71,11 @@ void ImageComponent::SetImageFrame(std::string name)
 //
 void ImageComponent::ImageSpriteSettings()
 {
-	if (m_pSpriteName == TILES)
+	if (strcmp(m_pSpriteName, BACKGROUND) == 0)
+	{
+		AddImageFrame("BackGround",0,0,1000,750);
+	}
+	else if (strcmp(m_pSpriteName, TILES) == 0)
 	{
 
 		AddImageFrame("Ground1", 0, 0, 128, 128);
@@ -99,7 +100,7 @@ void ImageComponent::ImageSpriteSettings()
 
 		AddImageFrame("Sky", 5, 2, 128, 128);
 	}
-	else if (m_pSpriteName == OBJECTS)
+	else if (strcmp(m_pSpriteName, OBJECTS) == 0)
 	{
 		AddImageFrame("SmallBush1", 0, 0, 64, 64);
 		AddImageFrame("SmallBush2", 1, 0, 64, 64);

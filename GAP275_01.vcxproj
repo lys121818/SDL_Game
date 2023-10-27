@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -127,7 +127,7 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -190,7 +190,10 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="ImageComponent.cpp" />
     <ClCompile Include="ImageObject.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MovingComponent.cpp" />
+    <ClCompile Include="Platformer.cpp" />
+    <ClCompile Include="Stage01.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TiledMap.cpp" />
   </ItemGroup>
@@ -204,9 +207,14 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="GameDemo.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameSetting.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameStateMachine.h" />
     <ClInclude Include="ImageComponent.h" />
     <ClInclude Include="ImageObject.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MovingComponent.h" />
+    <ClInclude Include="Platformer.h" />
+    <ClInclude Include="Stage01.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TiledMap.h" />

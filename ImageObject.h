@@ -13,9 +13,6 @@ class ImageObject : public GameObject
 	// Transform of the object
 	SDL_Rect m_transform;
 
-	// Position
-	Vector2 m_position;
-
 	// Image Component
 	ImageComponent m_imageComponent;
 
@@ -25,7 +22,6 @@ public:
 	ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name = "UnNamed");
 	~ImageObject();
 	// Inherited via GameObject
-	void Update(double deltaTime) override;
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 	// GETTER
@@ -35,9 +31,6 @@ public:
 
 	// Return Name of the object
 	virtual const char* GetName() { return "UnNamed"; }
-
-	// return current position of object
-	Vector2 GetPosition() { return m_position; }
 
 	virtual Status GetStatus() override { return m_status; }
 

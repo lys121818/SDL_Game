@@ -10,7 +10,8 @@
 
 /// IMAGE LOCATIONS
 // Single Image
-#define BACKGROUND	"assets/Space.png"
+#define BACKGROUND	"assets/BackGround.png"	// 1000 * 750
+
 #define PLAYER		"assets/Pig.bmp"
 #define BULLET		"assets/Globe.gif"
 #define STATIONARY1	"assets/Cat.jpg"
@@ -25,6 +26,8 @@
 #define ZOMBIEMALE		"assets/ZombieMale.png"		// 200 * 300
 #define ZOMBIEFEMALE	"assets/ZombieFemale.png"	// 200 * 300
 
+// Txt file for Tiled Map
+#define TILEMAP		"assets/TiledMap.txt"
 
 /// WINDOW SETTINGS
 // Window Size

@@ -13,113 +13,164 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\GameObject">
+    <Filter Include="Header Files\SDL_Game">
+      <UniqueIdentifier>{5ebaa42c-c740-4b5f-b0a7-3b0b9ea5ac98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SDL_Game\GameObject">
       <UniqueIdentifier>{ba43f995-8638-4fc7-bb73-45c1f2214ebe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GameObject">
-      <UniqueIdentifier>{d0c9273b-b806-4fdd-a421-7faad08ae7e1}</UniqueIdentifier>
+    <Filter Include="Header Files\SDL_Game\Defines">
+      <UniqueIdentifier>{56a2375f-57c4-4f9e-9b1c-243ae1842158}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Components">
+    <Filter Include="Header Files\SDL_Game\Components">
       <UniqueIdentifier>{842e487d-7b2d-49ef-b185-28b24a8981aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Components">
-      <UniqueIdentifier>{db514d7d-de73-4894-b231-0ed3a9ddf5e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Struct">
+    <Filter Include="Header Files\SDL_Game\GameObject\Struct">
       <UniqueIdentifier>{4dd69b5c-51b6-4981-bd02-35fb17954d3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Defines">
-      <UniqueIdentifier>{56a2375f-57c4-4f9e-9b1c-243ae1842158}</UniqueIdentifier>
+    <Filter Include="Header Files\SDL_Game\Virtual">
+      <UniqueIdentifier>{3b5ccf4f-1fd2-4be7-9eae-cf7006f3fe33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SDL_Game\States">
+      <UniqueIdentifier>{7798e878-cf8d-4184-a221-b00606e4a983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SDL_Game\States\Game_Platformer">
+      <UniqueIdentifier>{8a2b3e85-b3ca-405e-985b-5c85e88c450b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game">
+      <UniqueIdentifier>{53ce87d5-1cd1-4930-80cd-42117590496b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game\Components">
+      <UniqueIdentifier>{db514d7d-de73-4894-b231-0ed3a9ddf5e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game\GameObject">
+      <UniqueIdentifier>{d0c9273b-b806-4fdd-a421-7faad08ae7e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game\Scenes">
+      <UniqueIdentifier>{7b44c75e-4ce9-46d0-a340-1135737e9bf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SDL_Game\States\Game_Platformer\Scenes">
+      <UniqueIdentifier>{cd52076d-2df7-459b-b24a-a4a783bb0262}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game\States">
+      <UniqueIdentifier>{f159d5c9-d361-4a3d-9eed-509447a07f3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game\States\Platformer">
+      <UniqueIdentifier>{7693bcdf-5328-4bf3-be0c-f3aa852a85e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameDemo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CubeColider.cpp">
-      <Filter>Source Files\GameObject</Filter>
+      <Filter>Source Files\SDL_Game\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ImageObject.cpp">
-      <Filter>Source Files\GameObject</Filter>
+      <Filter>Source Files\SDL_Game\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="EnemyObject.cpp">
-      <Filter>Source Files\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Textures.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SDL_Game\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="AnimationComponent.cpp">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Source Files\SDL_Game\Components</Filter>
     </ClCompile>
     <ClCompile Include="ImageComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionReferee.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SDL_Game\Components</Filter>
     </ClCompile>
     <ClCompile Include="ColliderComponent.cpp">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Source Files\SDL_Game\Components</Filter>
     </ClCompile>
     <ClCompile Include="MovingComponent.cpp">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Source Files\SDL_Game\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\SDL_Game\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionReferee.cpp">
+      <Filter>Source Files\SDL_Game\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDemo.cpp">
+      <Filter>Source Files\SDL_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source Files\SDL_Game\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Platformer.cpp">
+      <Filter>Source Files\SDL_Game\States\Platformer</Filter>
     </ClCompile>
     <ClCompile Include="TiledMap.cpp">
+      <Filter>Source Files\SDL_Game\States\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage01.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameDemo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CubeColider.h">
-      <Filter>Header Files\GameObject</Filter>
+      <Filter>Header Files\SDL_Game\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ImageObject.h">
-      <Filter>Header Files\GameObject</Filter>
+      <Filter>Header Files\SDL_Game\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="EnemyObject.h">
-      <Filter>Header Files\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Textures.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SDL_Game\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="AnimationComponent.h">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\SDL_Game\Components</Filter>
     </ClInclude>
     <ClInclude Include="ImageComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionReferee.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SDL_Game\Components</Filter>
     </ClInclude>
     <ClInclude Include="ColliderComponent.h">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\SDL_Game\Components</Filter>
     </ClInclude>
     <ClInclude Include="Vector2.h">
-      <Filter>Header Files\Struct</Filter>
-    </ClInclude>
-    <ClInclude Include="Type.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SDL_Game\GameObject\Struct</Filter>
     </ClInclude>
     <ClInclude Include="Defines.h">
-      <Filter>Header Files\Defines</Filter>
+      <Filter>Header Files\SDL_Game\Defines</Filter>
     </ClInclude>
     <ClInclude Include="GameSetting.h">
-      <Filter>Header Files\Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="Status.h">
-      <Filter>Header Files\Struct</Filter>
+      <Filter>Header Files\SDL_Game\Defines</Filter>
     </ClInclude>
     <ClInclude Include="MovingComponent.h">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\SDL_Game\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionReferee.h">
+      <Filter>Header Files\SDL_Game\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDemo.h">
+      <Filter>Header Files\SDL_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Status.h">
+      <Filter>Header Files\SDL_Game\GameObject\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\SDL_Game\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\SDL_Game\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateMachine.h">
+      <Filter>Header Files\SDL_Game\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Header Files\SDL_Game\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Platformer.h">
+      <Filter>Header Files\SDL_Game\States\Game_Platformer</Filter>
     </ClInclude>
     <ClInclude Include="TiledMap.h">
+      <Filter>Header Files\SDL_Game\States\Game_Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>Header Files\SDL_Game\GameObject\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage01.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,10 +4,12 @@
 
 enum class Type
 {
+	// 0 is empty
+	m_Wall = 1,
+	m_Ground,
+
 	m_Player,
 	m_Enemy,
-	m_Wall,
-	m_Ground,
 
 	m_BackGround = COLLISIONINDEX,
 	m_DamageZone,

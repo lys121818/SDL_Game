@@ -13,7 +13,7 @@ class CubeColider : public GameObject
 private:
 
     // Current Animation States
-    enum AnimationState
+    enum class AnimationState
     {
         m_idle,
         m_walk,
@@ -46,12 +46,12 @@ private:
     static constexpr int s_kSpeed    = (int)PLAYERSPEED;
     static constexpr int s_kMixSpeed = (int)PLAYERMINSPEED;
 
+    static constexpr int s_kMaxJumpPower = (int)1000;
+
     // Moving Component
     MovingComponent m_movingComponent;
 
-    // Current direction.x movement. -1 for left, 1for right.
-    // Current direction.y movement. -1 for down, 1 for up.
-    Vector2 m_direction;
+
 
     // Transform of the object
     SDL_Rect m_transform;
@@ -66,6 +66,7 @@ private:
     // It's On Immune
     bool m_isImmune;
 
+    float m_jumpPower;
 
     // * ANIMATION SYSTEM
     // Location of Sprite Sheet
@@ -80,7 +81,7 @@ private:
     ColliderComponent m_collider;
 
     // Collider of Triggered Object
-    ColliderComponent* m_otherCollider;
+    //ColliderComponent* m_otherCollider;
 
 private:
 
@@ -89,8 +90,7 @@ public:
     (
         SDL_Rect transform, 
         CollisionReferee* pReferee, 
-        SDL_Renderer* pRenderer, 
-        Type type = m_Player, 
+        size_t type = (size_t)Type::m_Player,
         const char* directory = PLAYERSPRITE
     );
     ~CubeColider();
@@ -101,6 +101,15 @@ public:
 
     // On Collision action
     virtual void OnCollision(ColliderComponent* pCollider) override;
+
+    // Trigger Enter
+    virtual void OnOverlapBegin(ColliderComponent* pCollider) override;
+
+    // Trigger Update
+    virtual void OnOverlapUpdate() override;
+
+    // Trigger Exit
+    virtual void OnOverlapEnd() override;
 
     //GETTER
     // return the transform of object
@@ -116,6 +125,8 @@ public:
     // Get this Object's Status
     virtual Status GetStatus() override { return m_status; }
 
+    void Jump(double deltaTime = 0);
+
     // Moving
     // Sprint
     void SprintSpeed() { m_status.m_speed = s_kMaxSpeed; }
@@ -129,18 +140,8 @@ private:
     /// GAME EVENTS
     void UpdateGameEvent(double deltaTime);
 
-    /// COLLISION
-    // Check if the object is on collision
-    void CheckForCollision();
 
-    // Event happen with collision
-    void CollisionEvent();
-    void CollisionEnter();
-    void CollisionExit();
 
-    // Event happen with collider
-    void ColliderEvent(ColliderComponent* pCollider);
-    
     // Immune Mechanics
     void ImmuneTime(double deltaTime);
 

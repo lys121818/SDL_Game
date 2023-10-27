@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
-#include "Type.h"
 #include "Status.h"
 #include "MovingComponent.h"
 #include <iostream>
@@ -13,7 +12,7 @@ class EnemyObject : public GameObject
 private:
 
 	// Current Animation States
-	enum AnimationState
+	enum class AnimationState
 	{
 		m_idle,
 		m_walk,
@@ -42,7 +41,6 @@ private:
 
 	// Default setting is 1(right)
 	// Current direction movement. -1 for left, 1for right.
-	int m_directionX;
 
 	// Transform of the object
 	SDL_Rect m_transform;
@@ -59,12 +57,9 @@ private:
 	/// * COLLIDER
 	ColliderComponent m_collider;
 
-	ColliderComponent* m_otherCollider;
-
-
 
 public:
-	EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int kspeed, Type type, const char* name = "Enemy");
+	EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory,size_t type, const char* name = "Enemy");
 	~EnemyObject();
 
 	// Inherited via GameObject
@@ -82,8 +77,14 @@ public:
 	// On Collision action
 	virtual void OnCollision(ColliderComponent* pCollider);
 
-	// Move to the direction
-	virtual void TryMove(Vector2 deltaPosition) override {};
+	// Trigger Enter
+	virtual void OnOverlapBegin(ColliderComponent* pCollider) override;
+
+	// Trigger Update
+	virtual void OnOverlapUpdate() override;
+
+	// Trigger Exit
+	virtual void OnOverlapEnd() override;
 
 	// Get this Object's Status
 	virtual Status GetStatus() override { return m_status; }
@@ -94,16 +95,6 @@ private:
 	void AnimationState();
 	// Check current state before play animation.
 	void CheckCurrentState();
-
-
-	///GAME EVENT
-	// Event happen with Collide
-	void ColliderEvent();
-
-	// Event happen with Trigger
-	void CollisionEnter();
-	void CollisionEvent();
-	void CollisionExit();
 
 	void Gravity(double deltaTime);
 };

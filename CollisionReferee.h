@@ -26,7 +26,6 @@ public:
 
 	bool AABBCollisionCheck(ColliderComponent* colliderA, ColliderComponent* colliderB);
 
-private:
-
+	bool CircleCollisionCheck(ColliderComponent* colliderA, ColliderComponent* colliderB);
 };
 

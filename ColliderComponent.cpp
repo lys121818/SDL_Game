@@ -19,8 +19,6 @@ ColliderComponent::ColliderComponent(GameObject* pOwner, SDL_Rect transform, Col
 	// Collider Position
 	m_position.m_x = transform.x;
 	m_position.m_y = transform.y;
-
-
 }
 
 ColliderComponent::~ColliderComponent()
@@ -73,6 +71,7 @@ bool ColliderComponent::TryMove(Vector2 deltaPosition)
 		m_transform.y = (int)m_position.m_y;
 	}
 
+
 	// Return whether the move was successful.
 	return !didCollide;
 }
@@ -104,6 +103,7 @@ void ColliderComponent::DrawColliderBox(SDL_Renderer* pRenderer)
 // Add or Remove the collider to referee
 void ColliderComponent::SetCollider(bool isActive)
 {
+	
 	if (isActive)
 		m_pReferee->AddActiveCollider(this);
 	else if (!isActive)

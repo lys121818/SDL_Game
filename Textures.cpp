@@ -18,15 +18,17 @@ void Textures::PreloadTextures(size_t sceneNumber)
     DestoryTextures();
     switch ((int)sceneNumber)
     {
+    case 0:
+    {
+        AddImagesToTexture(BACKGROUND);
+        break;
+    }
     case 1:
     {
         // Simple adding by using directory of the image
         // IMAGES
-        AddImagesToTexture(BACKGROUND);
         AddImagesToTexture(PLAYER);
-        AddImagesToTexture(BULLET);
-        AddImagesToTexture(STATIONARY1);
-        AddImagesToTexture(STATIONARY2);
+        AddImagesToTexture(BACKGROUND);
 
         // IMAGE SPRITES
         AddImagesToTexture(TILES);      

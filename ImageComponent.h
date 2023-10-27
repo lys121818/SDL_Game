@@ -26,7 +26,6 @@ public:
 	ImageComponent(const char* directory, SDL_Rect* transform);
 	~ImageComponent();
 
-	void Update(double deltaTime);
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* ptexture);
 
 	/// IMAGE FRAME

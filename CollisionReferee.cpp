@@ -2,6 +2,7 @@
 #include "ColliderComponent.h"
 #include "GameObject.h"
 #include "Defines.h"
+#include "GameSetting.h"
 
 CollisionReferee::CollisionReferee()
 {
@@ -55,25 +56,57 @@ bool CollisionReferee::CheckForColliderAndNotify(ColliderComponent* pColliderToC
 		// Make sure we don't check a collider vs itself.
 		if (pColliderToCheck == pOtherCollider)
 			continue;
+		
 
-
-		// Calculate the bounds of the other collider.
-		// If both x and y are true, they collide.
+		//if we overlap
 		if (AABBCollisionCheck(pColliderToCheck, pOtherCollider))
 		{
-			pColliderToCheck->GetOwner()->OnCollision(pOtherCollider);	// notify object A
-			pOtherCollider->GetOwner()->OnCollision(pColliderToCheck);	// notify object B
-			// Only return true when it's collider to collider
-
-			if (pColliderToCheck->GetOwner()->GetStatus().m_type < COLLISIONINDEX &&	// when this object is collider
-				pOtherCollider->GetOwner()->GetStatus().m_type < COLLISIONINDEX		// when compared object is collider
-				)
+			//if this collider or the other collider is passable
+			if (pColliderToCheck->GetOwner()->GetStatus().m_type >= COLLISIONINDEX ||	// this collider is passable
+				pOtherCollider->GetOwner()->GetStatus().m_type >= COLLISIONINDEX)		// other collider is passable
 			{
-				// A collision has occured.
-				// Notify both colliders' owner of the collision.
-					didCollide = true;
+				//if the pColliderToCheck did not collide with pOtherCollider previously
+				if (pColliderToCheck->GetOwner()->GetStatus().m_pTargetCollider != pOtherCollider)
+				{
+					//call OnOverlapBegin
+					pColliderToCheck->GetOwner()->OnOverlapBegin(pOtherCollider);
+					pOtherCollider->GetOwner()->OnOverlapBegin(pColliderToCheck);
+				}
+				//else
+					//call OnOverlapUpdate        	
+				else
+				{
+					pColliderToCheck->GetOwner()->OnOverlapUpdate();
+					pOtherCollider->GetOwner()->OnOverlapUpdate();
+				}
+			}
+			//else
+				//call OnCollision function
+			else
+			{
+				pColliderToCheck->GetOwner()->OnCollision(pOtherCollider);
+				pOtherCollider->GetOwner()->OnCollision(pColliderToCheck);
+				didCollide = true;
+			}
+
+		}
+		//else if no overlap
+		else if (!AABBCollisionCheck(pColliderToCheck, pOtherCollider))
+		{
+			//if this collider or the other collider is passable
+			if (pColliderToCheck->GetOwner()->GetStatus().m_type >= COLLISIONINDEX ||	// this collider is passable
+				pOtherCollider->GetOwner()->GetStatus().m_type >= COLLISIONINDEX)		// other collider is passable
+			{
+				//if the pColliderToCheck did collide with pOtherCollider previously
+				if (pColliderToCheck->GetOwner()->GetStatus().m_pTargetCollider == pOtherCollider)
+				{
+					//call OnOverlapEnd
+					pColliderToCheck->GetOwner()->OnOverlapEnd();
+					pOtherCollider->GetOwner()->OnOverlapEnd();
+				}
 			}
 		}
+
 	}
 
 	// Return whether any collision occurred.
@@ -103,4 +136,39 @@ bool CollisionReferee::AABBCollisionCheck(ColliderComponent* colliderA, Collider
 	bool yOverlap = top_A < bottom_B && bottom_A > top_B;
 
 	return xOverlap && yOverlap;
+}
+
+// Collision Between circles
+bool CollisionReferee::CircleCollisionCheck(ColliderComponent* colliderA, ColliderComponent* colliderB)
+{
+	SDL_Rect circleA, circleB;
+
+	circleA = colliderA->GetTransform();
+	circleB = colliderB->GetTransform();
+
+	// Radius
+	float radiusA, radiusB;
+
+	radiusA = (float)circleA.w / 2.0f;
+	radiusB = (float)circleB.w / 2.0f;
+
+	// Set Position dot to middle of the object
+	circleA.x += (int)radiusA;
+	circleA.y += (int)radiusA;
+
+	circleB.x += (int)radiusB;
+	circleB.y += (int)radiusB;
+
+	// Distance between
+	float distanceBetweenObjects =
+	(float)(circleB.x - circleA.x) * (float)(circleB.x - circleA.x) +	// circles.x^2
+	(float)(circleB.y - circleA.y) * (float)(circleB.y - circleA.y);	// circles.y^2
+
+	// On Collision
+	if (distanceBetweenObjects < (radiusA + radiusB) * (radiusA + radiusB))
+	{
+		return true;
+	}
+
+	return false;
 }

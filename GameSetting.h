@@ -8,7 +8,8 @@
 /// GAME SETTINGS
 #define MAXGAMEOBJECT 10	// Max range of gameobject to be create
 #define IMMUNETIME 1		// Set time of when Immune happens
-#define GRAVITYPOWER 200	// Gravity
+#define GRAVITYPOWER 300	// Gravity
+#define COLLISIONINDEX	10	// Index of Collision Number
 
 /*	BACKGROUND	*/
 // * Size
@@ -35,7 +36,7 @@
 // * Transform
 #define ENEMYSIZE	50.0
 // * Speed
-#define ENEMYSPEED	300.0
+#define ENEMYSPEED	200.0
 
 
 

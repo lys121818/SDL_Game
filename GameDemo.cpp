@@ -4,20 +4,24 @@
 #include <time.h>
 #include <chrono>
 #include <cassert>
-#include "SDL_image.h" 
 #include "GameDemo.h"
-#include "EnemyObject.h"
+#include "Platformer.h"
+
 ////////////
 // PUBLIC //
 ////////////
-int GameDemo::Init()
+int GameDemo::Init(GameStateMachine* pGameStateMachine)
 {
     int failedInit;
     // Return errorCode when it fails to create window
     failedInit = CreateWindow();
     if(failedInit != 0)
         return failedInit;
-    InitGame();
+
+    if (pGameStateMachine != nullptr)
+    {
+        m_pStateMachine = pGameStateMachine;
+    }
 
 	return 0;
 }
@@ -61,16 +65,6 @@ void GameDemo::Destroy()
     // SDL window cleanup
     SDL_DestroyWindow(m_pWindow);
 
-    // Delete the vectors I've created
-    {
-        m_pTiledMap->Delete();
-        DestoryGameObjects(m_vpGameObjects);
-    }
-
-    // Destory texture when game ends.
-    delete m_pTexture;
-    delete m_pTiledMap;
-
     SDL_Quit();
 }
 
@@ -83,238 +77,53 @@ void GameDemo::Destroy()
 
 bool GameDemo::ProcessEvents()
 {
+    if (m_pStateMachine == nullptr)
+        return true;
+
+    bool doQuit = false;
+
+
     SDL_Event evt;
     while (SDL_PollEvent(&evt) != 0)
     {
-        switch ((int)evt.type)
-        {
-        // KeyBoard Event
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
-            if (ProcessKeyboardEvent(&evt.key) == true)
-                return true;
-            break;
-        break;
-        // Mouse Event
-        // Quit when true returns
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-            if (ProcessMouseEvent(&evt.button) == true)
-                return true;
-            break;
-        break;
-        default:
-            // Window Event
-            if (ProcessWindowEvent(&evt.window) == true)
-                return true;
-            break;
-        }
+        doQuit = m_pStateMachine->HandleEvent(&evt);
+
+        return doQuit;
     }
-    return m_pPlayer->FinishGame();
+    //return m_pPlayer->FinishGame();
+    return doQuit;
 }
 
 void GameDemo::UpdateGameState(double deltaTime)
 {
-    // Update GameObjects
-    for (auto& element : m_vpGameObjects)
-    {
-        element->Update(deltaTime);
-    }
+    if (m_pStateMachine == nullptr)
+        return;
+
+    m_pStateMachine->UpdateCurrentState(deltaTime);
+
+
 
 }
 
 void GameDemo::DisplayOutput()
 {
-    // Rendering any objects in the game.
+    if (m_pStateMachine == nullptr)
+        return;
 
     // Clear the screen.
     // Execute the clear.
     SDL_SetRenderDrawColor(m_pRenderer, BLACK);
     SDL_RenderClear(m_pRenderer);
 
-    m_pTiledMap->Render(m_pRenderer, m_pTexture);
+    
+    m_pStateMachine->RenderCurrentState(m_pRenderer);
 
-    //Render GameObjects
-    for (auto& element : m_vpGameObjects)
-    {
-        // Only render inside the window size (on visible)
-        if (element->GetTransform().x >= (0 - element->GetTransform().w) &&
-            element->GetTransform().x < WINDOWWIDTH &&   // Window width
-            element->GetTransform().y >= (0 - element->GetTransform().h) &&
-            element->GetTransform().y < WINDOWHEIGHT)    // Window height
-        {
-            element->Render(m_pRenderer, m_pTexture->GetTexture( element->GetTextureName() ) );
-        }
-    }
 
     // Presenting.
     SDL_RenderPresent(m_pRenderer);
 
 }
 
-
-// Every events using keyboards works here
-bool GameDemo::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
-{
-    if ((int)pData->state == 1 && (int)pData->repeat == 0)   // Key Press, ignore repeat keys
-    {
-        switch ((int)pData->keysym.sym)
-        {
-            // Run
-            case SDLK_LSHIFT:
-            {
-                
-                m_pPlayer->SprintSpeed();
-                break;
-            }
-
-            // Move Left
-            case SDLK_a:
-            {
-                m_pPlayer->TryMove(Vector2{ LEFT });
-                break;
-            }
-
-            // Move Right
-            case SDLK_d:
-            {
-                m_pPlayer->TryMove(Vector2{ RIGHT });
-                break;
-
-            }
-
-            // Move Up
-            case SDLK_w:
-            {
-                m_pPlayer->TryMove(Vector2{ UP });
-                break;
-
-            }
-
-            // Move Down
-            case SDLK_s:
-            {
-                m_pPlayer->TryMove(Vector2{ DOWN });
-                break;
-            }
-
-            // Shooting
-            case SDLK_SPACE:
-            {
-                // shooting objects when hit spacebar
-                break;
-            }
-
-            // Quit
-            case SDLK_q:
-            {
-                if (pData->keysym.mod & KMOD_LCTRL)
-                    return true;
-                break;
-            }
-        default:
-            break;
-        }
-    }
-    else if ((int)pData->state == 0) // Key Release
-    {
-        switch ((int)pData->keysym.sym)
-        {
-            // Stop Run
-            case SDLK_LSHIFT:
-            {
-                m_pPlayer->NormalSpeed();
-                break;
-            }
-
-            // Stop Moving Left
-            case SDLK_a:
-            {
-                m_pPlayer->TryMove(Vector2{ STOPLEFT });
-                break;
-            }
-
-            // Stop Moving Right
-            case SDLK_d:
-            {
-                m_pPlayer->TryMove(Vector2{ STOPRIGHT });
-                break;
-
-            }
-
-            // Stop Moving Up
-            case SDLK_w:
-            {
-                m_pPlayer->TryMove(Vector2{ STOPUP });
-                break;
-            }
-
-            // Stop Moving Down
-            case SDLK_s:
-            {
-                m_pPlayer->TryMove(Vector2{ STOPDOWN });
-                break;
-
-            }
-        default:
-            break;
-        }
-    }
-    return false;
-}
-// Every events using mouse works here
-bool GameDemo::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
-{
-    if ((int)pData->type == SDL_MOUSEBUTTONDOWN)
-    {
-        switch ((int)pData->button)
-        {
-            case SDL_BUTTON_LEFT:
-            {
-                break;
-            }
-            case SDL_BUTTON_RIGHT:
-            {
-                break;
-            }
-        default:
-            break;
-        }
-    }
-    else if ((int)pData->type == SDL_MOUSEBUTTONUP)
-    {
-        switch ((int)pData->button)
-        {
-            case SDL_BUTTON_LEFT:
-            {
-                break;
-            }
-            case SDL_BUTTON_RIGHT:
-            {
-                break;
-            }
-        default:
-            break;
-        }
-    }
-    return false;
-}
-// Every events using Window works here
-bool GameDemo::ProcessWindowEvent(SDL_WindowEvent* pData)
-{
-    switch ((int)pData->event)
-    {
-        // Quit when Window X button is pressed
-        case SDL_WINDOWEVENT_CLOSE:
-        {
-            return true;
-            break;
-        }
-    default:
-        break;
-    }
-    return false;
-}
 
 // Create Window
 int GameDemo::CreateWindow()
@@ -369,88 +178,3 @@ int GameDemo::CreateWindow()
     return m_errorCode;
 }
 
-void GameDemo::InitGame()
-{
-
-    // Temperary gameobject
-    GameObject* stationary;
-    // Set GameTime to 0sec
-    m_CurrentTime = (double)0.0;
-
-    /// TEXTURE
-    // Create Texture Pointer class
-    m_pTexture = new Textures(m_pRenderer);
-    // Load images that are being use in the game.
-    m_pTexture->PreloadTextures(1);
-
-    /// TILEMAP
-    m_pTiledMap = new TiledMap();
-    m_pTiledMap->Init(&m_collisionReferee);
-
-    /// GAMEOBJECT
-    // Set Player Object
-    // Player ColliderBox Setting
-    SDL_Rect playerTransform{ 
-        (int)s_kPlayerStartingPoisition.m_x, // X position of collider box
-        (int)s_kPlayerStartingPoisition.m_y, // Y position of collider box
-        (int)s_kPlayerStartingSize.m_x,      // Width of collider box
-        (int)s_kPlayerStartingSize.m_y       // Height of collider box
-    };
-    m_pPlayer = new CubeColider(playerTransform,&m_collisionReferee, m_pRenderer,Type::m_Player);
-    AddGameObject(m_pPlayer);
-
-    // Add GameObjects to m_vpGameObjects
-    SDL_Rect objectTransform;
-    objectTransform.w = (int)ENEMYWIDTH;
-    objectTransform.h = (int)ENEMYHEIGHT;
-
-    // Setting starting position of the enemy
-    objectTransform.x = 100;
-    objectTransform.y = 50;
-    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEFEMALE, 0, Type::m_Enemy, "Zombie_Female");
-    AddGameObject(stationary); 
-
-    objectTransform.x = 650; // X
-    objectTransform.y = 50; // Y
-    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE,0, Type::m_Enemy,"Zombie_Male");
-    AddGameObject(stationary);
-
-    // Stationary
-    objectTransform.w = 30;
-    objectTransform.h = 30;
-
-    objectTransform.x = 500;
-    objectTransform.y = 540;
-    stationary = new ImageObject(objectTransform, &m_collisionReferee, OBJECTS, 6, m_DamageZone, "Damage Zone");
-    AddGameObject(stationary);
-
-
-    objectTransform.x = 100;
-    objectTransform.y = 540;
-    stationary = new ImageObject(objectTransform, &m_collisionReferee, OBJECTS, 7, m_HealingZone, "Healing Zone");
-    AddGameObject(stationary);
-
-    objectTransform.x = 750;
-    objectTransform.y = 360;
-    stationary = new ImageObject(objectTransform, &m_collisionReferee, OBJECTS, 9, m_WinZone, "Win Zone");
-    AddGameObject(stationary);
-}
-
-// Destory the elements in vector of GameObject
-void GameDemo::DestoryGameObjects(std::vector<GameObject*> vector)
-{
-    for (auto& element : vector)
-    {
-        delete element;
-    }
-}
-
-// Add gameobject to vector
-void GameDemo::AddGameObject(GameObject* object)
-{
-    // Creates the Object only if it's under amount of s_kMaxGameObjectCount
-    if (m_vpGameObjects.size() >= s_kMaxGameObjectCount)
-        return;
-    // add the gameobject to vector
-    m_vpGameObjects.push_back(object);
-}
