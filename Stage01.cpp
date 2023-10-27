@@ -1,10 +1,12 @@
 #include "Stage01.h"
 #include "EnemyObject.h"
+#include "ImageDirectory.h"
+#include <iomanip>
 
 Stage01::Stage01(Platformer* pOwner)
     :m_pOwner(pOwner)
 {
-
+    m_CurrentTime = 0.0;
 }
 
 Stage01::~Stage01()
@@ -21,11 +23,16 @@ void Stage01::Update(double deltaTime)
 {
     // current time
     m_CurrentTime += deltaTime;
+    if (m_CurrentTime < LOADINGTIME)
+        std::cout << "Game Starts in " << std::setprecision(1) << (LOADINGTIME - m_CurrentTime) << std::endl;
 
-    // Update GameObjects
-    for (auto& element : m_vpGameObjects)
+    if (m_CurrentTime > LOADINGTIME)
     {
-        element->Update(deltaTime);
+        // Update GameObjects
+        for (auto& element : m_vpGameObjects)
+        {
+            element->Update(deltaTime);
+        }
     }
 
 }
@@ -33,22 +40,25 @@ void Stage01::Update(double deltaTime)
 // Rendering any objects in the game.
 void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 {
-
     m_pBackground->Render(pRenderer, pTextures->GetTexture(m_pBackground->GetTextureName()));
 
-    //Render GameObjects
-    for (auto& element : m_vpGameObjects)
+    // loading
+    if (m_CurrentTime > LOADINGTIME + 0.5)
     {
-        // Only render inside the window size (on visible)
-        if (element->GetTransform().x >= (0 - element->GetTransform().w) &&
-            element->GetTransform().x < WINDOWWIDTH &&   // Window width
-            element->GetTransform().y >= (0 - element->GetTransform().h) &&
-            element->GetTransform().y < WINDOWHEIGHT)    // Window height
+        //Render GameObjects
+        for (auto& element : m_vpGameObjects)
         {
-            element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
+            // Only render inside the window size (on visible)
+            if (element->GetTransform().x >= (0 - element->GetTransform().w) &&
+                element->GetTransform().x < WINDOWWIDTH &&   // Window width
+                element->GetTransform().y >= (0 - element->GetTransform().h) &&
+                element->GetTransform().y < WINDOWHEIGHT)    // Window height
+            {
+                element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
+            }
         }
+        m_pTiledMap->Render(pRenderer, pTextures);
     }
-    m_pTiledMap->Render(pRenderer, pTextures);
 
 }
 
@@ -274,7 +284,7 @@ void Stage01::InitGame()
         WINDOWWIDTH,
         WINDOWHEIGHT
     };
-    m_pBackground = new ImageObject(backgroundTransform, nullptr, BACKGROUND, 0, (size_t)Type::m_BackGround, "BackGround");
+    m_pBackground = new ImageObject(backgroundTransform, nullptr, BACKGROUND, 0, (size_t)ObjectType::m_BackGround, "BackGround");
     //AddGameObject(m_pBackground);
 
 
@@ -286,7 +296,7 @@ void Stage01::InitGame()
         (int)s_kPlayerStartingSize.m_x,      // Width of collider box
         (int)s_kPlayerStartingSize.m_y       // Height of collider box
     };
-    m_pPlayer = new CubeColider(playerTransform, &m_collisionReferee, (size_t)Type::m_Player);
+    m_pPlayer = new CubeColider(playerTransform, &m_collisionReferee, (size_t)ObjectType::m_Player);
     AddGameObject(m_pPlayer);
 
     // Add GameObjects to m_vpGameObjects
@@ -297,12 +307,12 @@ void Stage01::InitGame()
     // Setting starting position of the enemy
     objectTransform.x = 100;
     objectTransform.y = 50;
-    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEFEMALE, (size_t)Type::m_Enemy, "Zombie_Female");
+    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEFEMALE, (size_t)ObjectType::m_Enemy, "Zombie_Female");
     AddGameObject(stationary);
 
     objectTransform.x = 650; // X
     objectTransform.y = 50; // Y
-    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)Type::m_Enemy, "Zombie_Male");
+    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::m_Enemy, "Zombie_Male");
     AddGameObject(stationary);
 
 
@@ -326,7 +336,6 @@ void Stage01::AddGameObject(GameObject* object)
     // add the gameobject to vector
     m_vpGameObjects.push_back(object);
 }
-
 
 void Stage01::Exit()
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "Vector2.h"
-#include "Type.h"
+#include "ObjectType.h"
 #include "ColliderComponent.h"
 
 struct Status
@@ -9,7 +9,7 @@ struct Status
 
 	std::string m_name = "UnNamed";
 
-	size_t m_type = (size_t)Type::m_UNINIT;
+	size_t m_type = (size_t)ObjectType::m_UNINIT;
 
 	// Current direction.x movement. -1 for left, 1for right.
 	// Current direction.y movement. -1 for down, 1 for up.

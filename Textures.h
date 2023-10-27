@@ -13,7 +13,7 @@ public:
 public:
 	void PreloadTextures(size_t sceneNumber);
 
-	SDL_Texture* GetTexture(const char* name) { return m_mpTextures[name]; }
+	SDL_Texture* GetTexture(const char* name);
 
 private:
 	void AddImagesToTexture(const char* name);

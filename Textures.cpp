@@ -1,6 +1,6 @@
 #include "Textures.h"
 #include "SDL_image.h" 
-#include "Defines.h"
+#include "ImageDirectory.h"
 #include <iostream>
 Textures::Textures(SDL_Renderer* pRenderer)
     : m_pRenderer(pRenderer)
@@ -21,6 +21,7 @@ void Textures::PreloadTextures(size_t sceneNumber)
     case 0:
     {
         AddImagesToTexture(BACKGROUND);
+        AddImagesToTexture(BUTTONS);
         break;
     }
     case 1:
@@ -45,6 +46,14 @@ void Textures::PreloadTextures(size_t sceneNumber)
     }
 }
 
+SDL_Texture* Textures::GetTexture(const char* name)
+{
+    if (m_mpTextures[name] == nullptr)
+        std::cout << "[Textures] There are no Texture with name: " << name << std::endl;
+
+    return m_mpTextures[name];
+}
+
 void Textures::AddImagesToTexture(const char* name)
 {
     std::pair<const char*, SDL_Texture*> imageTexture;  //Pair to pass inform to m_mpTextures
@@ -57,7 +66,7 @@ void Textures::AddImagesToTexture(const char* name)
     // Error when it fails to load the image
     if (pImageSurface == nullptr)
     {
-        std::cout << "Image loading failed Error: " << SDL_GetError() << std::endl;
+        std::cout << "[Textures] Image loading failed Error: " << SDL_GetError() << std::endl;
     }
     // SDL_Surface -> SDL_Texture
     // Create texture from surface and save in pair
@@ -66,7 +75,7 @@ void Textures::AddImagesToTexture(const char* name)
     // Error when it fails to load the texture
     if (imageTexture.second == nullptr)
     {
-        std::cout << "Texture loading failed Error: " << SDL_GetError();
+        std::cout << "[Textures] Texture loading failed Error: " << SDL_GetError();
     }
     // add to mpTextures when image and texture loading is successfully done
     m_mpTextures.insert(imageTexture);
@@ -80,4 +89,5 @@ void Textures::DestoryTextures()
     {
         SDL_DestroyTexture(iter->second);
     }
+    m_mpTextures.clear();
 }

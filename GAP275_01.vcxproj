@@ -182,6 +182,7 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="ButtonObject.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="CollisionReferee.cpp" />
     <ClCompile Include="CubeColider.cpp" />
@@ -199,6 +200,8 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="ButtonObject.h" />
+    <ClInclude Include="ButtonType.h" />
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="CollisionReferee.h" />
     <ClInclude Include="Defines.h" />
@@ -210,6 +213,7 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateMachine.h" />
     <ClInclude Include="ImageComponent.h" />
+    <ClInclude Include="ImageDirectory.h" />
     <ClInclude Include="ImageObject.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MovingComponent.h" />
@@ -218,7 +222,7 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="Status.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TiledMap.h" />
-    <ClInclude Include="Type.h" />
+    <ClInclude Include="ObjectType.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

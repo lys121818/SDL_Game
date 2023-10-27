@@ -2,7 +2,7 @@
 #include <iostream>
 #include <assert.h>
 #include "GameSetting.h"
-#include "Type.h"
+#include "ObjectType.h"
 
 EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, size_t type, const char* name)
     : m_transform(transform),
@@ -87,18 +87,18 @@ void EnemyObject::OnCollision(ColliderComponent* pCollider)
 	{
 		switch (targetStaus.m_type)
 		{
-			case (size_t)Type::m_Wall:
+			case (size_t)ObjectType::m_Wall:
 			{
 				m_status.m_direction.m_x *= -1;	// change the direction by multiply negative value
 				break;
 			}
-			case (size_t)Type::m_Player:
+			case (size_t)ObjectType::m_Player:
 			{
 				m_status.m_direction.m_x *= -1;	// change the direction by multiply negative value
 				break;
 			}
 
-			case (size_t)Type::m_Ground:
+			case (size_t)ObjectType::m_Ground:
 			{
 				m_status.m_isGrounded = true;
 				break;

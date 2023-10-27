@@ -1,6 +1,7 @@
 #include "TiledMap.h"
 #include "ImageObject.h"
-#include "Type.h"
+#include "ObjectType.h"
+#include "ImageDirectory.h"
 
 TiledMap::TiledMap(const char* txtFile)
     :m_fileName(txtFile)
@@ -124,49 +125,49 @@ void TiledMap::TileSettings(CollisionReferee* pReferee)
                     break;
                 }
 
-                case (size_t)Type::m_Wall:
+                case (size_t)ObjectType::m_Wall:
                 {
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 8, (size_t)Type::m_Wall, "Wall")); // tile index goes in here
+                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 8, (size_t)ObjectType::m_Wall, "Wall")); // tile index goes in here
                     break;
                 }
 
-                case (size_t)Type::m_Ground:
+                case (size_t)ObjectType::m_Ground:
                 {
                     // at the very left or left is empty
                     if (x == 0 || (map[currentLocation - 1] == 0))
                     {
-                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 0, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
+                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 0, (size_t)ObjectType::m_Ground, "Ground")); // tile index goes in here
 
                     }
                     // at the very right or right is empty
                     else if (x == m_maxTiles.m_x - 1 || (map[currentLocation + 1] == 0))
                     {
-                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 2, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
+                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 2, (size_t)ObjectType::m_Ground, "Ground")); // tile index goes in here
 
                     }
                     else
                     {
-                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, (size_t)Type::m_Ground, "Ground")); // tile index goes in here
+                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, (size_t)ObjectType::m_Ground, "Ground")); // tile index goes in here
                     }
                     break;
                 }
 
-                case (size_t)Type::m_WinZone:
+                case (size_t)ObjectType::m_WinZone:
                 {
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 9, (size_t)Type::m_WinZone, "Win Zone"));
+                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 9, (size_t)ObjectType::m_WinZone, "Win Zone"));
                     break;
                 }
 
-                case (size_t)Type::m_HealingZone:
+                case (size_t)ObjectType::m_HealingZone:
                 {
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 7, (size_t)Type::m_HealingZone, "Healing Zone"));
+                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 7, (size_t)ObjectType::m_HealingZone, "Healing Zone"));
                     break;
                 }
 
-                case (size_t)Type::m_DamageZone:
+                case (size_t)ObjectType::m_DamageZone:
                 {
 
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 6, (size_t)Type::m_DamageZone, "Damage Zone"));
+                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 6, (size_t)ObjectType::m_DamageZone, "Damage Zone"));
                     break;
                 }
 

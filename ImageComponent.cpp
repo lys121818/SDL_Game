@@ -1,5 +1,5 @@
 #include "ImageComponent.h"
-#include "Defines.h"
+#include "ImageDirectory.h"
 #include <iostream>
 
 ImageComponent::ImageComponent(const char* directory, SDL_Rect* transform)
@@ -23,7 +23,7 @@ void ImageComponent::Render(SDL_Renderer* pRenderer, SDL_Texture* ptexture)
 	// error call when the image hasn't been set up
 	if (m_frameTransform == nullptr)
 	{
-		std::cout << "CurrentImageFrame has not been set up! \n";
+		std::cout << "[ImageComponent] CurrentImageFrame has not been set up! \n";
 		return;
 	}
 
@@ -68,7 +68,7 @@ void ImageComponent::SetImageFrame(std::string name)
 
 }
 
-//
+// All the Sprite Image that are being used
 void ImageComponent::ImageSpriteSettings()
 {
 	if (strcmp(m_pSpriteName, BACKGROUND) == 0)
@@ -122,8 +122,15 @@ void ImageComponent::ImageSpriteSettings()
 		AddImageFrame("Sign2", 2, 2, 64, 64);
 
 		AddImageFrame("Rock", 3, 2, 64, 64);
-
 	}
+	else if (strcmp(m_pSpriteName, BUTTONS) == 0)
+	{
+		AddImageFrame("Normal", 0, 0, 100, 40);
+		AddImageFrame("Hover", 1, 0, 100, 40);
+		AddImageFrame("Disable", 0, 1, 100, 40);
+		AddImageFrame("Click", 1, 1, 100, 40);
+	}
+
 }
 
 void ImageComponent::Destroy()

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Defines.h"
+#include "ImageDirectory.h"
 #include "GameSetting.h"
 #include "Vector2.h"
 #include "AnimationComponent.h"
@@ -90,7 +91,7 @@ public:
     (
         SDL_Rect transform, 
         CollisionReferee* pReferee, 
-        size_t type = (size_t)Type::m_Player,
+        size_t type = (size_t)ObjectType::m_Player,
         const char* directory = PLAYERSPRITE
     );
     ~CubeColider();

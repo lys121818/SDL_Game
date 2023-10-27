@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Vector2.h"
 #include <assert.h>
-#include "Type.h"
+#include "ObjectType.h"
 
 CubeColider::CubeColider(SDL_Rect transform, CollisionReferee* pReferee, size_t type, const char* directory)
 	:
@@ -165,7 +165,7 @@ void CubeColider::OnCollision(ColliderComponent* pCollider)
 	// Colliding Event
 	switch (targetStaus.m_type)
 	{
-		case (size_t)Type::m_Enemy:
+		case (size_t)ObjectType::m_Enemy:
 		{
 			if (!m_isImmune)
 			{
@@ -176,8 +176,8 @@ void CubeColider::OnCollision(ColliderComponent* pCollider)
 			break;
 		}
 		// Wall and ground do the same
-		case (size_t)Type::m_Wall:
-		case (size_t)Type::m_Ground:
+		case (size_t)ObjectType::m_Wall:
+		case (size_t)ObjectType::m_Ground:
 		{
 			// if Ground is under player
 			if (pCollider->GetTransform().y > m_transform.y)
@@ -217,13 +217,13 @@ void CubeColider::OnOverlapBegin(ColliderComponent* pCollider)
 	// On Enter Trigger Event
 	switch (triggerStatus.m_type)
 	{
-	case (size_t)Type::m_WinZone:
+	case (size_t)ObjectType::m_WinZone:
 	{
 		std::cout << "You Have Entered the Win Zone!" << std::endl;
 		m_isGame = true;
 		break;
 	}
-	case (size_t)Type::m_DamageZone:
+	case (size_t)ObjectType::m_DamageZone:
 	{
 		break;
 	}
@@ -247,7 +247,7 @@ void CubeColider::OnOverlapUpdate()
 	// Trigger Event
 	switch (targetStaus.m_type)
 	{
-	case (size_t)Type::m_DamageZone:
+	case (size_t)ObjectType::m_DamageZone:
 	{
 		if (!m_isImmune)
 		{
@@ -257,7 +257,7 @@ void CubeColider::OnOverlapUpdate()
 		}
 		break;
 	}
-	case (size_t)Type::m_HealingZone:
+	case (size_t)ObjectType::m_HealingZone:
 	{
 		if (!m_isImmune)
 		{
@@ -267,7 +267,7 @@ void CubeColider::OnOverlapUpdate()
 		}
 		break;
 	}
-	case (size_t)Type::m_WinZone:
+	case (size_t)ObjectType::m_WinZone:
 	{
 		break;
 	}

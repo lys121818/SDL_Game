@@ -1,19 +1,21 @@
 #include "ImageObject.h"
 #include "SDL_image.h"
 #include <iostream>
-#include "Type.h"
+#include "ObjectType.h"
+#include "ImageDirectory.h"
 
 
-ImageObject::ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int frame, size_t type, const char* name)
+ImageObject::ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name)
 	: m_transform(transform),
-	  m_pSpriteName(directory),
-	  m_imageComponent(directory, &m_transform),
-	  m_collider(this,m_transform,pReferee)
+	m_pSpriteName(directory),
+	m_imageComponent(directory, &m_transform),
+	m_collider(this, m_transform, pReferee),
+	m_movingComponent(&m_transform, Vector2(m_transform.x, m_transform.y))
 {
 	m_status.m_type = type;
 	m_status.m_name = name;
-
-	SetImage(frame);
+	m_status.m_direction = Vector2{ 0.0,0.0 };
+	SetImage(index);
 }
 
 ImageObject::~ImageObject()
@@ -21,16 +23,34 @@ ImageObject::~ImageObject()
 }
 
 
+void ImageObject::Update(double deltaTime)
+{
+	m_movingComponent.TryMove(deltaTime, s_kSpeed, m_status.m_direction);
+}
+
 void ImageObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
 	m_imageComponent.Render(pRenderer, pTexture);
 }
 
-void ImageObject::SetImage(const int frame)
+void ImageObject::TryMove(Vector2 direction)
 {
-	if (frame < 0)
+	m_status.m_direction = direction;
+}
+
+void ImageObject::SetPosition(Vector2 position)
+{
+	m_transform.x = (int)position.m_x;
+	m_transform.y = (int)position.m_y;
+
+	m_movingComponent.SetPosition(position);
+}
+
+void ImageObject::SetImage(const int index)
+{
+	if (index < 0)
 	{
-		std::cout << "Unvalid frame number \n";
+		std::cout << "[ImageObject] Unvalid frame number \n";
 		return;
 	}
 	else
@@ -41,7 +61,7 @@ void ImageObject::SetImage(const int frame)
 		}
 		else if (strcmp(m_pSpriteName, TILES) == 0)
 		{
-			switch (frame)
+			switch (index)
 			{	
 				case 0:
 				{
@@ -69,7 +89,7 @@ void ImageObject::SetImage(const int frame)
 		}
 		else if (strcmp(m_pSpriteName, OBJECTS) == 0)
 		{
-			switch (frame)
+			switch (index)
 			{
 				case 0:
 				{

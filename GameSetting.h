@@ -39,6 +39,10 @@
 #define ENEMYSPEED	200.0
 
 
+/* BUTTON */
+// * Transform
+#define BUTTONSIZE	300.0
+
 
 /*=============== 
 || Calculation  ||	PLAYER
@@ -64,4 +68,13 @@
 #define ENEMYSIZEVECTOR2	ENEMYWIDTH, ENEMYHEIGHT	// Size in Vector2 form										||
 //==============================================================================================================//
 
+
+/*===============
+|| Calculation  ||	BUTTON
+||==============================================================================================================*/
+// * size																										||
+#define BUTTONWIDTH		BUTTONSIZE			// Width																||
+#define BUTTONHEIGHT	(BUTTONSIZE * 0.2)	// Height																||
+#define BUTTONSIZEVECTOR2	ENEMYWIDTH, ENEMYHEIGHT	// Size in Vector2 form										||
+//==============================================================================================================//
 

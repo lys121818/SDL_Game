@@ -1,12 +1,14 @@
 #include "Platformer.h"
 #include "GameState.h"
-#include "MainMenu.h"
 #include "GameDemo.h"
+#include "MainMenu.h"
+#include "Stage01.h"
 
 Platformer::Platformer(GameDemo* pOwner)
-    : m_pOwner(pOwner)
+    : m_pOwner(pOwner),
+      m_currentScene(SceneName::m_MainMenu)
 {
-    LoadScene(SceneName::m_MainMenu);
+    LoadScene(m_currentScene);
 }
 
 Platformer::~Platformer()
@@ -26,6 +28,7 @@ void Platformer::UpdateCurrentState(double deltaTime)
     if (m_pNextState != nullptr)
     {
         ChangeState(m_pNextState);
+        m_pOwner->PreloadTexture();
         m_pNextState = nullptr;
     }
     if (m_pCurrentState != nullptr)
@@ -34,11 +37,11 @@ void Platformer::UpdateCurrentState(double deltaTime)
     }
 }
 
-void Platformer::RenderCurrentState(SDL_Renderer* pRenderer)
+void Platformer::RenderCurrentState(SDL_Renderer* pRenderer, Textures* pTextures)
 {
     if (m_pCurrentState != nullptr)
     {
-        m_pCurrentState->Render(pRenderer, m_pTextures);
+        m_pCurrentState->Render(pRenderer, pTextures);
     }
 }
 
@@ -57,7 +60,9 @@ void Platformer::ChangeState(GameState* pNewState)
         // Exit the current State
     if (m_pCurrentState != nullptr)
     {
+        //m_pOwner.
         m_pCurrentState->Exit();
+
     }
 
     // delete the old state
@@ -65,6 +70,7 @@ void Platformer::ChangeState(GameState* pNewState)
 
     // Load the new state
     m_pCurrentState = pNewState;
+    //m_pOwner->PreloadTexture();
 
     // Enter the new state
     pNewState->Enter();
@@ -72,20 +78,18 @@ void Platformer::ChangeState(GameState* pNewState)
 
 void Platformer::LoadScene(SceneName scene)
 {
-    m_pTextures = new Textures(m_pOwner->GetRenderer());
     switch (scene)
     {
         case SceneName::m_MainMenu:
         {
             m_pNextState = new MainMenu(this);
-
-            // Preload the textures being used for scene
-            m_pTextures->PreloadTextures((size_t)scene);
+            m_currentScene = SceneName::m_MainMenu;
             break;
         }
         case SceneName::m_GamePlay:
         {
-
+            m_pNextState = new Stage01(this);
+            m_currentScene = SceneName::m_GamePlay;
         }
         // TODO: allocate game state
     }
@@ -95,8 +99,6 @@ void Platformer::LoadScene(SceneName scene)
 
 void Platformer::Destory()
 {
-    delete m_pTextures;
     delete m_pNextState;
     delete m_pCurrentState;
-    delete m_pOwner;
 }

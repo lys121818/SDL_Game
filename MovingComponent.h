@@ -27,7 +27,7 @@ public:
 	~MovingComponent();
 
 	void TryMove(double deltaTime, double speed, Vector2 direction);
-
+	void SetPosition(Vector2 position) { m_position = position; }
 private:
 };
 

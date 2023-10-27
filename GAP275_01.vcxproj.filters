@@ -46,9 +46,6 @@
     <Filter Include="Source Files\SDL_Game\GameObject">
       <UniqueIdentifier>{d0c9273b-b806-4fdd-a421-7faad08ae7e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\SDL_Game\Scenes">
-      <UniqueIdentifier>{7b44c75e-4ce9-46d0-a340-1135737e9bf1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\SDL_Game\States\Game_Platformer\Scenes">
       <UniqueIdentifier>{cd52076d-2df7-459b-b24a-a4a783bb0262}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,9 @@
     </Filter>
     <Filter Include="Source Files\SDL_Game\States\Platformer">
       <UniqueIdentifier>{7693bcdf-5328-4bf3-be0c-f3aa852a85e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game\States\Platformer\Scenes">
+      <UniqueIdentifier>{7b44c75e-4ce9-46d0-a340-1135737e9bf1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -85,7 +85,7 @@
       <Filter>Source Files\SDL_Game\Components</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
-      <Filter>Source Files\SDL_Game\Scenes</Filter>
+      <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="CollisionReferee.cpp">
       <Filter>Source Files\SDL_Game\Components</Filter>
@@ -103,7 +103,10 @@
       <Filter>Source Files\SDL_Game\States\Platformer</Filter>
     </ClCompile>
     <ClCompile Include="Stage01.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonObject.cpp">
+      <Filter>Source Files\SDL_Game\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,11 +170,20 @@
     <ClInclude Include="TiledMap.h">
       <Filter>Header Files\SDL_Game\States\Game_Platformer</Filter>
     </ClInclude>
-    <ClInclude Include="Type.h">
+    <ClInclude Include="ObjectType.h">
       <Filter>Header Files\SDL_Game\GameObject\Struct</Filter>
     </ClInclude>
     <ClInclude Include="Stage01.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonObject.h">
+      <Filter>Header Files\SDL_Game\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageDirectory.h">
+      <Filter>Header Files\SDL_Game\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonType.h">
+      <Filter>Header Files\SDL_Game\GameObject\Struct</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

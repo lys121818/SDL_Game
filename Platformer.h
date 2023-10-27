@@ -1,6 +1,5 @@
 #pragma once
 #include "GameStateMachine.h"
-#include "Textures.h"
 
 class GameDemo;
 class GameState;
@@ -12,8 +11,10 @@ public:
 	enum class SceneName
 	{
 		m_MainMenu = 0,
-		m_GamePlay
-	};
+		m_GamePlay,
+		m_Victory,
+		m_Dead
+	}m_currentScene;
 private:
 	// GameDemo object that is running this state machine.
 	GameDemo* m_pOwner;
@@ -24,8 +25,7 @@ private:
 	// Any State waiting to be loaded on the next frame.
 	GameState* m_pNextState;
 
-	// Class that handles Textures
-	Textures* m_pTextures;
+
 
 public:
 	Platformer(GameDemo* pOwner);
@@ -38,7 +38,7 @@ public:
 	void UpdateCurrentState(double deltaTime) override;
 
 	// Render the current state.
-	void RenderCurrentState(SDL_Renderer* pRenderer) override;
+	void RenderCurrentState(SDL_Renderer* pRenderer, Textures* pTextures) override;
 
 	// Handle the given event within the current state.
 	bool HandleEvent(SDL_Event* pEvent) override;
@@ -49,6 +49,7 @@ public:
 	// Load the given scene.
 	void LoadScene(SceneName scene);
 
+	size_t GetScene() override { return (size_t)m_currentScene; }
 private:
 	// delete all the pointers
 	void Destory();

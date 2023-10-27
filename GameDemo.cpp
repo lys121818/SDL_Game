@@ -4,6 +4,7 @@
 #include <time.h>
 #include <chrono>
 #include <cassert>
+#include <iostream>
 #include "GameDemo.h"
 #include "Platformer.h"
 
@@ -21,6 +22,7 @@ int GameDemo::Init(GameStateMachine* pGameStateMachine)
     if (pGameStateMachine != nullptr)
     {
         m_pStateMachine = pGameStateMachine;
+        m_pTextures = new Textures(m_pRenderer);
     }
 
 	return 0;
@@ -62,6 +64,9 @@ void GameDemo::Destroy()
     // Destroy Renderer.
     SDL_DestroyRenderer(m_pRenderer);
 
+    // Destory Textures
+    delete m_pTextures;
+
     // SDL window cleanup
     SDL_DestroyWindow(m_pWindow);
 
@@ -74,6 +79,13 @@ void GameDemo::Destroy()
 /////////////
 // PRIVATE //
 /////////////
+
+void GameDemo::PreloadTexture()
+{
+    std::cout << "Current Scene" << m_pStateMachine->GetScene() << std::endl;
+    m_pTextures->PreloadTextures(m_pStateMachine->GetScene());
+
+}
 
 bool GameDemo::ProcessEvents()
 {
@@ -116,7 +128,7 @@ void GameDemo::DisplayOutput()
     SDL_RenderClear(m_pRenderer);
 
     
-    m_pStateMachine->RenderCurrentState(m_pRenderer);
+    m_pStateMachine->RenderCurrentState(m_pRenderer,m_pTextures);
 
 
     // Presenting.

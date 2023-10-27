@@ -15,6 +15,7 @@ MovingComponent::~MovingComponent()
 
 void MovingComponent::TryMove(double deltaTime, double speed, Vector2 direction)
 {
+
 	// Amount of position its moving
 	double deltaPosition = speed * deltaTime;
 

@@ -15,11 +15,6 @@ public:
 	// Gets called by the main loop each frame to render this object.
 	virtual void Render(SDL_Renderer*, SDL_Texture*) {}
 
-	// Return Name of the Texture
-	virtual const char* GetTextureName() { return "UnNamed"; }
-
-	// Return Name of the object
-	virtual const char* GetName() { return "UnNamed"; }
 
 	// Callback for when a collision occurs.
 	virtual void OnCollision(ColliderComponent*) {}
@@ -32,8 +27,21 @@ public:
 
 	virtual void TryMove(Vector2) {}
 
+
+	//GETTERS
+	// Return Name of the Texture
+	virtual const char* GetTextureName() { return "UnNamed"; }
+
+	// Return Name of the object
+	virtual const char* GetName() { return "UnNamed"; }
+
+	// Return the Status of the gameobject
 	virtual Status GetStatus() = 0;
 
 	// Return transform of object
 	virtual SDL_Rect GetTransform() = 0;
+
+	// SETTERS
+
+	virtual void SetPosition(Vector2) {}
 };

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <unordered_map>
 #include "Defines.h"
+#include "Textures.h"
 
 
 class GameStateMachine;
@@ -28,6 +29,8 @@ private:
 	// Pointer to the state machine for managing game state.
 	GameStateMachine* m_pStateMachine;
 
+	// Class that handles Textures
+	Textures* m_pTextures;
 
 public:
 	// Initializing SDL and return errorCode or 0
@@ -38,6 +41,9 @@ public:
 
 	// Destroys the SDL elements or the pointers
 	void Destroy();
+
+	// load texture which are being used in the scene
+	void PreloadTexture();
 
 	// Return pointer to the renderer
 	SDL_Renderer* GetRenderer() { return m_pRenderer; }
