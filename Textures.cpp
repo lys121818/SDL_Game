@@ -16,31 +16,45 @@ void Textures::PreloadTextures(size_t sceneNumber)
 {
     // Destory the previous textures before Preload new Textures
     DestoryTextures();
+
+    // PlatFormer
     switch ((int)sceneNumber)
     {
-    case 0:
-    {
-        AddImagesToTexture(BACKGROUND);
-        AddImagesToTexture(BUTTONS);
-        break;
-    }
-    case 1:
-    {
-        // Simple adding by using directory of the image
-        // IMAGES
-        AddImagesToTexture(PLAYER);
-        AddImagesToTexture(BACKGROUND);
+        // Main Menu
+        case 0: 
+        {
+            AddImagesToTexture(BACKGROUND);
+            AddImagesToTexture(BUTTONS);
+            break;
+        }
 
-        // IMAGE SPRITES
-        AddImagesToTexture(TILES);      
-        AddImagesToTexture(OBJECTS);       
+        // Game Play
+        case 1:
+        {
+            // Simple adding by using directory of the image
+            // IMAGES
+            AddImagesToTexture(PLAYER);
+            AddImagesToTexture(BACKGROUND);
 
-        // ANIMATION SPRITES
-        AddImagesToTexture(PUMPKIN);
-        AddImagesToTexture(ZOMBIEMALE);
-        AddImagesToTexture(ZOMBIEFEMALE);
-        break;
-    }
+            // IMAGE SPRITES
+            AddImagesToTexture(TILES);      
+            AddImagesToTexture(OBJECTS);       
+
+            // ANIMATION SPRITES
+            AddImagesToTexture(PUMPKIN);
+            AddImagesToTexture(ZOMBIEMALE);
+            AddImagesToTexture(ZOMBIEFEMALE);
+            break;
+        }
+
+        // Win Screen
+        case 2:
+        {
+            AddImagesToTexture(BACKGROUND);
+            AddImagesToTexture(BUTTONS);
+            AddImagesToTexture(TESTPOPING);
+            break;
+        }
     default:
         break;
     }

@@ -41,12 +41,12 @@ public:
 	// Handles the event in the context of this scene.
 	bool HandleEvent(SDL_Event* pEvent) override;
 
-	bool ProcessMouseEvent(SDL_MouseButtonEvent* pData);
-
 	// Cleans up the state
 	void Exit() override;
 
 private:
+	bool ProcessMouseEvent(SDL_MouseButtonEvent* pData);
+
 	void SetButtons();
 
 	// Updates for background

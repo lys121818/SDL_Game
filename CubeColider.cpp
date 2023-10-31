@@ -7,7 +7,7 @@
 CubeColider::CubeColider(SDL_Rect transform, CollisionReferee* pReferee, size_t type, const char* directory)
 	:
 	 m_transform(transform),
-	 m_isGame(false),
+	 m_isWin(false),
 	 m_animation(directory, 6, 200, 300, &m_transform),
 	 m_collider(this, transform, pReferee),
 	 m_pSpriteName(directory),
@@ -220,7 +220,7 @@ void CubeColider::OnOverlapBegin(ColliderComponent* pCollider)
 	case (size_t)ObjectType::m_WinZone:
 	{
 		std::cout << "You Have Entered the Win Zone!" << std::endl;
-		m_isGame = true;
+		m_isWin = true;
 		break;
 	}
 	case (size_t)ObjectType::m_DamageZone:
@@ -377,7 +377,7 @@ void CubeColider::GetDamaged(int amount)
 	if (m_status.m_health <= 0)
 	{
 		std::cout << "You died \n";
-		m_isGame = true;
+		m_isWin = true;
 	}
 	// Over Healed
 	else if (m_status.m_health > s_KMaxHealth)

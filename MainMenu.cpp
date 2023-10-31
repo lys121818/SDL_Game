@@ -8,8 +8,9 @@
 
 MainMenu::MainMenu(Platformer* pOwner)
 	:m_pOwner(pOwner),
-	 m_background_1(SDL_Rect{ 0,0,WINDOWWIDTH,WINDOWHEIGHT },nullptr,BACKGROUND,0,0,"BackGround"),
-	 m_background_2(SDL_Rect{ WINDOWWIDTH,0,WINDOWWIDTH,WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround")
+	 m_background_1(SDL_Rect{ 0,0,WINDOWWIDTH,WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
+	 m_background_2(SDL_Rect{ WINDOWWIDTH,0,WINDOWWIDTH,WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
+	 m_pHoverButton(nullptr)
 {
 }
 
@@ -143,6 +144,11 @@ bool MainMenu::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
 					m_pHoverButton->SetClick(false);
 					m_pOwner->LoadScene(Platformer::SceneName::m_GamePlay);
 				}
+				else if (m_pHoverButton->GetStatus().m_name == "Quit" && m_pHoverButton->GetClicked())
+				{
+					m_pHoverButton->SetClick(false);
+					return true;
+				}
 			}
 			break;
 		}
@@ -166,6 +172,7 @@ void MainMenu::SetButtons()
 	ButtonObject* button;
 	SDL_Rect buttonTransform;
 	
+	// Start Button
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
@@ -175,6 +182,28 @@ void MainMenu::SetButtons()
 	};
 
 	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Normal, "Start");
+	m_vpButtons.push_back(button);
+
+	buttonTransform = SDL_Rect
+	{
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		200,				// Y
+		(int)BUTTONWIDTH,	// W
+		(int)BUTTONHEIGHT	// H
+	};
+
+	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Disable, "Settings");
+	m_vpButtons.push_back(button);
+
+	buttonTransform = SDL_Rect
+	{
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		300,				// Y
+		(int)BUTTONWIDTH,	// W
+		(int)BUTTONHEIGHT	// H
+	};
+
+	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Normal, "Quit");
 	m_vpButtons.push_back(button);
 
 

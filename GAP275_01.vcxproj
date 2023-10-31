@@ -190,13 +190,16 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="GameDemo.cpp" />
     <ClCompile Include="ImageComponent.cpp" />
     <ClCompile Include="ImageObject.cpp" />
+    <ClCompile Include="LossScreen.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MovingComponent.cpp" />
     <ClCompile Include="Platformer.cpp" />
+    <ClCompile Include="PopupImageObject.cpp" />
     <ClCompile Include="Stage01.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TiledMap.cpp" />
+    <ClCompile Include="WinScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
@@ -215,15 +218,18 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="ImageComponent.h" />
     <ClInclude Include="ImageDirectory.h" />
     <ClInclude Include="ImageObject.h" />
+    <ClInclude Include="LossScreen.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MovingComponent.h" />
     <ClInclude Include="Platformer.h" />
+    <ClInclude Include="PopupImageObject.h" />
     <ClInclude Include="Stage01.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TiledMap.h" />
     <ClInclude Include="ObjectType.h" />
     <ClInclude Include="Vector2.h" />
+    <ClInclude Include="WinScreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

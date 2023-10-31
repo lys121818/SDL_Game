@@ -85,6 +85,9 @@ private:
 	// Add additional gameobject to vector
 	void AddGameObject(GameObject* object);
 
+	// returns true if the game is over
+	bool UpdateGamestate();
+
 	// Cleans up the state
 	void Exit() override;
 };

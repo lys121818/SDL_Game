@@ -28,7 +28,7 @@ private:
 
 private:
     // true when Game Over
-    bool m_isGame;
+    bool m_isWin;
 
     // * PLAYER
     // Width
@@ -126,6 +126,8 @@ public:
     // Get this Object's Status
     virtual Status GetStatus() override { return m_status; }
 
+    bool GetWinState() { return m_isWin; }
+
     void Jump(double deltaTime = 0);
 
     // Moving
@@ -134,7 +136,7 @@ public:
     void NormalSpeed() { m_status.m_speed = s_kSpeed; }
     void SlowSpeed() { m_status.m_speed = s_kMixSpeed; }
 
-    bool FinishGame() { return m_isGame; }
+    bool FinishGame() { return m_isWin; }
 
 
 private:

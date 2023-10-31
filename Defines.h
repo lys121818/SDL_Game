@@ -15,7 +15,7 @@
 #define WINDOWHEIGHT 600
 
 // SCENE CHANGE
-#define LOADINGTIME 3.0
+#define LOADINGTIME 2.0
 
 /// VECTOR2 SETTINGS
 // Direction

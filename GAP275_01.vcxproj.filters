@@ -93,9 +93,6 @@
     <ClCompile Include="GameDemo.cpp">
       <Filter>Source Files\SDL_Game</Filter>
     </ClCompile>
-    <ClCompile Include="Textures.cpp">
-      <Filter>Source Files\SDL_Game\States</Filter>
-    </ClCompile>
     <ClCompile Include="Platformer.cpp">
       <Filter>Source Files\SDL_Game\States\Platformer</Filter>
     </ClCompile>
@@ -106,6 +103,18 @@
       <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="ButtonObject.cpp">
+      <Filter>Source Files\SDL_Game\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source Files\SDL_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="WinScreen.cpp">
+      <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="LossScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PopupImageObject.cpp">
       <Filter>Source Files\SDL_Game\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,9 +170,6 @@
     <ClInclude Include="GameStateMachine.h">
       <Filter>Header Files\SDL_Game\Virtual</Filter>
     </ClInclude>
-    <ClInclude Include="Textures.h">
-      <Filter>Header Files\SDL_Game\States</Filter>
-    </ClInclude>
     <ClInclude Include="Platformer.h">
       <Filter>Header Files\SDL_Game\States\Game_Platformer</Filter>
     </ClInclude>
@@ -184,6 +190,18 @@
     </ClInclude>
     <ClInclude Include="ButtonType.h">
       <Filter>Header Files\SDL_Game\GameObject\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Header Files\SDL_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="WinScreen.h">
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="LossScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PopupImageObject.h">
+      <Filter>Header Files\SDL_Game\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

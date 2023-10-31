@@ -2,6 +2,7 @@
 #include "GameState.h"
 #include "GameDemo.h"
 #include "MainMenu.h"
+#include "WinScreen.h"
 #include "Stage01.h"
 
 Platformer::Platformer(GameDemo* pOwner)
@@ -90,7 +91,16 @@ void Platformer::LoadScene(SceneName scene)
         {
             m_pNextState = new Stage01(this);
             m_currentScene = SceneName::m_GamePlay;
+            break;
         }
+        case SceneName::m_Victory:
+        {
+            m_pNextState = new WinScreen(this);
+            m_currentScene = SceneName::m_Victory;
+            break;
+        }
+        default:
+            break;
         // TODO: allocate game state
     }
 

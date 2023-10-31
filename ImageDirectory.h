@@ -12,6 +12,7 @@
 // Image Sprite
 #define TILES		"assets/Tiles.png"			// 128 * 128
 #define OBJECTS		"assets/Objects.png"		// 64 * 64
+#define TESTPOPING	"assets/TestPoping.png"		// 4868 * 3787
 
 // Animation Sprite Sheet
 #define PUMPKIN			"assets/Pumpkin.png"		// 200 * 300

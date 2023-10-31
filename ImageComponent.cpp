@@ -130,6 +130,10 @@ void ImageComponent::ImageSpriteSettings()
 		AddImageFrame("Disable", 0, 1, 100, 40);
 		AddImageFrame("Click", 1, 1, 100, 40);
 	}
+	else if (strcmp(m_pSpriteName, TESTPOPING) == 0)
+	{
+		AddImageFrame("Poping",0,0,4868,3787);
+	}
 
 }
 

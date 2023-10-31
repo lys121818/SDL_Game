@@ -1,12 +1,16 @@
 #include "Stage01.h"
 #include "EnemyObject.h"
 #include "ImageDirectory.h"
+#include "Platformer.h"
 #include <iomanip>
 
 Stage01::Stage01(Platformer* pOwner)
     :m_pOwner(pOwner)
 {
     m_CurrentTime = 0.0;
+
+    // GameObject and Tiles Setting
+    InitGame();
 }
 
 Stage01::~Stage01()
@@ -15,8 +19,6 @@ Stage01::~Stage01()
 
 void Stage01::Enter()
 {
-	InitGame();
-
 }
 
 void Stage01::Update(double deltaTime)
@@ -34,7 +36,7 @@ void Stage01::Update(double deltaTime)
             element->Update(deltaTime);
         }
     }
-
+    UpdateGamestate();
 }
 
 // Rendering any objects in the game.
@@ -64,8 +66,7 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
 bool Stage01::HandleEvent(SDL_Event* pEvent)
 {
-
-    
+    // Check if the game is over
 
     switch ((int)pEvent->type)
     {
@@ -73,8 +74,12 @@ bool Stage01::HandleEvent(SDL_Event* pEvent)
         case SDL_KEYDOWN:
         case SDL_KEYUP:
         {
+
+
             if (ProcessKeyboardEvent(&pEvent->key) == true)
+            {
                 return true;
+            }
             break;
         }
 
@@ -335,6 +340,23 @@ void Stage01::AddGameObject(GameObject* object)
         return;
     // add the gameobject to vector
     m_vpGameObjects.push_back(object);
+}
+
+bool Stage01::UpdateGamestate()
+{
+    if (m_pPlayer->GetWinState())
+    {
+        if (m_pPlayer->GetStatus().m_health > 0)
+        {
+            m_pOwner->LoadScene(Platformer::SceneName::m_Victory);
+        }
+        else
+        {
+            m_pOwner->LoadScene(Platformer::SceneName::m_Dead);
+        }
+    }
+
+    return false;
 }
 
 void Stage01::Exit()

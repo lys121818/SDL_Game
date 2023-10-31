@@ -1,16 +1,19 @@
 #pragma once
 #include "GameObject.h"
-#include "Vector2.h"
 #include "ImageComponent.h"
-#include "ColliderComponent.h"
-#include "CollisionReferee.h"
-#include "MovingComponent.h"
-class ImageObject : public GameObject
+
+class PopupImageObject : public GameObject
 {
+private:
 	Status m_status;
 
-	// Speed of object
+	// Speed of object poping out
 	static constexpr int s_kSpeed = 50;
+
+	// Max size of image
+	static constexpr int s_kMaxWidth = 400;
+	static constexpr int s_kMaxHeight = 300;
+
 
 	// Name Of the Object
 	const char* m_pSpriteName;
@@ -18,17 +21,17 @@ class ImageObject : public GameObject
 	// Transform of the object
 	SDL_Rect m_transform;
 
+	// Image position
+	Vector2 m_position;
+
+
 	// Image Component
 	ImageComponent m_imageComponent;
 
-	// Moving Component
-	MovingComponent m_movingComponent;
-
-	ColliderComponent m_collider;
-
+	bool m_isPoping;
 public:
-	ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name = "UnNamed");
-	~ImageObject();
+	PopupImageObject(Vector2 position, const char* directory, const int index, size_t type, const char* name = "UnNamed");
+	~PopupImageObject();
 
 
 
@@ -59,5 +62,6 @@ public:
 private:
 	void SetImage(const int index);
 
+	void PopingImage(double deltaTime);
 };
 
