@@ -22,6 +22,9 @@ private:
 
 	bool isOnAction;
 
+	// Index of selected button
+	int m_keyboardButtonIndex;
+
 public:
 	WinScreen(Platformer* pOwner);
 	~WinScreen();
@@ -44,12 +47,18 @@ public:
 	virtual void Exit() override;
 
 private:
+	// PROCESSING EVENT
+	// Every events using mouse works here
 	bool ProcessMouseEvent(SDL_MouseButtonEvent* pData);
+	// Every events using keyboards works here
+	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
 
 	void SetButtons();
 
 	// Destory the pointers
 	void Destory();
-	
+
+	// Changes button focus when using keyboard
+	void ChangeButtonFocus(int direction);
 };
 

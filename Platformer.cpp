@@ -110,6 +110,7 @@ void Platformer::LoadScene(SceneName scene)
         {
             m_pNextState = new LossScreen(this);
             m_currentScene = SceneName::kDead;
+            break;
         }
         default:
             break;

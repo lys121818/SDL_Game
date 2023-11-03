@@ -37,7 +37,7 @@ public:
 	void Init(CollisionReferee* pReferee);
 
 	// Render Tiles
-	void Render(SDL_Renderer* pRenderer, Textures* pTexture);
+	void Render(SDL_Renderer* pRenderer, Textures* pTextures);
 
 	// Remove pointers
 	void Delete();

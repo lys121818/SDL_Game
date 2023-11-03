@@ -50,14 +50,45 @@ void ButtonObject::HandleEvent(SDL_Event* pEvent)
 {
 	switch (pEvent->type)
 	{
-		case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEMOTION:
+	{
+		if (m_isAble)
 		{
-			if (m_callback != nullptr && HitTest(pEvent->button.x, pEvent->button.y))
+			if (HitTest(pEvent->button.x, pEvent->button.y))
 			{
-				Trigger();
+				if (m_currentState != Button_State::kClick)
+				{
+					m_isOnHover = true;
+				}
 			}
-			break;
+			else
+			{
+				m_isOnHover = false;
+				m_isClicked = false;
+			}
+
 		}
+
+		break;
+	}
+	case SDL_MOUSEBUTTONDOWN:
+	{
+		if (m_callback != nullptr && HitTest(pEvent->button.x, pEvent->button.y))
+		{
+			SetButtonState(Button_State::kClick);
+			m_isClicked = true;
+		}
+		break;
+	}
+	case SDL_MOUSEBUTTONUP:
+	{
+		if (m_isClicked)
+		{
+			m_isClicked = false;
+			Trigger();
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -79,24 +110,20 @@ void ButtonObject::ButtonState()
 			if (m_isClicked)
 			{
 				SetButtonState(Button_State::kClick);
-				m_currentState = Button_State::kClick;
 			}
 			else
 			{
 				SetButtonState(Button_State::kHover);
-				m_currentState = Button_State::kHover;
 			}
 		}
 		else
 		{
 			SetButtonState(Button_State::kNormal);
-			m_currentState = Button_State::kNormal;
 		}
 	}
 	else
 	{
 		SetButtonState(Button_State::kDisable);
-		m_currentState = Button_State::kDisable;
 	}
 }
 

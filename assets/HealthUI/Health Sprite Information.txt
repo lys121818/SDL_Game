@@ -1,0 +1,21 @@
+Sprite Information
+
+Bar
+W 540	X 0
+H 121	Y 0
+
+BlankHealth
+W 366	X 0
+H 53	Y 210
+
+LongHealth
+W 370	X 0
+H 53	Y 150
+
+HealthSymbol
+W 115	X 400
+H 115	Y 150
+
+ShortHeath
+W 51	X 0
+H 53	Y 280

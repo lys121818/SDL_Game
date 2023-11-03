@@ -28,6 +28,8 @@ private:
 
 	ButtonObject* m_pHoverButton;
 
+	// Index of selected button
+	int m_keyboardButtonIndex;
 
 public:
 	MainMenu(Platformer* pOwner);
@@ -48,7 +50,11 @@ public:
 	void Exit() override;
 
 private:
+	// PROCESSING EVENT
+	// Every events using mouse works here
 	bool ProcessMouseEvent(SDL_MouseButtonEvent* pData);
+	// Every events using keyboards works here
+	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
 
 	void SetButtons();
 
@@ -57,5 +63,8 @@ private:
 
 	// Destory the pointers
 	void Destory();
+
+	// Changes button focus when using keyboard
+	void ChangeButtonFocus(int direction);
 };
 

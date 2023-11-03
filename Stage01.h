@@ -9,6 +9,7 @@
 #include "ImageObject.h"
 #include "GameObject.h"
 #include "GameSetting.h"
+#include "UIController.h"
 
 //==================================================================================================//
 /// STAGE 01
@@ -50,6 +51,9 @@ private:
 
 	// Pair of animation collections
 	std::unordered_map<const char*, AnimationComponent*> m_mpAnimations;
+
+	// Controlls the UI
+	UIController* m_UIController;
 
 public:
 	Stage01(Platformer* pOwner);

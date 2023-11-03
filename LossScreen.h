@@ -23,6 +23,10 @@ private:
 	ButtonObject* m_pHoverButton;
 
 	bool isOnAction;
+
+	// Index of selected button
+	int m_keyboardButtonIndex;
+
 public:
 	LossScreen(Platformer* pOwner);
 	~LossScreen();
@@ -36,7 +40,6 @@ public:
 	// Render the scene.
 	virtual void Render(SDL_Renderer* pRenderer, Textures* pTextures) override;
 
-
 	// Handles the event in the context of this scene.
 	virtual bool HandleEvent(SDL_Event* pEvent) override;
 
@@ -45,11 +48,18 @@ public:
 	virtual void Exit() override;
 
 private:
+	// PROCESSING EVENT
+	// Every events using mouse works here
 	bool ProcessMouseEvent(SDL_MouseButtonEvent* pData);
+	// Every events using keyboards works here
+	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
 
 	void SetButtons();
 
 	// Destory the pointers
 	void Destory();
+
+	// Changes button focus when using keyboard
+	void ChangeButtonFocus(int direction);
 };
 

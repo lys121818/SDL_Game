@@ -28,8 +28,13 @@ public:
 
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* ptexture);
 
+
+	// Set image to render
+	void SetImageFrame(std::string name);
+
+private:
 	/// IMAGE FRAME
-	// Store image to Image Container
+// Store image to Image Container
 	void AddImageFrame
 	(
 		std::string name,	// Name of the image
@@ -37,10 +42,14 @@ public:
 		int frameWidth, int frameHeight	// Size On Image Sprite
 	);
 
-	// Set image to render
-	void SetImageFrame(std::string name);
+	void AddImageFrameByTransform
+	(
+		std::string name,	// Name of the image
+		int positionX, int positionY, // Position On Image Sprite
+		int frameWidth, int frameHeight	// Size On Image Sprite
+	);
 
-private:
+
 	// Image Sprite Settings
 	void ImageSpriteSettings();
 

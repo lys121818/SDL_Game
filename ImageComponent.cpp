@@ -56,6 +56,28 @@ void ImageComponent::AddImageFrame(std::string name, int frameX, int frameY, int
 
 }
 
+void ImageComponent::AddImageFrameByTransform(std::string name, int positionX, int positionY, int frameWidth, int frameHeight)
+{
+
+	// return when the frame is already created
+	if (m_allImages.find(name) != m_allImages.end())
+		return;
+	// Pair to insert on map
+	std::pair<std::string, SDL_Rect*> newImageFrame;
+
+	/// SOURCE TRANSFORM
+	SDL_Rect* imageTransform;
+
+	imageTransform = new SDL_Rect{ positionX, positionY, frameWidth, frameHeight };
+
+	newImageFrame.first = name;
+	newImageFrame.second = imageTransform;
+
+	// Add to vector container
+	m_allImages.insert(newImageFrame);
+
+}
+
 void ImageComponent::SetImageFrame(std::string name)
 {
 	// if named image is exist -> set current frame to named image
@@ -138,7 +160,16 @@ void ImageComponent::ImageSpriteSettings()
 	{
 		AddImageFrame("Loss", 0, 0, 750, 1000);
 	}
+	// UI
+	else if (strcmp(m_pSpriteName, HEALTHUI) == 0)
+	{
+		AddImageFrameByTransform("Bar", 0, 0, 540, 121);
+		AddImageFrameByTransform("Health_Long", 0, 150, 370, 53);
+		AddImageFrameByTransform("BlankHealth", 0, 210, 366, 53);
+		AddImageFrameByTransform("HealthSymbol", 400, 150, 115, 115);
+		AddImageFrameByTransform("Health_Short", 0, 280, 51, 53);
 
+	}
 }
 
 void ImageComponent::Destroy()

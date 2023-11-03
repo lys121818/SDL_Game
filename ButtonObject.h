@@ -53,7 +53,7 @@ public:
 
 	bool GetAble() { return m_isAble; }
 
-	bool GetClicked() { return m_isClicked; }
+	bool GetSelected() { return m_isOnHover; }
 
 	void SetHover(bool isHover) { m_isOnHover = isHover; }
 
@@ -62,6 +62,10 @@ public:
 	void SetTextInButton(TTF_Font* pFont, const char* pText, SDL_Color color, SDL_Renderer* pRenderer);
 
 	void SetCallback(std::function<void()> callback) { m_callback = callback; }
+
+	// Executes the callback
+	void Trigger();
+
 private:
 	void ButtonState();
 
@@ -71,8 +75,7 @@ private:
 	// Set the right image according to the state
 	void SetImage();
 
-	// Executes the callback
-	void Trigger();
+
 
 	// Returns whether (x,y) is within the bounds of the button.
 	bool HitTest(int x, int y);

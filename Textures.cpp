@@ -44,6 +44,8 @@ void Textures::PreloadTextures(size_t sceneNumber)
             AddImagesToTexture(PUMPKIN);
             AddImagesToTexture(ZOMBIEMALE);
             AddImagesToTexture(ZOMBIEFEMALE);
+
+            AddImagesToTexture(HEALTHUI);
             break;
         }
 

@@ -22,6 +22,7 @@ int GameDemo::Init(GameStateMachine* pGameStateMachine)
 
     if (pGameStateMachine != nullptr)
     {
+        m_quit = false;
         m_pStateMachine = pGameStateMachine;
         m_pTextures = new Textures(m_pRenderer);
         m_pFonts = new Fonts();
@@ -111,18 +112,18 @@ bool GameDemo::ProcessEvents()
     if (m_pStateMachine == nullptr)
         return true;
 
-    m_quit = false;
+    bool quit = false;
 
 
     SDL_Event evt;
     while (SDL_PollEvent(&evt) != 0)
     {
-        m_quit = m_pStateMachine->HandleEvent(&evt);
+        quit = m_pStateMachine->HandleEvent(&evt);
 
-        return m_quit;
+        return quit;
     }
 
-    return m_quit;
+    return quit;
 }
 
 void GameDemo::UpdateGameState(double deltaTime)

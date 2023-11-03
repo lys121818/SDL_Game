@@ -5,7 +5,9 @@
 #include <iomanip>
 
 Stage01::Stage01(Platformer* pOwner)
-    :m_pOwner(pOwner)
+    :
+    m_pOwner(pOwner),
+    m_UIController(nullptr)
 {
     m_CurrentTime = 0.0;
 
@@ -19,6 +21,7 @@ Stage01::~Stage01()
 
 void Stage01::Enter()
 {
+
 }
 
 void Stage01::Update(double deltaTime)
@@ -34,6 +37,7 @@ void Stage01::Update(double deltaTime)
         {
             element->Update(deltaTime);
         }
+        m_UIController->Update();
     }
     UpdateGamestate();
 }
@@ -58,8 +62,11 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
                 element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
             }
         }
+
         m_pTiledMap->Render(pRenderer, pTextures);
+        m_UIController->Render(pRenderer, pTextures);
     }
+    
 
 }
 
@@ -321,6 +328,8 @@ void Stage01::InitGame()
     stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::kEnemy, "Zombie_Male");
     AddGameObject(stationary);
 
+    m_UIController = new UIController(this, m_pPlayer);
+    m_UIController->InitUI();
 
 }
 

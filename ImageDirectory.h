@@ -23,6 +23,9 @@
 // Buttons
 #define BUTTONS	"assets/Buttons.png"		// 200 * 80
 
+/*  UI */
+// HEALTH
+#define HEALTHUI	"assets/HealthUI/HealthSprite.png"
 
 
 ///FONTS

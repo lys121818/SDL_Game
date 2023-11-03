@@ -123,6 +123,12 @@
     <ClCompile Include="TextComponent.cpp">
       <Filter>Source Files\SDL_Game\Components</Filter>
     </ClCompile>
+    <ClCompile Include="UIController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PlayerObject.h">
@@ -214,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="TextComponent.h">
       <Filter>Header Files\SDL_Game\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

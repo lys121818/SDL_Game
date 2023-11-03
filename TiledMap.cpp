@@ -22,7 +22,7 @@ void TiledMap::Init(CollisionReferee* pReferee)
 	TileSettings(pReferee);
 }
 
-void TiledMap::Render(SDL_Renderer* pRenderer, Textures* pTexture)
+void TiledMap::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 {
 
     //Render Background
@@ -34,7 +34,7 @@ void TiledMap::Render(SDL_Renderer* pRenderer, Textures* pTexture)
             element->GetTransform().y >= (0 - element->GetTransform().h) &&
             element->GetTransform().y < WINDOWHEIGHT - 10)    // Window height
         {
-            element->Render(pRenderer, pTexture->GetTexture(element->GetTextureName()));
+            element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
         }
     }
 
@@ -106,7 +106,7 @@ void TiledMap::TileSettings(CollisionReferee* pReferee)
         // runs loop size of tiles needed for width
         for (int x = 0; x < m_maxTiles.m_x; ++x)
         {
-            size_t currentLocation = (y * m_maxTiles.m_x) + x;
+            size_t currentLocation = (static_cast<size_t>(y) * m_maxTiles.m_x) + x;
             /// TRANSFORM
             Vector2 position;
             Vector2 size;

@@ -205,6 +205,8 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="TextComponent.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TiledMap.cpp" />
+    <ClCompile Include="UIController.cpp" />
+    <ClCompile Include="UIObject.cpp" />
     <ClCompile Include="WinScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +238,8 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TiledMap.h" />
     <ClInclude Include="ObjectType.h" />
+    <ClInclude Include="UIController.h" />
+    <ClInclude Include="UIObject.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="WinScreen.h" />
   </ItemGroup>
