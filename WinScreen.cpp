@@ -1,13 +1,16 @@
 #include "WinScreen.h"
 #include "ImageDirectory.h"
 #include "Platformer.h"
+#include "GameDemo.h"
 
 WinScreen::WinScreen(Platformer* pOwner)
-	:m_pOwner(pOwner),
-	 m_Background(SDL_Rect{ 0,0,WINDOWWIDTH,WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "WinState"),
-	 m_pHoverButton(nullptr),
-	 m_testPoping(Vector2{ 400,300 }, TESTPOPING, 0, 0, "Poping")
+	:
+	m_pOwner(pOwner),
+	m_Background(Vector2{ 0,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "WinState"),
+	m_pHoverButton(nullptr),
+	m_winImage(Vector2{ 200,-10 }, Vector2{400,500} , nullptr, WIN_STATE, 0, 0, "Win")
 {
+	isOnAction = true;
 }
 
 WinScreen::~WinScreen()
@@ -17,26 +20,37 @@ WinScreen::~WinScreen()
 void WinScreen::Enter()
 {
 	SetButtons();
+	m_winImage.SetAction(ImageActionComponent::ActionState::kPoping);
 }
 
 void WinScreen::Update(double deltaTime)
 {
+	if (isOnAction)
+	{
+		if (m_winImage.GetActionState() == ImageActionComponent::ActionState::kNormal)
+			isOnAction = false;
+	}
+	// Print buttons when action is done
 	for (auto& element : m_vpButtons)
 	{
 		element->Update(deltaTime);
 	}
-	m_testPoping.Update(deltaTime);
+	m_winImage.Update(deltaTime);
+
 }
 
 void WinScreen::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 {
 	m_Background.Render(pRenderer, pTextures->GetTexture(m_Background.GetTextureName()));
 
-	m_testPoping.Render(pRenderer, pTextures->GetTexture(m_testPoping.GetTextureName()));
-
-	for (auto& element : m_vpButtons)
+	m_winImage.Render(pRenderer, pTextures->GetTexture(m_winImage.GetTextureName()));
+	if (!isOnAction)
 	{
-		element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
+		// Print buttons when action is done
+		for (auto& element : m_vpButtons)
+		{
+			element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
+		}
 	}
 }
 
@@ -132,12 +146,12 @@ bool WinScreen::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
 				if (m_pHoverButton->GetStatus().m_name == "MainMenu" && m_pHoverButton->GetClicked())
 				{
 					m_pHoverButton->SetClick(false);
-					m_pOwner->LoadScene(Platformer::SceneName::m_MainMenu);
+					m_pOwner->LoadScene(Platformer::SceneName::kMainMenu);
 				}
 				else if (m_pHoverButton->GetStatus().m_name == "Restart" && m_pHoverButton->GetClicked())
 				{
 					m_pHoverButton->SetClick(false);
-					m_pOwner->LoadScene(Platformer::SceneName::m_GamePlay);
+					m_pOwner->LoadScene(Platformer::SceneName::kGamePlay);
 				}
 				else if (m_pHoverButton->GetStatus().m_name == "Quit" && m_pHoverButton->GetClicked())
 				{
@@ -173,34 +187,39 @@ void WinScreen::SetButtons()
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
-		100,				// Y
+		s_kFirstButtonY,				// Y
 		(int)BUTTONWIDTH,	// W
 		(int)BUTTONHEIGHT	// H
 	};
 
-	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Normal, "MainMenu");
+	TTF_Font* font = m_pOwner->GetGame()->GetFonts()->GetFont(FONT2);
+
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "MainMenu");
+	button->SetTextInButton(font, "MAIN MENU", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
-		200,				// Y
+		s_kFirstButtonY + s_kDistanceBetweenButtons,				// Y
 		(int)BUTTONWIDTH,	// W
 		(int)BUTTONHEIGHT	// H
 	};
 
-	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Normal, "Restart");
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Restart");
+	button->SetTextInButton(font, "RESTART", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
-		300,				// Y
+		s_kFirstButtonY + (s_kDistanceBetweenButtons * 2),				// Y
 		(int)BUTTONWIDTH,	// W
 		(int)BUTTONHEIGHT	// H
 	};
 
-	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Normal, "Quit");
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Quit");
+	button->SetTextInButton(font, "Q U I T", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
 

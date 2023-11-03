@@ -5,16 +5,16 @@
 enum class ObjectType
 {
 	// 0 is empty
-	m_Wall = 1,
-	m_Ground,
+	kWall = 1,
+	kGround,
 
-	m_Player,
-	m_Enemy,
+	kPlayer,
+	kEnemy,
 
-	m_BackGround = COLLISIONINDEX,
-	m_DamageZone,
-	m_HealingZone,
-	m_WinZone,
+	kBackGround = COLLISIONINDEX,
+	kDamageZone,
+	kHealingZone,
+	kWinZone,
 
-	m_UNINIT = 999
+	kUNINIT = 999
 };

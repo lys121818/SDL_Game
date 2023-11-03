@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include "Defines.h"
 #include "Textures.h"
+#include "Fonts.h"
 
 
 class GameStateMachine;
@@ -32,6 +33,12 @@ private:
 	// Class that handles Textures
 	Textures* m_pTextures;
 
+	// Class that handles Fonts
+	Fonts* m_pFonts;
+
+	// Whether to queit at the end of the current frame
+	bool m_quit;
+
 public:
 	// Initializing SDL and return errorCode or 0
 	int Init(GameStateMachine* pGameStateMachine);
@@ -42,11 +49,18 @@ public:
 	// Destroys the SDL elements or the pointers
 	void Destroy();
 
+	// Quits the game at the end of the current frame.
+	void Quit();
+
 	// load texture which are being used in the scene
 	void PreloadTexture();
 
+	void PreloadFonts();
+
 	// Return pointer to the renderer
 	SDL_Renderer* GetRenderer() { return m_pRenderer; }
+
+	Fonts* GetFonts() { return m_pFonts; }
 private:
 
 	// Processes events received by SDL. Returns whether or not the game should continue.

@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cassert>
 #include <iostream>
+#include <SDL_ttf.h>
 #include "GameDemo.h"
 #include "Platformer.h"
 
@@ -23,6 +24,7 @@ int GameDemo::Init(GameStateMachine* pGameStateMachine)
     {
         m_pStateMachine = pGameStateMachine;
         m_pTextures = new Textures(m_pRenderer);
+        m_pFonts = new Fonts();
     }
 
 	return 0;
@@ -55,6 +57,9 @@ void GameDemo::Run()
         quit = ProcessEvents();
         UpdateGameState(deltaTime);
         DisplayOutput();
+
+        if (m_quit)
+            quit = true;
     }
     
 }
@@ -64,13 +69,21 @@ void GameDemo::Destroy()
     // Destroy Renderer.
     SDL_DestroyRenderer(m_pRenderer);
 
-    // Destory Textures
+    // Destroy Textures
     delete m_pTextures;
+
+    // Destroy Fonts
+    delete m_pFonts;
 
     // SDL window cleanup
     SDL_DestroyWindow(m_pWindow);
 
     SDL_Quit();
+}
+
+void GameDemo::Quit()
+{
+    m_quit = true;
 }
 
 
@@ -87,23 +100,29 @@ void GameDemo::PreloadTexture()
 
 }
 
+void GameDemo::PreloadFonts()
+{
+    std::cout << "Current Scene" << m_pStateMachine->GetScene() << std::endl;
+    m_pFonts->PreloadFonts(m_pStateMachine->GetScene());
+}
+
 bool GameDemo::ProcessEvents()
 {
     if (m_pStateMachine == nullptr)
         return true;
 
-    bool doQuit = false;
+    m_quit = false;
 
 
     SDL_Event evt;
     while (SDL_PollEvent(&evt) != 0)
     {
-        doQuit = m_pStateMachine->HandleEvent(&evt);
+        m_quit = m_pStateMachine->HandleEvent(&evt);
 
-        return doQuit;
+        return m_quit;
     }
-    //return m_pPlayer->FinishGame();
-    return doQuit;
+
+    return m_quit;
 }
 
 void GameDemo::UpdateGameState(double deltaTime)
@@ -184,6 +203,17 @@ int GameDemo::CreateWindow()
         std::cout << "Failed to create renderer. Error: " << SDL_GetError();
         return 3;   // renderer creation error
     }
+
+    m_errorCode = TTF_Init();
+
+    if (m_errorCode != 0)
+    {
+        std::cout << "Failed to initialize TTF. Error: " << SDL_GetError() << std::endl;     // indicate the error
+        return 4;   // initializing error
+    }
+
+
+
     // You must set the blend mode if you want to support alpha.
     SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
 

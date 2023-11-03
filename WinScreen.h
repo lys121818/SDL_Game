@@ -2,11 +2,13 @@
 #include "GameState.h"
 #include "ImageObject.h"
 #include "ButtonObject.h"
-#include "PopupImageObject.h"
 class Platformer;
 
 class WinScreen : public GameState
 {
+	static constexpr int s_kFirstButtonY = 180;
+	static constexpr int s_kDistanceBetweenButtons= 80;
+
 private:
 	Platformer* m_pOwner;
 
@@ -14,9 +16,12 @@ private:
 
 	std::vector<ButtonObject*> m_vpButtons;
 
-	PopupImageObject m_testPoping;
+	ImageObject m_winImage;
 
 	ButtonObject* m_pHoverButton;
+
+	bool isOnAction;
+
 public:
 	WinScreen(Platformer* pOwner);
 	~WinScreen();

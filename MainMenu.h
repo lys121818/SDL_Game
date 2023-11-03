@@ -4,6 +4,7 @@
 #include "ButtonObject.h"
 #include "ImageObject.h"
 #include "Textures.h"
+#include "SDL_ttf.h"
 
 
 //==================================================================================================//
@@ -26,6 +27,8 @@ private:
 	std::vector<ButtonObject*> m_vpButtons;
 
 	ButtonObject* m_pHoverButton;
+
+
 public:
 	MainMenu(Platformer* pOwner);
 	~MainMenu();

@@ -4,12 +4,16 @@
 #include "MainMenu.h"
 #include "WinScreen.h"
 #include "Stage01.h"
+#include "LossScreen.h"
+#include "ImageDirectory.h"
 
 Platformer::Platformer(GameDemo* pOwner)
     : m_pOwner(pOwner),
-      m_currentScene(SceneName::m_MainMenu)
+      m_currentScene(SceneName::kMainMenu)
 {
+
     LoadScene(m_currentScene);
+
 }
 
 Platformer::~Platformer()
@@ -28,8 +32,11 @@ void Platformer::UpdateCurrentState(double deltaTime)
 {
     if (m_pNextState != nullptr)
     {
-        ChangeState(m_pNextState);
+        // Preload textur
+        m_pOwner->PreloadFonts();
         m_pOwner->PreloadTexture();
+        ChangeState(m_pNextState);
+
         m_pNextState = nullptr;
     }
     if (m_pCurrentState != nullptr)
@@ -81,27 +88,31 @@ void Platformer::LoadScene(SceneName scene)
 {
     switch (scene)
     {
-        case SceneName::m_MainMenu:
+        case SceneName::kMainMenu:
         {
             m_pNextState = new MainMenu(this);
-            m_currentScene = SceneName::m_MainMenu;
+            m_currentScene = SceneName::kMainMenu;
             break;
         }
-        case SceneName::m_GamePlay:
+        case SceneName::kGamePlay:
         {
             m_pNextState = new Stage01(this);
-            m_currentScene = SceneName::m_GamePlay;
+            m_currentScene = SceneName::kGamePlay;
             break;
         }
-        case SceneName::m_Victory:
+        case SceneName::kVictory:
         {
             m_pNextState = new WinScreen(this);
-            m_currentScene = SceneName::m_Victory;
+            m_currentScene = SceneName::kVictory;
             break;
+        }
+        case SceneName::kDead:
+        {
+            m_pNextState = new LossScreen(this);
+            m_currentScene = SceneName::kDead;
         }
         default:
             break;
-        // TODO: allocate game state
     }
 
 }
@@ -109,6 +120,7 @@ void Platformer::LoadScene(SceneName scene)
 
 void Platformer::Destory()
 {
+
     delete m_pNextState;
     delete m_pCurrentState;
 }

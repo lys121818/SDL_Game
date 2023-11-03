@@ -63,7 +63,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CubeColider.cpp">
+    <ClCompile Include="PlayerObject.cpp">
       <Filter>Source Files\SDL_Game\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ImageObject.cpp">
@@ -112,14 +112,20 @@
       <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="LossScreen.cpp">
+      <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageActionComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PopupImageObject.cpp">
-      <Filter>Source Files\SDL_Game\GameObject</Filter>
+    <ClCompile Include="Fonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextComponent.cpp">
+      <Filter>Source Files\SDL_Game\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CubeColider.h">
+    <ClInclude Include="PlayerObject.h">
       <Filter>Header Files\SDL_Game\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ImageObject.h">
@@ -198,10 +204,16 @@
       <Filter>Header Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="LossScreen.h">
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageActionComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PopupImageObject.h">
-      <Filter>Header Files\SDL_Game\GameObject</Filter>
+    <ClInclude Include="Fonts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextComponent.h">
+      <Filter>Header Files\SDL_Game\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

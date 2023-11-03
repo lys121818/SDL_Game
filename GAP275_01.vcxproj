@@ -76,14 +76,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL\include;$(SolutionDir)lib\SDL_Image\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL\include;$(SolutionDir)lib\SDL_Image\include;$(SolutionDir)lib\SDL_ttf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL\lib\x86;$(SolutionDir)lib\SDL_Image\lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_Image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL\lib\x86;$(SolutionDir)lib\SDL_Image\lib\x86;$(SolutionDir)lib\SDL_ttf\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_Image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)lib\SDL\lib\x86\SDL2.dll" "$(OutDir)"
@@ -93,6 +93,8 @@ copy "$(SolutionDir)lib\SDL_Image\lib\x86\libpng16-16.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_Image\lib\x86\libtiff-5.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_Image\lib\x86\libwebp-7.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_Image\lib\x86\zlib1.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_ttf\lib\x86\libfreetype-6.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_ttf\lib\x86\SDL2_ttf.dll" "$(OutDir)"
 xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -131,14 +133,14 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL\include;$(SolutionDir)lib\SDL_Image\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL\include;$(SolutionDir)lib\SDL_Image\include;$(SolutionDir)lib\SDL_ttf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL\lib\x64;$(SolutionDir)lib\SDL_Image\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_Image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL\lib\x64;$(SolutionDir)lib\SDL_Image\lib\x64;$(SolutionDir)lib\SDL_ttf\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_Image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)lib\SDL\lib\x64\SDL2.dll" "$(OutDir)"
@@ -148,6 +150,8 @@ copy "$(SolutionDir)lib\SDL_Image\lib\x64\libpng16-16.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_Image\lib\x64\libtiff-5.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_Image\lib\x64\libwebp-7.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_Image\lib\x64\zlib1.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_ttf\lib\x64\libfreetype-6.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_ttf\lib\x64\SDL2_ttf.dll" "$(OutDir)"
 xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -185,7 +189,8 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="ButtonObject.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="CollisionReferee.cpp" />
-    <ClCompile Include="CubeColider.cpp" />
+    <ClCompile Include="Fonts.cpp" />
+    <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="GameDemo.cpp" />
     <ClCompile Include="ImageComponent.cpp" />
@@ -195,8 +200,9 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MovingComponent.cpp" />
     <ClCompile Include="Platformer.cpp" />
-    <ClCompile Include="PopupImageObject.cpp" />
+    <ClCompile Include="ImageActionComponent.cpp" />
     <ClCompile Include="Stage01.cpp" />
+    <ClCompile Include="TextComponent.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TiledMap.cpp" />
     <ClCompile Include="WinScreen.cpp" />
@@ -208,7 +214,8 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="CollisionReferee.h" />
     <ClInclude Include="Defines.h" />
-    <ClInclude Include="CubeColider.h" />
+    <ClInclude Include="Fonts.h" />
+    <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="GameDemo.h" />
     <ClInclude Include="GameObject.h" />
@@ -222,9 +229,10 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MovingComponent.h" />
     <ClInclude Include="Platformer.h" />
-    <ClInclude Include="PopupImageObject.h" />
+    <ClInclude Include="ImageActionComponent.h" />
     <ClInclude Include="Stage01.h" />
     <ClInclude Include="Status.h" />
+    <ClInclude Include="TextComponent.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TiledMap.h" />
     <ClInclude Include="ObjectType.h" />

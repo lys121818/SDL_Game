@@ -2,7 +2,7 @@
 #include "GameState.h"
 #include "ImageObject.h"
 #include "Textures.h"
-#include "CubeColider.h"
+#include "PlayerObject.h"
 #include "TiledMap.h"
 #include "CollisionReferee.h"
 #include "AnimationComponent.h"
@@ -34,7 +34,7 @@ private:
 	Platformer* m_pOwner;
 
 	// Player Object
-	CubeColider* m_pPlayer;
+	PlayerObject* m_pPlayer;
 
 	// BackGround Image
 	ImageObject* m_pBackground;

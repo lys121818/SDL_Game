@@ -5,13 +5,17 @@
 #include "ImageDirectory.h"
 #include "Defines.h"
 #include "ButtonType.h"
+#include "Vector2.h"
+#include "GameDemo.h"
 
 MainMenu::MainMenu(Platformer* pOwner)
-	:m_pOwner(pOwner),
-	 m_background_1(SDL_Rect{ 0,0,WINDOWWIDTH,WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
-	 m_background_2(SDL_Rect{ WINDOWWIDTH,0,WINDOWWIDTH,WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
-	 m_pHoverButton(nullptr)
+	:
+	m_pOwner(pOwner),
+	m_background_1(Vector2{ 0,0 }, Vector2{WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
+	m_background_2(Vector2{ WINDOWWIDTH,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
+	m_pHoverButton(nullptr)
 {
+
 }
 
 MainMenu::~MainMenu()
@@ -21,11 +25,12 @@ MainMenu::~MainMenu()
 void MainMenu::Enter()
 {
 	// Background Setups
-	m_background_1.TryMove(Vector2(LEFT));
-	m_background_2.TryMove(Vector2(LEFT));
+	m_background_1.TryMove(Vector2(LEFT), BACKGROUNDMOVESPEED);
+	m_background_2.TryMove(Vector2(LEFT), BACKGROUNDMOVESPEED);
 
 	// Set button objects
 	SetButtons();
+
 
 }
 
@@ -59,30 +64,31 @@ bool MainMenu::HandleEvent(SDL_Event* pEvent)
 		// Quit when true returns
 		case SDL_MOUSEMOTION:
 		{
-			for (auto& element : m_vpButtons)
-			{
-				// if the button is able
-				if (element->GetAble())
-				{
-					// if the mouse is inside the button
-					if (pEvent->button.x > element->GetTransform().x &&
-						pEvent->button.x < (element->GetTransform().x + element->GetTransform().w) &&
-						pEvent->button.y > element->GetTransform().y &&
-						pEvent->button.y < (element->GetTransform().y + element->GetTransform().h))
-					{
-						// Set Hover to true and break (Mouse is single object)
-						m_pHoverButton = element;
-						m_pHoverButton->SetHover(true);
-						break;
-					}
-					else
-					{
-						m_pHoverButton = nullptr;
-						element->SetClick(false);
-						element->SetHover(false);
-					}
-				}
-			}
+			//for (auto& element : m_vpButtons)
+			//{
+			//	// if the button is able
+			//	if (element->GetAble())
+			//	{
+			//		// if the mouse is inside the button
+			//		if (pEvent->button.x > element->GetTransform().x &&
+			//			pEvent->button.x < (element->GetTransform().x + element->GetTransform().w) &&
+			//			pEvent->button.y > element->GetTransform().y &&
+			//			pEvent->button.y < (element->GetTransform().y + element->GetTransform().h))
+			//		{
+			//			// Set Hover to true and break (Mouse is single object)
+			//			m_pHoverButton = element;
+			//			m_pHoverButton->SetHover(true);
+			//			break;
+			//		}
+			//		else
+			//		{
+			//			m_pHoverButton = nullptr;
+			//			element->SetClick(false);
+			//			element->SetHover(false);
+			//		}
+			//	}
+			//}
+
 			break;
 		}
 		case SDL_MOUSEBUTTONDOWN:
@@ -142,7 +148,7 @@ bool MainMenu::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
 				if (m_pHoverButton->GetStatus().m_name == "Start" && m_pHoverButton->GetClicked())
 				{
 					m_pHoverButton->SetClick(false);
-					m_pOwner->LoadScene(Platformer::SceneName::m_GamePlay);
+					m_pOwner->LoadScene(Platformer::SceneName::kGamePlay);
 				}
 				else if (m_pHoverButton->GetStatus().m_name == "Quit" && m_pHoverButton->GetClicked())
 				{
@@ -181,7 +187,17 @@ void MainMenu::SetButtons()
 		(int)BUTTONHEIGHT	// H
 	};
 
-	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Normal, "Start");
+	TTF_Font* font = m_pOwner->GetGame()->GetFonts()->GetFont(FONT1);
+
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Start");
+
+	// TODO: Fix callback funtion
+	button->SetCallback([m_pOwner]()->void
+		{
+		});
+
+	button->SetTextInButton(font, "START", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
+
 	m_vpButtons.push_back(button);
 
 	buttonTransform = SDL_Rect
@@ -192,7 +208,8 @@ void MainMenu::SetButtons()
 		(int)BUTTONHEIGHT	// H
 	};
 
-	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Disable, "Settings");
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kDisable, "Settings");
+	button->SetTextInButton(font, "SETTINGS", SDL_Color(GRAY), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
 	buttonTransform = SDL_Rect
@@ -203,7 +220,8 @@ void MainMenu::SetButtons()
 		(int)BUTTONHEIGHT	// H
 	};
 
-	button = new ButtonObject(buttonTransform, BUTTONS, 0, Button_State::m_Normal, "Quit");
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Quit");
+	button->SetTextInButton(font, "QUIT", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
 

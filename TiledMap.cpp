@@ -108,15 +108,16 @@ void TiledMap::TileSettings(CollisionReferee* pReferee)
         {
             size_t currentLocation = (y * m_maxTiles.m_x) + x;
             /// TRANSFORM
-            SDL_Rect tileTransform;
+            Vector2 position;
+            Vector2 size;
 
             // Position
-            tileTransform.x = x * s_kBackgroundWidth;
-            tileTransform.y = y * s_kBackgroundHeight;
+            position.m_x = x * s_kBackgroundWidth;
+            position.m_y = y * s_kBackgroundHeight;
 
             // Size
-            tileTransform.w = s_kBackgroundWidth;
-            tileTransform.h = s_kBackgroundHeight;
+            size.m_x = s_kBackgroundWidth;
+            size.m_y = s_kBackgroundHeight;
 
             switch (map[currentLocation])
             {
@@ -125,49 +126,49 @@ void TiledMap::TileSettings(CollisionReferee* pReferee)
                     break;
                 }
 
-                case (size_t)ObjectType::m_Wall:
+                case (size_t)ObjectType::kWall:
                 {
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 8, (size_t)ObjectType::m_Wall, "Wall")); // tile index goes in here
+                    m_pTiles.push_back(new ImageObject(position,size, pReferee, OBJECTS , 8, (size_t)ObjectType::kWall, "Wall")); // tile index goes in here
                     break;
                 }
 
-                case (size_t)ObjectType::m_Ground:
+                case (size_t)ObjectType::kGround:
                 {
                     // at the very left or left is empty
                     if (x == 0 || (map[currentLocation - 1] == 0))
                     {
-                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 0, (size_t)ObjectType::m_Ground, "Ground")); // tile index goes in here
+                        m_pTiles.push_back(new ImageObject(position,size, pReferee, TILES, 0, (size_t)ObjectType::kGround, "Ground")); // tile index goes in here
 
                     }
                     // at the very right or right is empty
                     else if (x == m_maxTiles.m_x - 1 || (map[currentLocation + 1] == 0))
                     {
-                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 2, (size_t)ObjectType::m_Ground, "Ground")); // tile index goes in here
+                        m_pTiles.push_back(new ImageObject(position, size, pReferee, TILES, 2, (size_t)ObjectType::kGround, "Ground")); // tile index goes in here
 
                     }
                     else
                     {
-                        m_pTiles.push_back(new ImageObject(tileTransform, pReferee, TILES, 1, (size_t)ObjectType::m_Ground, "Ground")); // tile index goes in here
+                        m_pTiles.push_back(new ImageObject(position, size, pReferee, TILES, 1, (size_t)ObjectType::kGround, "Ground")); // tile index goes in here
                     }
                     break;
                 }
 
-                case (size_t)ObjectType::m_WinZone:
+                case (size_t)ObjectType::kWinZone:
                 {
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 9, (size_t)ObjectType::m_WinZone, "Win Zone"));
+                    m_pTiles.push_back(new ImageObject(position, size, pReferee, OBJECTS, 9, (size_t)ObjectType::kWinZone, "Win Zone"));
                     break;
                 }
 
-                case (size_t)ObjectType::m_HealingZone:
+                case (size_t)ObjectType::kHealingZone:
                 {
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 7, (size_t)ObjectType::m_HealingZone, "Healing Zone"));
+                    m_pTiles.push_back(new ImageObject(position, size, pReferee, OBJECTS, 7, (size_t)ObjectType::kHealingZone, "Healing Zone"));
                     break;
                 }
 
-                case (size_t)ObjectType::m_DamageZone:
+                case (size_t)ObjectType::kDamageZone:
                 {
 
-                    m_pTiles.push_back(new ImageObject(tileTransform, pReferee, OBJECTS, 6, (size_t)ObjectType::m_DamageZone, "Damage Zone"));
+                    m_pTiles.push_back(new ImageObject(position, size, pReferee, OBJECTS, 6, (size_t)ObjectType::kDamageZone, "Damage Zone"));
                     break;
                 }
 

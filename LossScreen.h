@@ -8,14 +8,21 @@ class Platformer;
 
 class LossScreen : public GameState
 {
+	static constexpr int s_kFirstButtonY = 200;
+	static constexpr int s_kDistanceBetweenButtons = 80;
+
 private:
 	Platformer* m_pOwner;
 
 	ImageObject m_Background;
 
+	ImageObject m_lossImage;
+
 	std::vector<ButtonObject*> m_vpButtons;
 
 	ButtonObject* m_pHoverButton;
+
+	bool isOnAction;
 public:
 	LossScreen(Platformer* pOwner);
 	~LossScreen();

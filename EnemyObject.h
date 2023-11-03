@@ -14,11 +14,11 @@ private:
 	// Current Animation States
 	enum class AnimationState
 	{
-		m_idle,
-		m_walk,
-		m_run,
-		m_jump,
-		m_slide
+		kIdle,
+		kWalk,
+		kRun,
+		kJump,
+		kSlide
 	} m_currentState;
 
 	// gameobject's status

@@ -3,17 +3,20 @@
 #include "ImageDirectory.h"
 #include "ButtonObject.h"
 
-ButtonObject::ButtonObject(SDL_Rect transform, const char* directory, const int index, Button_State type, const char* name)
+ButtonObject::ButtonObject(SDL_Rect transform, const char* directory, Button_State type, const char* name)
 	:
 	m_pSpriteName(directory),
 	m_transform(transform),
 	m_imageComponent(directory, &m_transform),
-	m_currentState(type)
+	m_currentState(type),
+	m_textComponent(&m_transform)
 {
 	m_status.m_name = name;
 	m_isOnHover = false;
 
-	if (type != Button_State::m_Disable)
+	m_callback = nullptr;
+
+	if (type != Button_State::kDisable)
 		m_isAble = true;
 
 	SetButtonState(m_currentState);
@@ -40,8 +43,32 @@ void ButtonObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 		return;
 	}
 	m_imageComponent.Render(pRenderer, pTexture);
+	m_textComponent.Render(pRenderer);
 }
 
+void ButtonObject::HandleEvent(SDL_Event* pEvent)
+{
+	switch (pEvent->type)
+	{
+		case SDL_MOUSEBUTTONDOWN:
+		{
+			if (m_callback != nullptr && HitTest(pEvent->button.x, pEvent->button.y))
+			{
+				Trigger();
+			}
+			break;
+		}
+	default:
+		break;
+	}
+}
+
+
+void ButtonObject::SetTextInButton(TTF_Font* pFont, const char* pText, SDL_Color color, SDL_Renderer* pRenderer)
+{
+	m_textComponent.SetText(pFont, pText, color, pRenderer);
+
+}
 
 void ButtonObject::ButtonState()
 {
@@ -51,25 +78,25 @@ void ButtonObject::ButtonState()
 		{
 			if (m_isClicked)
 			{
-				SetButtonState(Button_State::m_Click);
-				m_currentState = Button_State::m_Click;
+				SetButtonState(Button_State::kClick);
+				m_currentState = Button_State::kClick;
 			}
 			else
 			{
-				SetButtonState(Button_State::m_Hover);
-				m_currentState = Button_State::m_Hover;
+				SetButtonState(Button_State::kHover);
+				m_currentState = Button_State::kHover;
 			}
 		}
 		else
 		{
-			SetButtonState(Button_State::m_Normal);
-			m_currentState = Button_State::m_Normal;
+			SetButtonState(Button_State::kNormal);
+			m_currentState = Button_State::kNormal;
 		}
 	}
 	else
 	{
-		SetButtonState(Button_State::m_Disable);
-		m_currentState = Button_State::m_Disable;
+		SetButtonState(Button_State::kDisable);
+		m_currentState = Button_State::kDisable;
 	}
 }
 
@@ -89,22 +116,22 @@ void ButtonObject::SetImage()
 	{
 		switch (m_currentState)
 		{
-			case Button_State::m_Normal:
+			case Button_State::kNormal:
 			{
 				m_imageComponent.SetImageFrame("Normal");
 				break;
 			}
-			case Button_State::m_Hover:
+			case Button_State::kHover:
 			{
 				m_imageComponent.SetImageFrame("Hover");
 				break;
 			}
-			case Button_State::m_Click:
+			case Button_State::kClick:
 			{
 				m_imageComponent.SetImageFrame("Click");
 				break;
 			}
-			case Button_State::m_Disable:
+			case Button_State::kDisable:
 			{
 				m_imageComponent.SetImageFrame("Disable");
 				break;
@@ -113,4 +140,23 @@ void ButtonObject::SetImage()
 			break;
 		}
 	}
+}
+
+void ButtonObject::Trigger()
+{
+	if (m_callback != nullptr)
+	{
+		m_callback();
+	}
+}
+
+bool ButtonObject::HitTest(int x, int y)
+{
+	if (x > m_transform.x && x < (m_transform.x + m_transform.w) &&
+		y > m_transform.y && y < (m_transform.y + m_transform.h))
+	{
+		return true;
+	}
+
+	return false;
 }

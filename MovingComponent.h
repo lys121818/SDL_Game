@@ -26,7 +26,7 @@ public:
 	MovingComponent(SDL_Rect* transform, Vector2 position, ColliderComponent* objectCollider = nullptr);
 	~MovingComponent();
 
-	void TryMove(double deltaTime, double speed, Vector2 direction);
+	bool TryMove(double deltaTime, double speed, Vector2 direction);
 	void SetPosition(Vector2 position) { m_position = position; }
 private:
 };

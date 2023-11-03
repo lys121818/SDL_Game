@@ -27,8 +27,7 @@ void Stage01::Update(double deltaTime)
     m_CurrentTime += deltaTime;
     if (m_CurrentTime < LOADINGTIME)
         std::cout << "Game Starts in " << std::setprecision(1) << (LOADINGTIME - m_CurrentTime) << std::endl;
-
-    if (m_CurrentTime > LOADINGTIME)
+    else if (m_CurrentTime > LOADINGTIME)
     {
         // Update GameObjects
         for (auto& element : m_vpGameObjects)
@@ -44,8 +43,8 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 {
     m_pBackground->Render(pRenderer, pTextures->GetTexture(m_pBackground->GetTextureName()));
 
-    // loading
-    if (m_CurrentTime > LOADINGTIME + 0.5)
+    // loading 
+    if (m_CurrentTime > LOADINGTIME)
     {
         //Render GameObjects
         for (auto& element : m_vpGameObjects)
@@ -153,7 +152,7 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
         // Shooting
         case SDLK_SPACE:
         {
-            m_pPlayer->Jump();
+            m_pPlayer->SetJump();
             break;
         }
 
@@ -283,14 +282,15 @@ void Stage01::InitGame()
 
     /// GAMEOBJECT
 
-    SDL_Rect backgroundTransform{
-        0,
-        0,
-        WINDOWWIDTH,
-        WINDOWHEIGHT
-    };
-    m_pBackground = new ImageObject(backgroundTransform, nullptr, BACKGROUND, 0, (size_t)ObjectType::m_BackGround, "BackGround");
-    //AddGameObject(m_pBackground);
+    Vector2 position;
+    Vector2 size;
+
+    position.m_x = 0;
+    position.m_y = 0;
+    size.m_x = WINDOWWIDTH;
+    size.m_y = WINDOWHEIGHT;
+
+    m_pBackground = new ImageObject(position,size, nullptr, BACKGROUND, 0, (size_t)ObjectType::kBackGround, "BackGround");
 
 
     // Set Player Object
@@ -301,7 +301,8 @@ void Stage01::InitGame()
         (int)s_kPlayerStartingSize.m_x,      // Width of collider box
         (int)s_kPlayerStartingSize.m_y       // Height of collider box
     };
-    m_pPlayer = new CubeColider(playerTransform, &m_collisionReferee, (size_t)ObjectType::m_Player);
+
+    m_pPlayer = new PlayerObject(playerTransform, &m_collisionReferee, (size_t)ObjectType::kPlayer);
     AddGameObject(m_pPlayer);
 
     // Add GameObjects to m_vpGameObjects
@@ -312,12 +313,12 @@ void Stage01::InitGame()
     // Setting starting position of the enemy
     objectTransform.x = 100;
     objectTransform.y = 50;
-    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEFEMALE, (size_t)ObjectType::m_Enemy, "Zombie_Female");
+    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEFEMALE, (size_t)ObjectType::kEnemy, "Zombie_Female");
     AddGameObject(stationary);
 
     objectTransform.x = 650; // X
     objectTransform.y = 50; // Y
-    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::m_Enemy, "Zombie_Male");
+    stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::kEnemy, "Zombie_Male");
     AddGameObject(stationary);
 
 
@@ -348,11 +349,11 @@ bool Stage01::UpdateGamestate()
     {
         if (m_pPlayer->GetStatus().m_health > 0)
         {
-            m_pOwner->LoadScene(Platformer::SceneName::m_Victory);
+            m_pOwner->LoadScene(Platformer::SceneName::kVictory);
         }
         else
         {
-            m_pOwner->LoadScene(Platformer::SceneName::m_Dead);
+            m_pOwner->LoadScene(Platformer::SceneName::kDead);
         }
     }
 
@@ -367,6 +368,7 @@ void Stage01::Exit()
         DestoryGameObjects(m_vpGameObjects);
     }
 
+    delete m_pBackground;
     // Destory texture when game ends.
     delete m_pTiledMap;
 }

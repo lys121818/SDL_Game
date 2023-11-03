@@ -9,7 +9,9 @@ struct Status
 
 	std::string m_name = "UnNamed";
 
-	size_t m_type = (size_t)ObjectType::m_UNINIT;
+	size_t m_type = (size_t)ObjectType::kUNINIT;
+
+	int m_attackPower = 0;
 
 	// Current direction.x movement. -1 for left, 1for right.
 	// Current direction.y movement. -1 for down, 1 for up.

@@ -9,13 +9,13 @@ Textures::Textures(SDL_Renderer* pRenderer)
 
 Textures::~Textures()
 {
-    DestoryTextures();
+    DestroyTextures();
 }
 
 void Textures::PreloadTextures(size_t sceneNumber)
 {
     // Destory the previous textures before Preload new Textures
-    DestoryTextures();
+    DestroyTextures();
 
     // PlatFormer
     switch ((int)sceneNumber)
@@ -52,7 +52,15 @@ void Textures::PreloadTextures(size_t sceneNumber)
         {
             AddImagesToTexture(BACKGROUND);
             AddImagesToTexture(BUTTONS);
-            AddImagesToTexture(TESTPOPING);
+            AddImagesToTexture(WIN_STATE);
+            break;
+        }
+        // Loss Screen
+        case 3:
+        {
+            AddImagesToTexture(BACKGROUND);
+            AddImagesToTexture(LOSS_STATE);
+            AddImagesToTexture(BUTTONS);
             break;
         }
     default:
@@ -82,6 +90,7 @@ void Textures::AddImagesToTexture(const char* name)
     {
         std::cout << "[Textures] Image loading failed Error: " << SDL_GetError() << std::endl;
     }
+
     // SDL_Surface -> SDL_Texture
     // Create texture from surface and save in pair
     imageTexture.second = SDL_CreateTextureFromSurface(m_pRenderer, pImageSurface);
@@ -97,7 +106,7 @@ void Textures::AddImagesToTexture(const char* name)
     SDL_FreeSurface(pImageSurface);
 }
 
-void Textures::DestoryTextures()
+void Textures::DestroyTextures()
 {
     for (auto iter = m_mpTextures.begin(); iter != m_mpTextures.end(); ++iter)
     {

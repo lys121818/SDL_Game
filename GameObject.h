@@ -4,6 +4,7 @@
 #include "Status.h"
 
 class ColliderComponent;
+
 class GameObject
 {
 public:
@@ -27,6 +28,8 @@ public:
 
 	virtual void TryMove(Vector2) {}
 
+	// Handles this even in the context of this object
+	virtual void HandleEvent(SDL_Event*) {}
 
 	//GETTERS
 	// Return Name of the Texture

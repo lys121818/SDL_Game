@@ -17,6 +17,6 @@ public:
 
 private:
 	void AddImagesToTexture(const char* name);
-	void DestoryTextures();
+	void DestroyTextures();
 };
 

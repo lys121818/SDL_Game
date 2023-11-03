@@ -35,7 +35,7 @@ EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const c
 	m_animation.AddAnimationSequence("attack", 30, 37);
 
 	// Animation Default setting
-	m_currentState = AnimationState::m_idle;
+	m_currentState = AnimationState::kIdle;
 }
 
 EnemyObject::~EnemyObject()
@@ -87,18 +87,18 @@ void EnemyObject::OnCollision(ColliderComponent* pCollider)
 	{
 		switch (targetStaus.m_type)
 		{
-			case (size_t)ObjectType::m_Wall:
+			case (size_t)ObjectType::kWall:
 			{
 				m_status.m_direction.m_x *= -1;	// change the direction by multiply negative value
 				break;
 			}
-			case (size_t)ObjectType::m_Player:
+			case (size_t)ObjectType::kPlayer:
 			{
 				m_status.m_direction.m_x *= -1;	// change the direction by multiply negative value
 				break;
 			}
 
-			case (size_t)ObjectType::m_Ground:
+			case (size_t)ObjectType::kGround:
 			{
 				m_status.m_isGrounded = true;
 				break;
@@ -146,12 +146,12 @@ void EnemyObject::AnimationState()
 	// Play animation according to m_crrentState
 	switch (m_currentState)
 	{
-		case EnemyObject::AnimationState::m_idle:
+		case EnemyObject::AnimationState::kIdle:
 		{
 			m_animation.PlayAnimation("idle");
 			break;
 		}
-		case EnemyObject::AnimationState::m_walk:
+		case EnemyObject::AnimationState::kWalk:
 		{
 			m_animation.PlayAnimation("walk");
 			break;
@@ -178,10 +178,10 @@ void EnemyObject::CheckCurrentState()
 	if (m_status.m_speed > 0)	// if player is moving x direction
 	{
 
-		m_currentState = AnimationState::m_walk;
+		m_currentState = AnimationState::kWalk;
 	}
 	else
-		m_currentState = AnimationState::m_idle;
+		m_currentState = AnimationState::kIdle;
 
 }
 

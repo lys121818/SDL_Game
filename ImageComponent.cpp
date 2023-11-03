@@ -130,9 +130,13 @@ void ImageComponent::ImageSpriteSettings()
 		AddImageFrame("Disable", 0, 1, 100, 40);
 		AddImageFrame("Click", 1, 1, 100, 40);
 	}
-	else if (strcmp(m_pSpriteName, TESTPOPING) == 0)
+	else if (strcmp(m_pSpriteName, WIN_STATE) == 0)
 	{
-		AddImageFrame("Poping",0,0,4868,3787);
+		AddImageFrame("Win",0,0,750,1000);
+	}
+	else if (strcmp(m_pSpriteName, LOSS_STATE) == 0)
+	{
+		AddImageFrame("Loss", 0, 0, 750, 1000);
 	}
 
 }

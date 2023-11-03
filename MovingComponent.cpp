@@ -13,11 +13,14 @@ MovingComponent::~MovingComponent()
 
 }
 
-void MovingComponent::TryMove(double deltaTime, double speed, Vector2 direction)
+bool MovingComponent::TryMove(double deltaTime, double speed, Vector2 direction)
 {
 
 	// Amount of position its moving
 	double deltaPosition = speed * deltaTime;
+
+	// Check if the move is valid
+	bool isAble = false;
 
 	// Direction of position its moving
 	Vector2 deltaDirection
@@ -37,9 +40,10 @@ void MovingComponent::TryMove(double deltaTime, double speed, Vector2 direction)
 	// If object has colliderComponent
 	if (m_objectCollider != nullptr)
 	{
+		isAble = m_objectCollider->TryMove(deltaDirection);
 		// If object moving has failed.
 		// Back to position of where it was
-		if (!(m_objectCollider->TryMove(deltaDirection)))
+		if (!isAble)
 		{
 			// Horizontal Movement
 			m_position.m_x -= deltaDirection.m_x;
@@ -50,5 +54,5 @@ void MovingComponent::TryMove(double deltaTime, double speed, Vector2 direction)
 			m_transform->y = (int)m_position.m_y;
 		}
 	}
-
+	return !isAble;
 }

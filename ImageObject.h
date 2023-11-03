@@ -5,12 +5,13 @@
 #include "ColliderComponent.h"
 #include "CollisionReferee.h"
 #include "MovingComponent.h"
+#include "ImageActionComponent.h"
+
+class ImageActionComponent;
+
 class ImageObject : public GameObject
 {
 	Status m_status;
-
-	// Speed of object
-	static constexpr int s_kSpeed = 50;
 
 	// Name Of the Object
 	const char* m_pSpriteName;
@@ -26,8 +27,9 @@ class ImageObject : public GameObject
 
 	ColliderComponent m_collider;
 
+	ImageActionComponent m_imageAction;
 public:
-	ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name = "UnNamed");
+	ImageObject(Vector2 position, Vector2 size, CollisionReferee* pReferee, const char* directory, const int index = 0, size_t type = 0, const char* name = "UnNamed");
 	~ImageObject();
 
 
@@ -39,7 +41,7 @@ public:
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 	// Move to the direction
-	void TryMove(Vector2 direction);
+	void TryMove(const Vector2& direction,const int& speed);
 
 	// GETTERS
 	SDL_Rect GetTransform() override { return m_transform; }
@@ -51,10 +53,12 @@ public:
 
 	virtual Status GetStatus() override { return m_status; }
 
+	ImageActionComponent::ActionState GetActionState() { return m_imageAction.m_actionState; }
 
 	// SETTERS
 	virtual void SetPosition(Vector2 position) override;
 
+	void SetAction(ImageActionComponent::ActionState state);
 
 private:
 	void SetImage(const int index);

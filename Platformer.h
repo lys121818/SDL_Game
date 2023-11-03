@@ -1,5 +1,6 @@
 #pragma once
 #include "GameStateMachine.h"
+#include <SDL_ttf.h>
 
 class GameDemo;
 class GameState;
@@ -10,10 +11,10 @@ class Platformer : public GameStateMachine
 public:
 	enum class SceneName
 	{
-		m_MainMenu = 0,
-		m_GamePlay,
-		m_Victory,
-		m_Dead
+		kMainMenu = 0,
+		kGamePlay,
+		kVictory,
+		kDead
 	}m_currentScene;
 private:
 	// GameDemo object that is running this state machine.
@@ -24,7 +25,6 @@ private:
 
 	// Any State waiting to be loaded on the next frame.
 	GameState* m_pNextState;
-
 
 
 public:
@@ -50,6 +50,7 @@ public:
 	void LoadScene(SceneName scene);
 
 	size_t GetScene() override { return (size_t)m_currentScene; }
+
 private:
 	// delete all the pointers
 	void Destory();

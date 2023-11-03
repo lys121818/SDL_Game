@@ -14,6 +14,8 @@
 /*	BACKGROUND	*/
 // * Size
 #define BACKGROUNDTILESIZE	30	// Size of Tile
+// * Speed
+#define BACKGROUNDMOVESPEED 50
 
 
 /*	PLAYER	*/ 
@@ -31,6 +33,8 @@
 // * Health
 #define PLAYERHEALTH	100	
 
+#define PLAYERATTACKPOWER	10
+
 
 /*	ENEMY	*/
 // * Transform
@@ -38,11 +42,16 @@
 // * Speed
 #define ENEMYSPEED	200.0
 
+#define ENEMYATTACKPOWER	10
+
 
 /* BUTTON */
 // * Transform
-#define BUTTONSIZE	300.0
+#define BUTTONSIZE	230.0
 
+
+/* OBJECTS */
+#define OBJECTDAMAGE	100
 
 /*=============== 
 || Calculation  ||	PLAYER
@@ -74,7 +83,7 @@
 ||==============================================================================================================*/
 // * size																										||
 #define BUTTONWIDTH		BUTTONSIZE			// Width																||
-#define BUTTONHEIGHT	(BUTTONSIZE * 0.2)	// Height																||
+#define BUTTONHEIGHT	(BUTTONSIZE * 0.3)	// Height																||
 #define BUTTONSIZEVECTOR2	ENEMYWIDTH, ENEMYHEIGHT	// Size in Vector2 form										||
 //==============================================================================================================//
 

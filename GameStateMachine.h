@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "Textures.h"
+#include "Fonts.h"
 //==================================================================================================//
 /// GAME STATE MACHINE
 /// An Interfave for handling game states / scene

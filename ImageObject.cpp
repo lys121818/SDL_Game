@@ -5,16 +5,20 @@
 #include "ImageDirectory.h"
 
 
-ImageObject::ImageObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name)
-	: m_transform(transform),
+ImageObject::ImageObject(Vector2 position, Vector2 size, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name)
+	:
+	m_transform(SDL_Rect((int)position.m_x, (int)position.m_y, (int)size.m_x, (int)size.m_y)),
 	m_pSpriteName(directory),
 	m_imageComponent(directory, &m_transform),
 	m_collider(this, m_transform, pReferee),
-	m_movingComponent(&m_transform, Vector2(m_transform.x, m_transform.y))
+	m_movingComponent(&m_transform, Vector2(m_transform.x, m_transform.y)),
+	m_imageAction(this,&m_transform)
 {
 	m_status.m_type = type;
 	m_status.m_name = name;
 	m_status.m_direction = Vector2{ 0.0,0.0 };
+	m_status.m_speed = 0;
+
 	SetImage(index);
 }
 
@@ -25,7 +29,9 @@ ImageObject::~ImageObject()
 
 void ImageObject::Update(double deltaTime)
 {
-	m_movingComponent.TryMove(deltaTime, s_kSpeed, m_status.m_direction);
+	m_movingComponent.TryMove(deltaTime, m_status.m_speed, m_status.m_direction);
+	m_imageAction.Update(deltaTime);
+
 }
 
 void ImageObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
@@ -33,9 +39,10 @@ void ImageObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 	m_imageComponent.Render(pRenderer, pTexture);
 }
 
-void ImageObject::TryMove(Vector2 direction)
+void ImageObject::TryMove(const Vector2& direction, const int& speed)
 {
 	m_status.m_direction = direction;
+	m_status.m_speed = speed;
 }
 
 void ImageObject::SetPosition(Vector2 position)
@@ -44,6 +51,11 @@ void ImageObject::SetPosition(Vector2 position)
 	m_transform.y = (int)position.m_y;
 
 	m_movingComponent.SetPosition(position);
+}
+
+void ImageObject::SetAction(ImageActionComponent::ActionState state)
+{
+	m_imageAction.SetAction(state);
 }
 
 void ImageObject::SetImage(const int index)
@@ -153,6 +165,32 @@ void ImageObject::SetImage(const int index)
 				}
 				default:
 					break;
+			}
+		}
+		else if (strcmp(m_pSpriteName, WIN_STATE) == 0)
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					m_imageComponent.SetImageFrame("Win");
+					break;
+				}
+			default:
+				break;
+			}
+		}
+		else if (strcmp(m_pSpriteName, LOSS_STATE) == 0)
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					m_imageComponent.SetImageFrame("Loss");
+					break;
+				}
+			default:
+				break;
 			}
 		}
 	}
