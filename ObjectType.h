@@ -11,7 +11,7 @@ enum class ObjectType
 	kPlayer,
 	kEnemy,
 
-	kBackGround = COLLISIONINDEX,
+	kBackGround = COLLISION_INDEX,
 	kDamageZone,
 	kHealingZone,
 	kWinZone,

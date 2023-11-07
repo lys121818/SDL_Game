@@ -14,7 +14,8 @@ public:
 		kMainMenu = 0,
 		kGamePlay,
 		kVictory,
-		kDead
+		kLoss,
+		kCredit
 	}m_currentScene;
 private:
 	// GameDemo object that is running this state machine.

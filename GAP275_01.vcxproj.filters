@@ -52,11 +52,17 @@
     <Filter Include="Source Files\SDL_Game\States">
       <UniqueIdentifier>{f159d5c9-d361-4a3d-9eed-509447a07f3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\SDL_Game\States\Platformer">
+    <Filter Include="Source Files\SDL_Game\States\Game_Platformer">
       <UniqueIdentifier>{7693bcdf-5328-4bf3-be0c-f3aa852a85e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\SDL_Game\States\Platformer\Scenes">
+    <Filter Include="Source Files\SDL_Game\States\Game_Platformer\Scenes">
       <UniqueIdentifier>{7b44c75e-4ce9-46d0-a340-1135737e9bf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game\States\Game_Platformer\UIInterfaces">
+      <UniqueIdentifier>{6437f9a9-67a2-42c8-ab0a-59ecc8e90ead}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SDL_Game\States\Game_Platformer\UIInterfaces">
+      <UniqueIdentifier>{dda6e73a-bfa6-41bd-87c1-d391b1974482}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -85,7 +91,7 @@
       <Filter>Source Files\SDL_Game\Components</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
-      <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="CollisionReferee.cpp">
       <Filter>Source Files\SDL_Game\Components</Filter>
@@ -94,13 +100,13 @@
       <Filter>Source Files\SDL_Game</Filter>
     </ClCompile>
     <ClCompile Include="Platformer.cpp">
-      <Filter>Source Files\SDL_Game\States\Platformer</Filter>
+      <Filter>Source Files\SDL_Game\States\Game_Platformer</Filter>
     </ClCompile>
     <ClCompile Include="TiledMap.cpp">
-      <Filter>Source Files\SDL_Game\States\Platformer</Filter>
+      <Filter>Source Files\SDL_Game\States\Game_Platformer</Filter>
     </ClCompile>
     <ClCompile Include="Stage01.cpp">
-      <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="ButtonObject.cpp">
       <Filter>Source Files\SDL_Game\GameObject</Filter>
@@ -109,25 +115,34 @@
       <Filter>Source Files\SDL_Game</Filter>
     </ClCompile>
     <ClCompile Include="WinScreen.cpp">
-      <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="LossScreen.cpp">
-      <Filter>Source Files\SDL_Game\States\Platformer\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageActionComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Fonts.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="TextComponent.cpp">
       <Filter>Source Files\SDL_Game\Components</Filter>
     </ClCompile>
-    <ClCompile Include="UIController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UIObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SDL_Game\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageActionComponent.cpp">
+      <Filter>Source Files\SDL_Game\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Fonts.cpp">
+      <Filter>Source Files\SDL_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="TextObject.cpp">
+      <Filter>Source Files\SDL_Game\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditsScene.cpp">
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameUI.cpp">
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\UIInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuUI.cpp">
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\UIInterfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,20 +227,32 @@
     <ClInclude Include="LossScreen.h">
       <Filter>Header Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="ImageActionComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Fonts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextComponent.h">
       <Filter>Header Files\SDL_Game\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UIObject.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SDL_Game\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageActionComponent.h">
+      <Filter>Header Files\SDL_Game\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextObject.h">
+      <Filter>Header Files\SDL_Game\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsScene.h">
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="UIInterface.h">
+      <Filter>Header Files\SDL_Game\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameUI.h">
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\UIInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuUI.h">
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\UIInterfaces</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

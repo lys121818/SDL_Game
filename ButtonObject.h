@@ -41,7 +41,7 @@ public:
 	~ButtonObject();
 	
 	void Update(double deltaTime) override;
-	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture);
+	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 	// Inherited via GameObject
 	Status GetStatus() override { return m_status; }
@@ -49,7 +49,7 @@ public:
 
 	virtual const char* GetTextureName() { return m_pSpriteName; }
 
-	virtual void HandleEvent(SDL_Event* pEvent);
+	virtual void HandleEvent(SDL_Event* pEvent) override;
 
 	bool GetAble() { return m_isAble; }
 

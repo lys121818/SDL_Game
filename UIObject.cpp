@@ -9,7 +9,7 @@ UIObject::UIObject(SDL_Rect transform, const char* spriteName, size_t index)
 	m_pSpriteName(spriteName)
 
 {
-	SetUIImage(index);
+	SetUIImage((int)index);
 }
 
 UIObject::~UIObject()
@@ -70,14 +70,4 @@ void UIObject::SetUIImage(const int index)
 			}
 		}
 	}
-}
-
-Status UIObject::GetStatus()
-{
-    return Status();
-}
-
-SDL_Rect UIObject::GetTransform()
-{
-    return SDL_Rect();
 }

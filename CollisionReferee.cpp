@@ -62,8 +62,8 @@ bool CollisionReferee::CheckForColliderAndNotify(ColliderComponent* pColliderToC
 		if (AABBCollisionCheck(pColliderToCheck, pOtherCollider))
 		{
 			//if this collider or the other collider is passable
-			if (pColliderToCheck->GetOwner()->GetStatus().m_type >= COLLISIONINDEX ||	// this collider is passable
-				pOtherCollider->GetOwner()->GetStatus().m_type >= COLLISIONINDEX)		// other collider is passable
+			if (pColliderToCheck->GetOwner()->GetStatus().m_type >= COLLISION_INDEX ||	// this collider is passable
+				pOtherCollider->GetOwner()->GetStatus().m_type >= COLLISION_INDEX)		// other collider is passable
 			{
 				//if the pColliderToCheck did not collide with pOtherCollider previously
 				if (pColliderToCheck->GetOwner()->GetStatus().m_pTargetCollider != pOtherCollider)
@@ -94,8 +94,8 @@ bool CollisionReferee::CheckForColliderAndNotify(ColliderComponent* pColliderToC
 		else if (!AABBCollisionCheck(pColliderToCheck, pOtherCollider))
 		{
 			//if this collider or the other collider is passable
-			if (pColliderToCheck->GetOwner()->GetStatus().m_type >= COLLISIONINDEX ||	// this collider is passable
-				pOtherCollider->GetOwner()->GetStatus().m_type >= COLLISIONINDEX)		// other collider is passable
+			if (pColliderToCheck->GetOwner()->GetStatus().m_type >= COLLISION_INDEX ||	// this collider is passable
+				pOtherCollider->GetOwner()->GetStatus().m_type >= COLLISION_INDEX)		// other collider is passable
 			{
 				//if the pColliderToCheck did collide with pOtherCollider previously
 				if (pColliderToCheck->GetOwner()->GetStatus().m_pTargetCollider == pOtherCollider)

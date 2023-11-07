@@ -8,6 +8,8 @@
 #include "ColliderComponent.h"
 #include "MovingComponent.h"
 #include "Status.h"
+#include <unordered_map>
+#include <functional>
 
 class PlayerObject : public GameObject
 {
@@ -32,34 +34,34 @@ private:
 
     // * PLAYER
     // Width
-    static constexpr int s_kWidth = (int)PLAYERWIDTH;
+    static constexpr int s_kWidth = (int)PLAYER_WIDTH;
 
     // Height
-    static constexpr int s_kHeight = (int)PLAYERHEIGHT;
+    static constexpr int s_kHeight = (int)PLAYER_HEIGHT;
 
     // Health
-    static constexpr int s_KMaxHealth = PLAYERMAXHEALTH;
+    static constexpr int s_KMaxHealth = PLAYER_MAX_HEALTH;
 
 
     // * MOVEMENT
     // Speed
-    static constexpr int s_kMaxSpeed = (int)PLAYERMAXSPEED;
-    static constexpr int s_kSpeed    = (int)PLAYERSPEED;
-    static constexpr int s_kMixSpeed = (int)PLAYERMINSPEED;
+    static constexpr int s_kMaxSpeed = (int)PLAYER_MAX_SPEED;
+    static constexpr int s_kSpeed    = (int)PLAYER_SPEED;
+    static constexpr int s_kMixSpeed = (int)PLAYER_MIN_SPEED;
 
     static constexpr int s_kMaxJumpPower = (int)1000;
 
     // Moving Component
     MovingComponent m_movingComponent;
 
-
-
     // Transform of the object
     SDL_Rect m_transform;
 
+    // Trigger to update function such as UI update
+    std::unordered_map<const char*, std::function<void()>> m_mpTriggers;
 
     // * IMMUNE SYSTEM
-    static constexpr int s_kMaxImmuneTime= IMMUNETIME;
+    static constexpr int s_kMaxImmuneTime= IMMUNE_TIME;
 
     // Current Immune Timer
     double m_immuneTime;
@@ -81,8 +83,6 @@ private:
     // Collider for this object
     ColliderComponent m_collider;
 
-    // Collider of Triggered Object
-    //ColliderComponent* m_otherCollider;
 
 private:
 
@@ -92,7 +92,7 @@ public:
         SDL_Rect transform, 
         CollisionReferee* pReferee, 
         size_t type = (size_t)ObjectType::kPlayer,
-        const char* directory = PLAYERSPRITE
+        const char* directory = PLAYER_SPRITE
     );
     ~PlayerObject();
     
@@ -128,6 +128,10 @@ public:
 
     bool GetWinState() { return m_isWin; }
 
+    // SETTER
+    // add trigger function with key of name
+    void SetTriggerFunction(const char* name, std::function<void()> func);
+
 
     // Moving
     // Sprint
@@ -135,7 +139,7 @@ public:
     void NormalSpeed() { m_status.m_speed = s_kSpeed; }
     void SlowSpeed() { m_status.m_speed = s_kMixSpeed; }
 
-    void SetJump() { m_status.m_isOnJump = true; }
+    void SetJump() { if(m_status.m_isGrounded) m_status.m_isOnJump = true; }
     
     bool FinishGame() { return m_isWin; }
 
@@ -148,7 +152,7 @@ private:
 
 
     // Immune Mechanics
-    void ImmuneTime(double deltaTime);
+    void OnImmune(double deltaTime);
 
     //Gravity Mechanics
     void Gravity(double deltaTime);

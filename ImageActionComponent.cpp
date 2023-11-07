@@ -3,9 +3,8 @@
 #include "ImageObject.h"
 #include "Defines.h"
 
-ImageActionComponent::ImageActionComponent(ImageObject* pOwner, SDL_Rect* transform)
+ImageActionComponent::ImageActionComponent(SDL_Rect* transform)
 	:
-	m_pOwner(pOwner),
 	m_OwnerTransform(transform)
 {
 	m_OwnerSize = Vector2{ (double)transform->w,(double)transform->h };

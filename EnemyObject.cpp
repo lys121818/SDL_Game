@@ -83,7 +83,7 @@ void EnemyObject::OnCollision(ColliderComponent* pCollider)
 {
 	Status targetStaus = pCollider->GetOwner()->GetStatus();
 
-	if (targetStaus.m_type < COLLISIONINDEX)
+	if (targetStaus.m_type < COLLISION_INDEX)
 	{
 		switch (targetStaus.m_type)
 		{
@@ -114,7 +114,7 @@ void EnemyObject::OnCollision(ColliderComponent* pCollider)
 void EnemyObject::OnOverlapBegin(ColliderComponent* pCollider)
 {
 	Status targetStaus = pCollider->GetOwner()->GetStatus();
-	assert(targetStaus.m_type >= COLLISIONINDEX);
+	assert(targetStaus.m_type >= COLLISION_INDEX);
 
 	m_status.m_isOnCollision = true;
 
@@ -125,13 +125,13 @@ void EnemyObject::OnOverlapBegin(ColliderComponent* pCollider)
 void EnemyObject::OnOverlapUpdate()
 {
 	Status targetStaus = m_status.m_pTargetCollider->GetOwner()->GetStatus();
-	assert(targetStaus.m_type >= COLLISIONINDEX);
+	assert(targetStaus.m_type >= COLLISION_INDEX);
 }
 
 void EnemyObject::OnOverlapEnd()
 {
 	Status targetStaus = m_status.m_pTargetCollider->GetOwner()->GetStatus();
-	assert(targetStaus.m_type >= COLLISIONINDEX);
+	assert(targetStaus.m_type >= COLLISION_INDEX);
 
 	m_status.m_pTargetCollider = nullptr;
 	m_status.m_isOnCollision = false;
@@ -187,5 +187,5 @@ void EnemyObject::CheckCurrentState()
 
 void EnemyObject::Gravity(double deltaTime)
 {
-	m_movingComponent.TryMove(deltaTime, GRAVITYPOWER, Vector2{ 0,1 });
+	m_movingComponent.TryMove(deltaTime, GRAVITY_POWER, Vector2{ 0,1 });
 }

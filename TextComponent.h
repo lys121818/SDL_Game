@@ -17,6 +17,8 @@ public:
 	TextComponent(SDL_Rect* transform);
 	~TextComponent();
 
+	void Update();
+
 	void Render(SDL_Renderer* pRenderer);
 
 	void SetTransform(SDL_Rect transform);

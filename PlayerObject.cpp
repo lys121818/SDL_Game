@@ -3,6 +3,7 @@
 #include "Vector2.h"
 #include <assert.h>
 #include "ObjectType.h"
+#include <fstream>
 
 PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_t type, const char* directory)
 	:
@@ -13,11 +14,14 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 	 m_pSpriteName(directory),
 	 m_isImmune(false),
 	 m_immuneTime(s_kMaxImmuneTime),
-	 m_movingComponent(&m_transform,Vector2{PLAYERPOSITION}, &m_collider)
+	 m_movingComponent(&m_transform,Vector2{PLAYER_POSITION}, &m_collider)
 {
+	// Get Name from the file
+	std::ifstream file(PLAYER_INFO);
+	file >> m_status.m_name;
+	file.close();
 
 	/// STATUS
-	m_status.m_name = "Player";
 	m_status.m_type = type;
 	m_status.m_health = s_KMaxHealth;	// Player Speed
 	m_status.m_speed = s_kSpeed;		// Player Health
@@ -25,7 +29,7 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 	m_status.m_isOnCollision = false;
 	m_status.m_pTargetCollider = nullptr;
 	m_status.m_isRight = false;
-	m_status.m_attackPower = PLAYERATTACKPOWER;
+	m_status.m_attackPower = PLAYER_ATTACK_POWER;
 
 	m_jumpPower = 0;
 	/// TRANSFORM
@@ -63,11 +67,16 @@ void PlayerObject::Update(double deltaTime)
 	// All the Update of Animation Event
 	UpdateAnimationEvent(deltaTime);
 
+	std::cout << m_status.m_name << std::endl;
 }
 
 void PlayerObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
-	m_animation.Render(pRenderer, pTexture, m_status.m_isRight);
+	int blink = (int)(m_immuneTime * 100);
+
+	// Blink when it's on Immune
+	if(!m_isImmune ||( (blink % 2) != 0))
+		m_animation.Render(pRenderer, pTexture, m_status.m_isRight);
 }
 
 // Play the right animation fallowing current state of gameobject
@@ -134,7 +143,7 @@ void PlayerObject::CheckCurrentState()
 	else if (m_status.m_direction.m_x != 0)	// if player is moving x direction
 	{
 		
-		if (m_status.m_speed > PLAYERSPEED)
+		if (m_status.m_speed > PLAYER_SPEED)
 		{
 			m_currentState = AnimationState::kRun;
 		}
@@ -152,7 +161,7 @@ void PlayerObject::CheckCurrentState()
 void PlayerObject::Gravity(double deltaTime)
 {
 	
-	m_status.m_isGrounded = m_movingComponent.TryMove(deltaTime, GRAVITYPOWER, Vector2{ DOWN });
+	m_status.m_isGrounded = m_movingComponent.TryMove(deltaTime, GRAVITY_POWER, Vector2{ DOWN });
 	if (m_status.m_isGrounded)
 	{
 		m_status.m_isOnJump = false;
@@ -167,7 +176,7 @@ void PlayerObject::OnCollision(ColliderComponent* pCollider)
 	Status targetStaus = pCollider->GetOwner()->GetStatus();
 
 	// Only Collidable Object
-	assert(targetStaus.m_type < COLLISIONINDEX);
+	assert(targetStaus.m_type < COLLISION_INDEX);
 
 	// Colliding Event
 	switch (targetStaus.m_type)
@@ -186,6 +195,7 @@ void PlayerObject::OnCollision(ColliderComponent* pCollider)
 		case (size_t)ObjectType::kWall:
 		case (size_t)ObjectType::kGround:
 		{
+			//m_status.m_isOnJump = false;
 			// if Ground is under player
 			if (pCollider->GetTransform().y > m_transform.y)
 			{
@@ -193,7 +203,7 @@ void PlayerObject::OnCollision(ColliderComponent* pCollider)
 				{
 					m_status.m_isGrounded = true;
 				}
-
+			
 			}
 			else if (pCollider->GetTransform().y + pCollider->GetTransform().h >= m_transform.y && m_status.m_isOnJump)
 			{
@@ -249,7 +259,7 @@ void PlayerObject::OnOverlapUpdate()
 	Status targetStaus = m_status.m_pTargetCollider->GetOwner()->GetStatus();
 
 	// Not collidable Collision Object
-	assert(targetStaus.m_type >= COLLISIONINDEX);
+	assert(targetStaus.m_type >= COLLISION_INDEX);
 
 	// Trigger Event
 	switch (targetStaus.m_type)
@@ -258,7 +268,7 @@ void PlayerObject::OnOverlapUpdate()
 	{
 		if (!m_isImmune)
 		{
-			GetDamaged(OBJECTDAMAGE);
+			GetDamaged(OBJECT_DAMAGE);
 			m_isImmune = true;
 			std::cout << "Health: " << m_status.m_health << std::endl;
 		}
@@ -268,7 +278,7 @@ void PlayerObject::OnOverlapUpdate()
 	{
 		if (!m_isImmune)
 		{
-			GetDamaged(-OBJECTDAMAGE);
+			GetDamaged(-OBJECT_DAMAGE);
 			m_isImmune = true;
 			std::cout << "Health: " << m_status.m_health << std::endl;
 		}
@@ -303,21 +313,18 @@ void PlayerObject::UpdateGameEvent(double deltaTime)
 {
 
 
+
+	// Check for jump
+	// check for Vertical
 	if (m_status.m_isOnJump)
 		Jump(deltaTime);
-
 	// check for Horizontal
 	if (m_status.m_direction.m_x != 0)
 		m_movingComponent.TryMove(deltaTime, m_status.m_speed, Vector2{ m_status.m_direction.m_x,0 });
 
-	// check for Vertical
-	if(m_status.m_direction.m_y != 0)
-		m_movingComponent.TryMove(deltaTime, m_status.m_speed, Vector2{ 0,m_status.m_direction.m_y });
-	
-
 	// Immune System
 	if (m_isImmune)
-		ImmuneTime(deltaTime);
+		OnImmune(deltaTime);
 
 	// Moving System
 	Gravity(deltaTime);
@@ -331,6 +338,17 @@ void PlayerObject::TryMove(Vector2 deltaDirection)
 	m_status.m_direction.m_y += deltaDirection.m_y;
 }
 
+void PlayerObject::SetTriggerFunction(const char* name, std::function<void()> func)
+{
+	std::pair<const char*, std::function<void()>> pair;
+
+	pair.first = name;
+
+	pair.second = func;
+
+	m_mpTriggers.insert(pair);
+}
+
 void PlayerObject::Jump(double deltaTime)
 {
 	// Set jump
@@ -340,6 +358,7 @@ void PlayerObject::Jump(double deltaTime)
 		m_status.m_isOnJump = true;
 	}
 
+	// Check if the vertical movmenet is valid
 	m_movingComponent.TryMove(deltaTime, (double)m_jumpPower, Vector2{ UP });
 
 	// decrease power of jumping every deltaTime
@@ -349,8 +368,9 @@ void PlayerObject::Jump(double deltaTime)
 		m_status.m_isOnJump = false;
 }
 
-void PlayerObject::ImmuneTime(double deltaTime)
+void PlayerObject::OnImmune(double deltaTime)
 {
+	// Doesn't get damaged while Immune is set
 	if (m_immuneTime <= 0)
 	{
 		m_isImmune = false;
@@ -366,6 +386,7 @@ void PlayerObject::GetDamaged(int amount)
 	// decrease the health by amount of damage its given
 	m_status.m_health -= amount;
 
+
 	// Game Over
 	if (m_status.m_health <= 0)
 	{
@@ -379,6 +400,10 @@ void PlayerObject::GetDamaged(int amount)
 		std::cout << "Your Health is already Full \n";
 		m_status.m_health = s_KMaxHealth;
 	}
+
+	// if trigger key has allocated in m_mpTriggers
+	if(m_mpTriggers[HEALTHBAR_UI_FUNCTION] != nullptr)
+		m_mpTriggers[HEALTHBAR_UI_FUNCTION]();
 }
 
 

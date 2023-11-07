@@ -6,7 +6,7 @@
 WinScreen::WinScreen(Platformer* pOwner)
 	:
 	m_pOwner(pOwner),
-	m_Background(Vector2{ 0,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "WinState"),
+	m_Background(Vector2{ 0,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
 	m_pHoverButton(nullptr),
 	m_winImage(Vector2{ 200,-10 }, Vector2{400,500} , nullptr, WIN_STATE, 0, 0, "Win"),
 	m_keyboardButtonIndex(-1)
@@ -194,10 +194,10 @@ void WinScreen::SetButtons()
 	// Start Button
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		s_kFirstButtonY,				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	TTF_Font* font = m_pOwner->GetGame()->GetFonts()->GetFont(FONT2);
@@ -214,10 +214,10 @@ void WinScreen::SetButtons()
 
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		s_kFirstButtonY + s_kDistanceBetweenButtons,				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Restart");
@@ -232,10 +232,10 @@ void WinScreen::SetButtons()
 
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		s_kFirstButtonY + (s_kDistanceBetweenButtons * 2),				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Quit");

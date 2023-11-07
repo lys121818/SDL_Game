@@ -1,5 +1,7 @@
 #pragma once
 
+#define CREATOR	"Jason Lee"
+
 /// COLOR
 #define BLACK   0,0,0,SDL_ALPHA_OPAQUE
 #define WHITE	255,255,255,SDL_ALPHA_OPAQUE
@@ -24,6 +26,7 @@
 #define LEFT	-1,0
 #define DOWN	0,1
 #define UP		0,-1
+#define ZERO	0,0
 
 // Counter Direction
 #define STOPRIGHT	LEFT
@@ -33,3 +36,5 @@
 
 // Txt file for Tiled Map
 #define TILEMAP		"assets/TiledMap.txt"
+
+#define PLAYER_INFO	"assets/PlayerInfo.txt"

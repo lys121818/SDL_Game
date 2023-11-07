@@ -2,8 +2,6 @@
 #include <SDL.h>
 #include "Vector2.h"
 
-class ImageObject;
-
 class ImageActionComponent
 {
 public:
@@ -13,8 +11,6 @@ public:
 		kPoping
 	}m_actionState;
 private:
-	ImageObject* m_pOwner;
-
 	Vector2 m_OwnerSize;
 
 	Vector2 m_currentSize;
@@ -22,7 +18,7 @@ private:
 	SDL_Rect* m_OwnerTransform;
 
 public:
-	ImageActionComponent(ImageObject* pOwner, SDL_Rect* transform);
+	ImageActionComponent(SDL_Rect* transform);
 	~ImageActionComponent();
 
 	void Update(double deltaTime);

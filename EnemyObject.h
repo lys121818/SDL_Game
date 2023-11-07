@@ -27,13 +27,13 @@ private:
 private:
 	// * ENEMY
 	// Width
-	static constexpr int s_kWidth = (int)ENEMYWIDTH;
+	static constexpr int s_kWidth = (int)ENEMY_WIDTH;
 
 	// Height
-	static constexpr int s_kHeight = (int)ENEMYHEIGHT;
+	static constexpr int s_kHeight = (int)ENEMY_HEIGHT;
 
 	// Speed
-	static constexpr int s_kSpeed = (int)ENEMYSPEED;
+	static constexpr int s_kSpeed = (int)ENEMY_SPEED;
 
 	// * MOVEMENT
 	// Component

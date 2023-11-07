@@ -93,10 +93,12 @@ void ImageComponent::SetImageFrame(std::string name)
 // All the Sprite Image that are being used
 void ImageComponent::ImageSpriteSettings()
 {
+	// Background
 	if (strcmp(m_pSpriteName, BACKGROUND) == 0)
 	{
 		AddImageFrame("BackGround",0,0,1000,750);
 	}
+	// Tiles
 	else if (strcmp(m_pSpriteName, TILES) == 0)
 	{
 
@@ -122,6 +124,7 @@ void ImageComponent::ImageSpriteSettings()
 
 		AddImageFrame("Sky", 5, 2, 128, 128);
 	}
+	// Objects
 	else if (strcmp(m_pSpriteName, OBJECTS) == 0)
 	{
 		AddImageFrame("SmallBush1", 0, 0, 64, 64);
@@ -145,6 +148,7 @@ void ImageComponent::ImageSpriteSettings()
 
 		AddImageFrame("Rock", 3, 2, 64, 64);
 	}
+	// Buttons
 	else if (strcmp(m_pSpriteName, BUTTONS) == 0)
 	{
 		AddImageFrame("Normal", 0, 0, 100, 40);

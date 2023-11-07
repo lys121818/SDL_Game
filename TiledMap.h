@@ -16,8 +16,8 @@ private:
 	}m_maxTiles;
 
 	// Background information on start
-	static constexpr int s_kBackgroundWidth = BACKGROUNDTILESIZE;
-	static constexpr int s_kBackgroundHeight = BACKGROUNDTILESIZE;
+	static constexpr int s_kBackgroundWidth = BACKGROUND_TILE_SIZE;
+	static constexpr int s_kBackgroundHeight = BACKGROUND_TILE_SIZE;
 
 
 

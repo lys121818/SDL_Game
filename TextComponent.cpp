@@ -5,6 +5,7 @@
 TextComponent::TextComponent(SDL_Rect* transform)
 	:
 	m_pObjectTransform(transform),
+	m_transform(SDL_Rect{0,0,0,0}),
 	m_pTexture(nullptr)
 {
 }
@@ -12,6 +13,12 @@ TextComponent::TextComponent(SDL_Rect* transform)
 TextComponent::~TextComponent()
 {
 	SDL_DestroyTexture(m_pTexture);
+}
+
+void TextComponent::Update()
+{
+	m_transform.x = m_pObjectTransform->x - (m_transform.w / 2);
+	m_transform.y = m_pObjectTransform->y - (m_transform.h / 2);
 }
 
 void TextComponent::Render(SDL_Renderer* pRenderer)

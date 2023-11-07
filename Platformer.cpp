@@ -6,6 +6,7 @@
 #include "Stage01.h"
 #include "LossScreen.h"
 #include "ImageDirectory.h"
+#include "CreditsScene.h"
 
 Platformer::Platformer(GameDemo* pOwner)
     : m_pOwner(pOwner),
@@ -78,7 +79,6 @@ void Platformer::ChangeState(GameState* pNewState)
 
     // Load the new state
     m_pCurrentState = pNewState;
-    //m_pOwner->PreloadTexture();
 
     // Enter the new state
     pNewState->Enter();
@@ -106,10 +106,16 @@ void Platformer::LoadScene(SceneName scene)
             m_currentScene = SceneName::kVictory;
             break;
         }
-        case SceneName::kDead:
+        case SceneName::kLoss:
         {
             m_pNextState = new LossScreen(this);
-            m_currentScene = SceneName::kDead;
+            m_currentScene = SceneName::kLoss;
+            break;
+        }
+        case SceneName::kCredit:
+        {
+            m_pNextState = new CreditsScene(this);
+            m_currentScene = SceneName::kCredit;
             break;
         }
         default:

@@ -15,7 +15,10 @@ MainMenu::MainMenu(Platformer* pOwner)
 	m_background_1(Vector2{ 0,0 }, Vector2{WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
 	m_background_2(Vector2{ WINDOWWIDTH,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
 	m_pHoverButton(nullptr),
-	m_keyboardButtonIndex(-1)
+	m_keyboardButtonIndex(-1),
+	m_textBox(SDL_Rect{300,300,300,50}),
+	m_pMainMenuUI(nullptr),
+	isSetUI(false)
 {
 
 }
@@ -27,21 +30,24 @@ MainMenu::~MainMenu()
 void MainMenu::Enter()
 {
 	// Background Setups
-	m_background_1.TryMove(Vector2(LEFT), BACKGROUNDMOVESPEED);
-	m_background_2.TryMove(Vector2(LEFT), BACKGROUNDMOVESPEED);
+	m_background_1.TryMove(Vector2(LEFT), BACKGROUND_MOVE_SPEED);
+	m_background_2.TryMove(Vector2(LEFT), BACKGROUND_MOVE_SPEED);
 
 	// Set button objects
 	SetButtons();
 
-
+	SetUI();
 }
 
 void MainMenu::Update(double deltaTime)
 {
 	BackgroundUpdates(deltaTime);
-	for (auto& element : m_vpButtons)
+	if (isSetUI)
 	{
-		element->Update(deltaTime);
+		for (auto& element : m_vpButtons)
+		{
+			element->Update(deltaTime);
+		}
 	}
 }
 
@@ -51,11 +57,17 @@ void MainMenu::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 	m_background_1.Render(pRenderer, pTextures->GetTexture(m_background_1.GetTextureName()));
 	m_background_2.Render(pRenderer, pTextures->GetTexture(m_background_1.GetTextureName()));
 
-	for (auto& element : m_vpButtons)
+		for (auto& element : m_vpButtons)
+		{
+			element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
+		}
+	if (isSetUI)
 	{
-		element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
 	}
-
+	else
+	{
+		m_pMainMenuUI->Render(pRenderer, pTextures);
+	}
 }
 
 bool MainMenu::HandleEvent(SDL_Event* pEvent)
@@ -65,45 +77,53 @@ bool MainMenu::HandleEvent(SDL_Event* pEvent)
 		element->HandleEvent(pEvent);
 	}
 
-	switch (pEvent->type)
+	if (!isSetUI)
 	{
-		// Mouse Event
+		isSetUI = m_pMainMenuUI->HandleEvent(pEvent);
+	}
+	else
+	{
 		// Quit when true returns
-		case SDL_MOUSEMOTION:
+		switch (pEvent->type)
 		{
-			break;
-		}
-		case SDL_MOUSEBUTTONDOWN:
-		case SDL_MOUSEBUTTONUP:
-		{
-			if (ProcessMouseEvent(&pEvent->button) == true)
-				return true;
-			break;
-		}
-
-		// Keyboard Event
-		case SDL_KEYDOWN:
-		case SDL_KEYUP:
-		{
-			if (ProcessKeyboardEvent(&pEvent->key) == true)
-				return true;
-			break;
-		}
-
-		// determine action base on event type
-		case SDL_WINDOWEVENT:
-		{
-			if (pEvent->window.event == SDL_WINDOWEVENT_CLOSE)
+			// Mouse Event
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
 			{
-				return true;
+				if (ProcessMouseEvent(&pEvent->button) == true)
+					return true;
+				break;
 			}
-			break;
-		}
 
+			// Keyboard Event
+			case SDL_KEYDOWN:
+			case SDL_KEYUP:
+			{
+				if (ProcessKeyboardEvent(&pEvent->key) == true)
+					return true;
+				break;
+			}
+
+			// determine action base on event type
+			case SDL_WINDOWEVENT:
+			{
+				if (pEvent->window.event == SDL_WINDOWEVENT_CLOSE)
+				{
+					return true;
+				}
+				break;
+			}
+
+		}
 	}
 
 	return false;
 }
+
+
+////////////////
+//	PRIVATE	  //
+////////////////
 
 // Every events using mouse works here
 bool MainMenu::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
@@ -149,7 +169,7 @@ bool MainMenu::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 	{
 		switch ((int)pData->keysym.sym)
 		{
-			// Move Up
+		// Move Up
 		case SDLK_w:
 		case SDLK_UP:
 		{
@@ -193,10 +213,10 @@ void MainMenu::SetButtons()
 	// Start Button
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		100,				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	TTF_Font* font = m_pOwner->GetGame()->GetFonts()->GetFont(FONT1);
@@ -214,10 +234,10 @@ void MainMenu::SetButtons()
 
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		200,				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kDisable, "Settings");
@@ -228,10 +248,10 @@ void MainMenu::SetButtons()
 
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		300,				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Quit");
@@ -244,14 +264,38 @@ void MainMenu::SetButtons()
 	button->SetTextInButton(font, "QUIT", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
-	
+
+	buttonTransform = SDL_Rect
+	{
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
+		400,				// Y
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
+	};
+
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Quit");
+
+	button->SetCallback([this]()->void
+		{
+			m_pOwner->LoadScene(Platformer::SceneName::kCredit);
+		});
+
+	button->SetTextInButton(font, "CREDITS", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
+	m_vpButtons.push_back(button);
+
 }
 
+void MainMenu::SetUI()
+{
+	m_pMainMenuUI = new MainMenuUI(m_pOwner->GetGame()->GetFonts()->GetFont(FONT2),
+					SDL_Color{ BLACK },
+					m_pOwner->GetGame()->GetRenderer());
 
+	// Set UI
+	m_pMainMenuUI->InitUI();
 
-////////////////
-//	PRIVATE	  //
-////////////////
+}
+
 
 /// <summary>
 /// Updates for Background

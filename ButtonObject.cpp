@@ -43,6 +43,7 @@ void ButtonObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 		return;
 	}
 	m_imageComponent.Render(pRenderer, pTexture);
+
 	m_textComponent.Render(pRenderer);
 }
 

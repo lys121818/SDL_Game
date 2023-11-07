@@ -12,7 +12,7 @@ ImageObject::ImageObject(Vector2 position, Vector2 size, CollisionReferee* pRefe
 	m_imageComponent(directory, &m_transform),
 	m_collider(this, m_transform, pReferee),
 	m_movingComponent(&m_transform, Vector2(m_transform.x, m_transform.y)),
-	m_imageAction(this,&m_transform)
+	m_imageAction(&m_transform)
 {
 	m_status.m_type = type;
 	m_status.m_name = name;
@@ -29,7 +29,10 @@ ImageObject::~ImageObject()
 
 void ImageObject::Update(double deltaTime)
 {
-	m_movingComponent.TryMove(deltaTime, m_status.m_speed, m_status.m_direction);
+	// Movement update when speed or direction is not 0
+	if (m_status.m_speed != 0 || m_status.m_direction != Vector2{ 0,0 });
+		m_movingComponent.TryMove(deltaTime, m_status.m_speed, m_status.m_direction);
+
 	m_imageAction.Update(deltaTime);
 
 }

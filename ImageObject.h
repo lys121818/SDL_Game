@@ -11,6 +11,8 @@ class ImageActionComponent;
 
 class ImageObject : public GameObject
 {
+	static constexpr int s_kSpeed = 50;
+
 	Status m_status;
 
 	// Name Of the Object
@@ -28,6 +30,7 @@ class ImageObject : public GameObject
 	ColliderComponent m_collider;
 
 	ImageActionComponent m_imageAction;
+
 public:
 	ImageObject(Vector2 position, Vector2 size, CollisionReferee* pReferee, const char* directory, const int index = 0, size_t type = 0, const char* name = "UnNamed");
 	~ImageObject();
@@ -41,7 +44,7 @@ public:
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 	// Move to the direction
-	void TryMove(const Vector2& direction,const int& speed);
+	void TryMove(const Vector2& direction,const int& speed = s_kSpeed);
 
 	// GETTERS
 	SDL_Rect GetTransform() override { return m_transform; }

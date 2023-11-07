@@ -4,8 +4,11 @@
 #include "ButtonObject.h"
 #include "ImageObject.h"
 #include "Textures.h"
+#include <string>
 #include "SDL_ttf.h"
-
+#include "TextObject.h"
+#include "MainMenuUI.h"
+#include <fstream>
 
 //==================================================================================================//
 /// MAIN MENU
@@ -30,6 +33,15 @@ private:
 
 	// Index of selected button
 	int m_keyboardButtonIndex;
+
+	// Transform of InputTextFile
+	SDL_Rect m_textBox;
+
+
+	MainMenuUI* m_pMainMenuUI;
+
+	char* m_playerName;
+	bool isSetUI;
 
 public:
 	MainMenu(Platformer* pOwner);
@@ -57,6 +69,8 @@ private:
 	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
 
 	void SetButtons();
+
+	void SetUI();
 
 	// Updates for background
 	void BackgroundUpdates(double deltaTime);

@@ -48,6 +48,14 @@ void Fonts::PreloadFonts(size_t sceneNumber)
             AddTTFToFonts(FONT2, 35);
             break;
         }
+        // CreditScene
+        case 4:
+        {
+            AddTTFToFonts(FONT2, 20);
+            AddTTFToFonts(FONT3, 40);
+            AddTTFToFonts(SANS, 20);
+            break;
+        }
     default:
         break;
     }
@@ -72,7 +80,7 @@ void Fonts::AddTTFToFonts(const char* name, size_t size)
     // Error when it fails to load the texture
     if (fontFile.second == nullptr)
     {
-        std::cout << "[Textures] Texture loading failed Error: " << SDL_GetError();
+        std::cout << "[Fonts] Fonts loading failed Error: " << SDL_GetError();
     }
     m_mpFonts.insert(fontFile);
 }

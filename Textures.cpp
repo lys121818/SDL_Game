@@ -45,6 +45,7 @@ void Textures::PreloadTextures(size_t sceneNumber)
             AddImagesToTexture(ZOMBIEMALE);
             AddImagesToTexture(ZOMBIEFEMALE);
 
+            // UI SPRITES
             AddImagesToTexture(HEALTHUI);
             break;
         }
@@ -63,6 +64,13 @@ void Textures::PreloadTextures(size_t sceneNumber)
             AddImagesToTexture(BACKGROUND);
             AddImagesToTexture(LOSS_STATE);
             AddImagesToTexture(BUTTONS);
+            break;
+        }
+        // Credit Scene
+        case 4:
+        {
+            AddImagesToTexture(BACKGROUND);
+
             break;
         }
     default:

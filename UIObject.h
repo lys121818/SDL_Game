@@ -24,18 +24,20 @@ public:
 
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture);
 
+	// [GETTER]
+	// Return name of the Sprite
+	const char* GetTextureName() override { return m_pSpriteName; }
+
+	// [SETTER]
 	// all the UI Image Setup here
 	void SetUIImage(const int index);
 
 	// Set transform
 	void SetTransform(SDL_Rect transform) { m_transform = transform; }
 
-	const char* GetTextureName() override { return m_pSpriteName; }
-
 	// Inherited via GameObject
-	Status GetStatus() override;
-
-	SDL_Rect GetTransform() override;
+	Status GetStatus() override { return m_status; }
+	SDL_Rect GetTransform() override { return m_transform; }
 
 };
 

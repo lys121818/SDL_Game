@@ -9,7 +9,8 @@
 #include "ImageObject.h"
 #include "GameObject.h"
 #include "GameSetting.h"
-#include "UIController.h"
+#include "InGameUI.h"
+#include <fstream>
 
 //==================================================================================================//
 /// STAGE 01
@@ -22,11 +23,11 @@ class Stage01 : public GameState
 {
 private:
 	// Max value of gameobject to be create
-	static constexpr size_t s_kMaxGameObjectCount = MAXGAMEOBJECT;
+	static constexpr size_t s_kMaxGameObjectCount = MAX_GAMEOBJECT;
 
 	// Player Information on start
-	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ PLAYERPOSITION };
-	static constexpr Vector2 s_kPlayerStartingSize = Vector2{ PLAYERSIZEVECTOR2 };
+	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ PLAYER_POSITION };
+	static constexpr Vector2 s_kPlayerStartingSize = Vector2{ PLAYER_SIZE_VECTOR2 };
 
 	// Game Playing Timer
 	double m_CurrentTime;
@@ -53,7 +54,7 @@ private:
 	std::unordered_map<const char*, AnimationComponent*> m_mpAnimations;
 
 	// Controlls the UI
-	UIController* m_UIController;
+	InGameUI* m_pInGameUI;
 
 public:
 	Stage01(Platformer* pOwner);

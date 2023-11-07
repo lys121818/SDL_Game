@@ -194,10 +194,10 @@ void LossScreen::SetButtons()
 	// Start Button
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		s_kFirstButtonY,				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	TTF_Font* font = m_pOwner->GetGame()->GetFonts()->GetFont(FONT2);
@@ -214,10 +214,10 @@ void LossScreen::SetButtons()
 
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		s_kFirstButtonY + s_kDistanceBetweenButtons,				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Restart");
@@ -232,10 +232,10 @@ void LossScreen::SetButtons()
 
 	buttonTransform = SDL_Rect
 	{
-		(int)(WINDOWWIDTH / 2) - (int)(BUTTONWIDTH / 2),	// X
+		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
 		s_kFirstButtonY + (s_kDistanceBetweenButtons * 2),				// Y
-		(int)BUTTONWIDTH,	// W
-		(int)BUTTONHEIGHT	// H
+		(int)BUTTON_WIDTH,	// W
+		(int)BUTTON_HEIGHT	// H
 	};
 
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Quit");

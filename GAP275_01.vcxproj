@@ -189,6 +189,9 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="ButtonObject.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="CollisionReferee.cpp" />
+    <ClCompile Include="CreditsScene.cpp" />
+    <ClCompile Include="MainMenuUI.cpp" />
+    <ClCompile Include="TextObject.cpp" />
     <ClCompile Include="Fonts.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
@@ -205,7 +208,7 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="TextComponent.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TiledMap.cpp" />
-    <ClCompile Include="UIController.cpp" />
+    <ClCompile Include="InGameUI.cpp" />
     <ClCompile Include="UIObject.cpp" />
     <ClCompile Include="WinScreen.cpp" />
   </ItemGroup>
@@ -215,7 +218,10 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="ButtonType.h" />
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="CollisionReferee.h" />
+    <ClInclude Include="CreditsScene.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="MainMenuUI.h" />
+    <ClInclude Include="TextObject.h" />
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="EnemyObject.h" />
@@ -238,7 +244,8 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TiledMap.h" />
     <ClInclude Include="ObjectType.h" />
-    <ClInclude Include="UIController.h" />
+    <ClInclude Include="InGameUI.h" />
+    <ClInclude Include="UIInterface.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="WinScreen.h" />

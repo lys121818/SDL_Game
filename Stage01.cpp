@@ -7,12 +7,14 @@
 Stage01::Stage01(Platformer* pOwner)
     :
     m_pOwner(pOwner),
-    m_UIController(nullptr)
+    m_pInGameUI(nullptr),
+    m_pBackground(nullptr),
+    m_pPlayer(nullptr),
+    m_pTiledMap(nullptr)
 {
     m_CurrentTime = 0.0;
 
     // GameObject and Tiles Setting
-    InitGame();
 }
 
 Stage01::~Stage01()
@@ -21,6 +23,7 @@ Stage01::~Stage01()
 
 void Stage01::Enter()
 {
+    InitGame();
 
 }
 
@@ -37,7 +40,6 @@ void Stage01::Update(double deltaTime)
         {
             element->Update(deltaTime);
         }
-        m_UIController->Update();
     }
     UpdateGamestate();
 }
@@ -64,7 +66,7 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
         }
 
         m_pTiledMap->Render(pRenderer, pTextures);
-        m_UIController->Render(pRenderer, pTextures);
+        m_pInGameUI->Render(pRenderer, pTextures);
     }
     
 
@@ -121,55 +123,41 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
     {
         switch ((int)pData->keysym.sym)
         {
-            // Run
-        case SDLK_LSHIFT:
-        {
-            m_pPlayer->SprintSpeed();
-            break;
-        }
+                // Run
+            case SDLK_LSHIFT:
+            {
+                m_pPlayer->SprintSpeed();
+                break;
+            }
 
-        // Move Left
-        case SDLK_a:
-        {
-            m_pPlayer->TryMove(Vector2{ LEFT });
-            break;
-        }
+            // Move Left
+            case SDLK_LEFT:
+            {
+                m_pPlayer->TryMove(Vector2{ LEFT });
+                break;
+            }
 
-        // Move Right
-        case SDLK_d:
-        {
-            m_pPlayer->TryMove(Vector2{ RIGHT });
-            break;
-        }
+            // Move Right
+            case SDLK_RIGHT:
+            {
+                m_pPlayer->TryMove(Vector2{ RIGHT });
+                break;
+            }
 
-        // Move Up
-        case SDLK_w:
-        {
-            m_pPlayer->TryMove(Vector2{ UP });
-            break;
-        }
+            // Jumping
+            case SDLK_SPACE:
+            {
+                m_pPlayer->SetJump();
+                break;
+            }
 
-        // Move Down
-        case SDLK_s:
-        {
-            m_pPlayer->TryMove(Vector2{ DOWN });
-            break;
-        }
-
-        // Shooting
-        case SDLK_SPACE:
-        {
-            m_pPlayer->SetJump();
-            break;
-        }
-
-        // Quit
-        case SDLK_q:
-        {
-            if (pData->keysym.mod & KMOD_LCTRL)
-                return true;
-            break;
-        }
+            // Quit
+            case SDLK_q:
+            {
+                if (pData->keysym.mod & KMOD_LCTRL)
+                    return true;
+                break;
+            }
         default:
             break;
         }
@@ -178,41 +166,24 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
     {
         switch ((int)pData->keysym.sym)
         {
-            // Stop Run
-        case SDLK_LSHIFT:
-        {
-            m_pPlayer->NormalSpeed();
-            break;
-        }
-
-        // Stop Moving Left
-        case SDLK_a:
-        {
-            m_pPlayer->TryMove(Vector2{ STOPLEFT });
-            break;
-        }
-
-        // Stop Moving Right
-        case SDLK_d:
-        {
-            m_pPlayer->TryMove(Vector2{ STOPRIGHT });
-            break;
-        }
-
-        // Stop Moving Up
-        case SDLK_w:
-        {
-            m_pPlayer->TryMove(Vector2{ STOPUP });
-            break;
-        }
-
-        // Stop Moving Down
-        case SDLK_s:
-        {
-            m_pPlayer->TryMove(Vector2{ STOPDOWN });
-            break;
-
-        }
+                // Stop Run
+            case SDLK_LSHIFT:
+            {
+                m_pPlayer->NormalSpeed();
+                break;
+            }
+            // Stop Moving Left
+            case SDLK_LEFT:
+            {
+                m_pPlayer->TryMove(Vector2{ STOPLEFT });
+                break;
+            }
+            // Stop Moving Right
+            case SDLK_RIGHT:
+            {
+                m_pPlayer->TryMove(Vector2{ STOPRIGHT });
+                break;
+            }
         default:
             break;
         }
@@ -314,8 +285,8 @@ void Stage01::InitGame()
 
     // Add GameObjects to m_vpGameObjects
     SDL_Rect objectTransform;
-    objectTransform.w = (int)ENEMYWIDTH;
-    objectTransform.h = (int)ENEMYHEIGHT;
+    objectTransform.w = (int)ENEMY_WIDTH;
+    objectTransform.h = (int)ENEMY_HEIGHT;
 
     // Setting starting position of the enemy
     objectTransform.x = 100;
@@ -328,8 +299,13 @@ void Stage01::InitGame()
     stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::kEnemy, "Zombie_Male");
     AddGameObject(stationary);
 
-    m_UIController = new UIController(this, m_pPlayer);
-    m_UIController->InitUI();
+    m_pInGameUI = new InGameUI(m_pPlayer);
+    m_pInGameUI->InitUI();
+    
+    m_pPlayer->SetTriggerFunction(HEALTHBAR_UI_FUNCTION, [this]()->void
+        {
+            m_pInGameUI->UpdateUI();
+        });
 
 }
 
@@ -362,7 +338,7 @@ bool Stage01::UpdateGamestate()
         }
         else
         {
-            m_pOwner->LoadScene(Platformer::SceneName::kDead);
+            m_pOwner->LoadScene(Platformer::SceneName::kLoss);
         }
     }
 
