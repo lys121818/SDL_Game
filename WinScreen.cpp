@@ -270,7 +270,7 @@ void WinScreen::ChangeButtonFocus(int direction)
 	// set to last index if its over capacity
 	else if (nextDirectionIndex >= m_vpButtons.capacity())
 	{
-		m_keyboardButtonIndex = m_vpButtons.capacity() - 1;
+		m_keyboardButtonIndex = (int)(m_vpButtons.capacity() - 1);
 	}
 	else
 	{

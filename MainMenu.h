@@ -34,13 +34,8 @@ private:
 	// Index of selected button
 	int m_keyboardButtonIndex;
 
-	// Transform of InputTextFile
-	SDL_Rect m_textBox;
-
-
 	MainMenuUI* m_pMainMenuUI;
 
-	char* m_playerName;
 	bool isSetUI;
 
 public:

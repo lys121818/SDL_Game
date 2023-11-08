@@ -16,7 +16,6 @@ MainMenu::MainMenu(Platformer* pOwner)
 	m_background_2(Vector2{ WINDOWWIDTH,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
 	m_pHoverButton(nullptr),
 	m_keyboardButtonIndex(-1),
-	m_textBox(SDL_Rect{300,300,300,50}),
 	m_pMainMenuUI(nullptr),
 	isSetUI(false)
 {
@@ -34,6 +33,7 @@ void MainMenu::Enter()
 	m_background_2.TryMove(Vector2(LEFT), BACKGROUND_MOVE_SPEED);
 
 	// Set button objects
+
 	SetButtons();
 
 	SetUI();
@@ -49,6 +49,10 @@ void MainMenu::Update(double deltaTime)
 			element->Update(deltaTime);
 		}
 	}
+	else
+	{
+		m_pMainMenuUI->UpdateUI(deltaTime);
+	}
 }
 
 void MainMenu::Render(SDL_Renderer* pRenderer, Textures* pTextures)
@@ -57,12 +61,12 @@ void MainMenu::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 	m_background_1.Render(pRenderer, pTextures->GetTexture(m_background_1.GetTextureName()));
 	m_background_2.Render(pRenderer, pTextures->GetTexture(m_background_1.GetTextureName()));
 
+	if (isSetUI)
+	{
 		for (auto& element : m_vpButtons)
 		{
 			element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
 		}
-	if (isSetUI)
-	{
 	}
 	else
 	{
@@ -72,10 +76,6 @@ void MainMenu::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
 bool MainMenu::HandleEvent(SDL_Event* pEvent)
 {
-	for (auto& element : m_vpButtons)
-	{
-		element->HandleEvent(pEvent);
-	}
 
 	if (!isSetUI)
 	{
@@ -83,6 +83,12 @@ bool MainMenu::HandleEvent(SDL_Event* pEvent)
 	}
 	else
 	{
+		// buttons handles event its own
+		for (auto& element : m_vpButtons)
+		{
+			element->HandleEvent(pEvent);
+		}
+
 		// Quit when true returns
 		switch (pEvent->type)
 		{
@@ -288,7 +294,6 @@ void MainMenu::SetButtons()
 void MainMenu::SetUI()
 {
 	m_pMainMenuUI = new MainMenuUI(m_pOwner->GetGame()->GetFonts()->GetFont(FONT2),
-					SDL_Color{ BLACK },
 					m_pOwner->GetGame()->GetRenderer());
 
 	// Set UI
@@ -322,7 +327,7 @@ void MainMenu::Destory()
 	{
 		delete element;
 	}
-
+	delete m_pMainMenuUI;
 }
 
 void MainMenu::ChangeButtonFocus(int direction)
@@ -337,7 +342,7 @@ void MainMenu::ChangeButtonFocus(int direction)
 	// set to last index if its over capacity
 	else if (nextDirectionIndex >= m_vpButtons.capacity())
 	{
-		m_keyboardButtonIndex = m_vpButtons.capacity() - 1;
+		m_keyboardButtonIndex = (int)(m_vpButtons.capacity() - 1);
 	}
 	else
 	{

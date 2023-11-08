@@ -47,7 +47,6 @@ EnemyObject::~EnemyObject()
 //  PUBLIC  //
 -----------*/
 
-// TODO: Clean Up Update Function
 void EnemyObject::Update(double deltaTime)
 {
 	Gravity(deltaTime);

@@ -2,6 +2,7 @@
 #include "ImageDirectory.h"
 #include "Platformer.h"
 #include "GameDemo.h"
+#include <assert.h>
 
 LossScreen::LossScreen(Platformer* pOwner)
 	:
@@ -259,7 +260,10 @@ void LossScreen::Destory()
 
 void LossScreen::ChangeButtonFocus(int direction)
 {
+	assert(m_vpButtons.capacity() > 0);
+
 	int nextDirectionIndex = (m_keyboardButtonIndex + direction);
+
 	// set to first index if its negative value
 	if (nextDirectionIndex < 0)
 	{
@@ -268,7 +272,7 @@ void LossScreen::ChangeButtonFocus(int direction)
 	// set to last index if its over capacity
 	else if (nextDirectionIndex >= m_vpButtons.capacity())
 	{
-		m_keyboardButtonIndex = m_vpButtons.capacity() - 1;
+		m_keyboardButtonIndex = (int)(m_vpButtons.capacity() - 1);
 	}
 	else
 	{

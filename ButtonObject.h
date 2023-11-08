@@ -59,9 +59,14 @@ public:
 
 	void SetClick(bool isClick) { m_isClicked = isClick; }
 
+	void SetAble(bool isAble) { m_isAble = isAble; }
+
 	void SetTextInButton(TTF_Font* pFont, const char* pText, SDL_Color color, SDL_Renderer* pRenderer);
 
 	void SetCallback(std::function<void()> callback) { m_callback = callback; }
+
+	void SetPosition(Vector2 position) { m_transform.x = (int)position.m_x; 
+										 m_transform.y = (int)position.m_y; }
 
 	// Executes the callback
 	void Trigger();

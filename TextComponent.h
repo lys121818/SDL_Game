@@ -13,6 +13,8 @@ private:
 
 	SDL_Texture* m_pTexture;
 
+	Vector2 m_textSize;
+
 public:
 	TextComponent(SDL_Rect* transform);
 	~TextComponent();

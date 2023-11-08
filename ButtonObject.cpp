@@ -32,6 +32,7 @@ ButtonObject::~ButtonObject()
 void ButtonObject::Update(double deltaTime)
 {
 	ButtonState();
+	m_textComponent.Update();
 }
 
 
@@ -64,6 +65,7 @@ void ButtonObject::HandleEvent(SDL_Event* pEvent)
 			}
 			else
 			{
+				m_isAble = true;
 				m_isOnHover = false;
 				m_isClicked = false;
 			}
@@ -85,8 +87,11 @@ void ButtonObject::HandleEvent(SDL_Event* pEvent)
 	{
 		if (m_isClicked)
 		{
-			m_isClicked = false;
-			Trigger();
+			if (m_isAble)
+			{
+				m_isClicked = false;
+				Trigger();
+			}
 		}
 		break;
 	}

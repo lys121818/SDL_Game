@@ -1,4 +1,5 @@
 #include "TextComponent.h"
+#include "Defines.h"
 #include <assert.h>
 #include <iostream>
 
@@ -6,7 +7,8 @@ TextComponent::TextComponent(SDL_Rect* transform)
 	:
 	m_pObjectTransform(transform),
 	m_transform(SDL_Rect{0,0,0,0}),
-	m_pTexture(nullptr)
+	m_pTexture(nullptr),
+	m_textSize(Vector2(ZERO))
 {
 }
 
@@ -17,8 +19,9 @@ TextComponent::~TextComponent()
 
 void TextComponent::Update()
 {
-	m_transform.x = m_pObjectTransform->x - (m_transform.w / 2);
-	m_transform.y = m_pObjectTransform->y - (m_transform.h / 2);
+	// Set text to the middle of object
+	m_transform.x = (int)(m_pObjectTransform->x + (m_pObjectTransform->w / 2) - (m_textSize.m_x / 2));
+	m_transform.y = (int)(m_pObjectTransform->y + (m_pObjectTransform->h / 2) - (m_textSize.m_y / 2));
 }
 
 void TextComponent::Render(SDL_Renderer* pRenderer)
@@ -55,17 +58,22 @@ void TextComponent::SetText(TTF_Font* pFont, const char* pText, SDL_Color color,
 		std::cout << "[TextComponent] Texture loading failed Error: " << SDL_GetError();
 	}
 	
+	assert(pTextSurface);
+
+	m_textSize.m_x = pTextSurface->w;
+	m_textSize.m_y = pTextSurface->h;
+
 	// Setting text to the middle of object
 	if (pTextSurface != nullptr)
 	{
 		m_transform.w = pTextSurface->w;
 		m_transform.h = pTextSurface->h;
 
-		Vector2 objectMiddlePosition{	m_pObjectTransform->x + (m_pObjectTransform->w / 2) ,
-										m_pObjectTransform->y + (m_pObjectTransform->h / 2) };
+		Vector2 objectMiddlePosition{	(double)m_pObjectTransform->x + (m_pObjectTransform->w / 2) ,
+										(double)m_pObjectTransform->y + (m_pObjectTransform->h / 2) };
 
-		m_transform.x = objectMiddlePosition.m_x - (pTextSurface->w / 2);
-		m_transform.y = objectMiddlePosition.m_y - (pTextSurface->h / 2);
+		m_transform.x = (int)(objectMiddlePosition.m_x - (pTextSurface->w / 2));
+		m_transform.y = (int)(objectMiddlePosition.m_y - (pTextSurface->h / 2));
 	}
 
 

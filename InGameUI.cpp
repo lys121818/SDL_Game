@@ -22,6 +22,7 @@ void InGameUI::InitUI()
 
 void InGameUI::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 {
+	// TODO : Print Player name text object
 	// Rendering UI objects
 	for (auto& element : m_mpUIObjects)
 	{
