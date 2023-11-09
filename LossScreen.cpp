@@ -27,15 +27,17 @@ void LossScreen::Enter()
 
 void LossScreen::Update(double deltaTime)
 {
-	if (isOnAction)
+	if (isOnAction && m_lossImage.GetActionState() == ImageActionComponent::ActionState::kNormal)
 	{
-		if (m_lossImage.GetActionState() == ImageActionComponent::ActionState::kNormal)
-			isOnAction = false;
+		isOnAction = false;
 	}
-
-	for (auto& element : m_vpButtons)
+	// Render when action is done
+	else if (!isOnAction)
 	{
-		element->Update(deltaTime);
+		for (auto& element : m_vpButtons)
+		{
+			element->Update(deltaTime);
+		}
 	}
 	m_lossImage.Update(deltaTime);
 }
@@ -58,47 +60,51 @@ void LossScreen::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
 bool LossScreen::HandleEvent(SDL_Event* pEvent)
 {
-	for (auto& element : m_vpButtons)
+	if (!isOnAction)
 	{
-		element->HandleEvent(pEvent);
-	}
+		for (auto& element : m_vpButtons)
+		{
+			element->HandleEvent(pEvent);
+		}
 
-	switch (pEvent->type)
-	{
+		switch (pEvent->type)
+		{
 		// Mouse Event
 		// Quit when true returns
-	case SDL_MOUSEMOTION:
-	{
-
-		break;
-	}
-	case SDL_MOUSEBUTTONDOWN:
-	case SDL_MOUSEBUTTONUP:
-	{
-		if (ProcessMouseEvent(&pEvent->button) == true)
-			return true;
-		break;
-	}
-
-	// Keyboard Event
-	case SDL_KEYDOWN:
-	case SDL_KEYUP:
-	{
-		if (ProcessKeyboardEvent(&pEvent->key) == true)
-			return true;
-		break;
-	}
-
-	// determine action base on event type
-	case SDL_WINDOWEVENT:
-	{
-		if (pEvent->window.event == SDL_WINDOWEVENT_CLOSE)
+		// Reset keyboard index when mouse event happens
+		case SDL_MOUSEMOTION:
 		{
-			return true;
+			m_keyboardButtonIndex = -1;
+			break;
 		}
-		break;
-	}
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+		{
+			if (ProcessMouseEvent(&pEvent->button) == true)
+				return true;
+			break;
+		}
 
+		// Keyboard Event
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+		{
+			if (ProcessKeyboardEvent(&pEvent->key) == true)
+				return true;
+			break;
+		}
+
+		// determine action base on event type
+		case SDL_WINDOWEVENT:
+		{
+			if (pEvent->window.event == SDL_WINDOWEVENT_CLOSE)
+			{
+				return true;
+			}
+			break;
+		}
+
+		}
 	}
 
 	return false;
@@ -203,6 +209,7 @@ void LossScreen::SetButtons()
 
 	TTF_Font* font = m_pOwner->GetGame()->GetFonts()->GetFont(FONT2);
 
+	// [Main Menu]
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "MainMenu");
 
 	button->SetCallback([this]()->void
@@ -213,6 +220,7 @@ void LossScreen::SetButtons()
 	button->SetTextInButton(font, "MAIN MENU", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
+	// [Restart]
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
@@ -231,6 +239,7 @@ void LossScreen::SetButtons()
 	button->SetTextInButton(font, "RESTART", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
+	// [Quit]
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
@@ -260,7 +269,7 @@ void LossScreen::Destory()
 
 void LossScreen::ChangeButtonFocus(int direction)
 {
-	assert(m_vpButtons.capacity() > 0);
+	assert(m_vpButtons.size() > 0);
 
 	int nextDirectionIndex = (m_keyboardButtonIndex + direction);
 
@@ -269,24 +278,33 @@ void LossScreen::ChangeButtonFocus(int direction)
 	{
 		m_keyboardButtonIndex = 0;
 	}
-	// set to last index if its over capacity
-	else if (nextDirectionIndex >= m_vpButtons.capacity())
+	// set to last index if its over size
+	else if (nextDirectionIndex >= m_vpButtons.size())
 	{
-		m_keyboardButtonIndex = (int)(m_vpButtons.capacity() - 1);
+		m_keyboardButtonIndex = (int)(m_vpButtons.size() - 1);
 	}
 	else
 	{
 		m_keyboardButtonIndex = nextDirectionIndex;
 	}
 
-	if (!m_vpButtons[m_keyboardButtonIndex]->GetAble())
-		ChangeButtonFocus(direction);
-
-	for (size_t i = 0; i < m_vpButtons.capacity(); ++i)
+	// if the button is disable and next index exist
+	if (!m_vpButtons[m_keyboardButtonIndex]->GetAble() &&
+		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < m_vpButtons.size()))
 	{
-		if (i == m_keyboardButtonIndex)
-			m_vpButtons[i]->SetHover(true);
-		else
-			m_vpButtons[i]->SetHover(false);
+
+		ChangeButtonFocus(direction);
+	}
+
+	// Change Hover setting if the button is able
+	for (size_t i = 0; i < m_vpButtons.size(); ++i)
+	{
+		if (m_vpButtons[m_keyboardButtonIndex]->GetAble())
+		{
+			if (i == m_keyboardButtonIndex)
+				m_vpButtons[i]->SetHover(true);
+			else
+				m_vpButtons[i]->SetHover(false);
+		}
 	}
 }

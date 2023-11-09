@@ -25,6 +25,7 @@ void Textures::PreloadTextures(size_t sceneNumber)
         {
             AddImagesToTexture(BACKGROUND);
             AddImagesToTexture(BUTTONS);
+            AddImagesToTexture(TEXT_BAR);
             break;
         }
 

@@ -17,12 +17,13 @@ private:
 	std::vector<TextObject*> m_vpCreditsText;
 	
 	// Skip Info Text
-	TextObject m_skipInfo_1;
-	TextObject m_skipInfo_2;
+	TextObject* m_skipInfo_1;
+	TextObject* m_skipInfo_2;
 
 	// Image for background
 	ImageObject m_background_1;
 	ImageObject m_background_2;
+
 public:
 	CreditsScene(Platformer* pOwner);
 	~CreditsScene();
@@ -49,6 +50,7 @@ private:
 	// Every events using keyboards works here
 	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
 
+	// Background Movemenet
 	void UpdateBackgrounds(double deltaTime);
 
 	void Destory();

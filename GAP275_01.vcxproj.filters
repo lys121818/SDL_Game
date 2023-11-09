@@ -58,11 +58,11 @@
     <Filter Include="Source Files\SDL_Game\States\Game_Platformer\Scenes">
       <UniqueIdentifier>{7b44c75e-4ce9-46d0-a340-1135737e9bf1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\SDL_Game\States\Game_Platformer\UIInterfaces">
-      <UniqueIdentifier>{6437f9a9-67a2-42c8-ab0a-59ecc8e90ead}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\SDL_Game\States\Game_Platformer\UIInterfaces">
+    <Filter Include="Header Files\SDL_Game\States\Game_Platformer\UI">
       <UniqueIdentifier>{dda6e73a-bfa6-41bd-87c1-d391b1974482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SDL_Game\States\Game_Platformer\UI">
+      <UniqueIdentifier>{6437f9a9-67a2-42c8-ab0a-59ecc8e90ead}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -139,10 +139,10 @@
       <Filter>Source Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="InGameUI.cpp">
-      <Filter>Source Files\SDL_Game\States\Game_Platformer\UIInterfaces</Filter>
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\UI</Filter>
     </ClCompile>
     <ClCompile Include="MainMenuUI.cpp">
-      <Filter>Source Files\SDL_Game\States\Game_Platformer\UIInterfaces</Filter>
+      <Filter>Source Files\SDL_Game\States\Game_Platformer\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +227,6 @@
     <ClInclude Include="LossScreen.h">
       <Filter>Header Files\SDL_Game\States\Game_Platformer\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Fonts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TextComponent.h">
       <Filter>Header Files\SDL_Game\Components</Filter>
     </ClInclude>
@@ -249,10 +246,13 @@
       <Filter>Header Files\SDL_Game\Virtual</Filter>
     </ClInclude>
     <ClInclude Include="InGameUI.h">
-      <Filter>Header Files\SDL_Game\States\Game_Platformer\UIInterfaces</Filter>
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\UI</Filter>
     </ClInclude>
     <ClInclude Include="MainMenuUI.h">
-      <Filter>Header Files\SDL_Game\States\Game_Platformer\UIInterfaces</Filter>
+      <Filter>Header Files\SDL_Game\States\Game_Platformer\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts.h">
+      <Filter>Header Files\SDL_Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

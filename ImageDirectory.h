@@ -16,9 +16,9 @@
 #define LOSS_STATE	"assets/LossState.png"		// 750 * 1000
 
 // Animation Sprite Sheet
-#define PUMPKIN			"assets/Pumpkin.png"		// 200 * 300
-#define ZOMBIEMALE		"assets/ZombieMale.png"		// 200 * 300
-#define ZOMBIEFEMALE	"assets/ZombieFemale.png"	// 200 * 300
+#define PUMPKIN			"assets/Animation/Pumpkin.png"		// 200 * 300
+#define ZOMBIEMALE		"assets/Animation/ZombieMale.png"		// 200 * 300
+#define ZOMBIEFEMALE	"assets/Animation/ZombieFemale.png"	// 200 * 300
 
 // Buttons
 #define BUTTONS	"assets/Buttons.png"		// 200 * 80
@@ -27,9 +27,12 @@
 // HEALTH
 #define HEALTHUI	"assets/HealthUI/HealthSprite.png"
 
+// TEXT BOX
+#define TEXT_BAR	"assets/TextBar.png"	// 1110 * 235
 
 ///FONTS
 #define FONT1	"assets/fonts/BiIuendVibesDemo.ttf"
 #define FONT2	"assets/fonts/theboldfont.ttf"
 #define FONT3	"assets/fonts/Sho-CardCapsNF.ttf"
 #define SANS	"assets/fonts/OpenSans/OpenSans-Bold.ttf"
+#define ARIAL	"assets/fonts/arial.ttf"

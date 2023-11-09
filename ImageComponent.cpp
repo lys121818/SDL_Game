@@ -172,7 +172,10 @@ void ImageComponent::ImageSpriteSettings()
 		AddImageFrameByTransform("BlankHealth", 0, 210, 366, 53);
 		AddImageFrameByTransform("HealthSymbol", 400, 150, 115, 115);
 		AddImageFrameByTransform("Health_Short", 0, 280, 51, 53);
-
+	}
+	else if (strcmp(m_pSpriteName, TEXT_BAR) == 0)
+	{
+		AddImageFrame("TextBar", 0, 0, 1110, 235);
 	}
 }
 

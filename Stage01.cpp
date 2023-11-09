@@ -2,6 +2,8 @@
 #include "EnemyObject.h"
 #include "ImageDirectory.h"
 #include "Platformer.h"
+#include "GameDemo.h"
+
 #include <iomanip>
 
 Stage01::Stage01(Platformer* pOwner)
@@ -40,6 +42,7 @@ void Stage01::Update(double deltaTime)
         {
             element->Update(deltaTime);
         }
+        m_pPlayer->Update(deltaTime);
     }
     UpdateGamestate();
 }
@@ -52,6 +55,8 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
     // loading 
     if (m_CurrentTime > LOADINGTIME)
     {
+
+
         //Render GameObjects
         for (auto& element : m_vpGameObjects)
         {
@@ -64,8 +69,13 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
                 element->Render(pRenderer, pTextures->GetTexture(element->GetTextureName()));
             }
         }
-
+        // Render Tiles
         m_pTiledMap->Render(pRenderer, pTextures);
+
+        // Render Player
+        m_pPlayer->Render(pRenderer, pTextures->GetTexture(m_pPlayer->GetTextureName()));
+
+        // Render UI
         m_pInGameUI->Render(pRenderer, pTextures);
     }
     
@@ -143,6 +153,7 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
                 m_pPlayer->TryMove(Vector2{ RIGHT });
                 break;
             }
+
 
             // Jumping
             case SDLK_SPACE:
@@ -281,8 +292,12 @@ void Stage01::InitGame()
     };
 
     m_pPlayer = new PlayerObject(playerTransform, &m_collisionReferee, (size_t)ObjectType::kPlayer);
-    AddGameObject(m_pPlayer);
-
+    m_pPlayer->SetNameTag(
+        m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
+        SDL_Color(BLACK),
+        m_pOwner->GetGame()->GetRenderer()
+    );
+    
     // Add GameObjects to m_vpGameObjects
     SDL_Rect objectTransform;
     objectTransform.w = (int)ENEMY_WIDTH;
@@ -299,7 +314,7 @@ void Stage01::InitGame()
     stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::kEnemy, "Zombie_Male");
     AddGameObject(stationary);
 
-    m_pInGameUI = new InGameUI(m_pPlayer);
+    m_pInGameUI = new InGameUI(m_pPlayer, m_pOwner->GetGame()->GetFonts(),m_pOwner->GetGame()->GetRenderer());
     m_pInGameUI->InitUI();
     
     m_pPlayer->SetTriggerFunction(HEALTHBAR_UI_FUNCTION, [this]()->void
@@ -354,6 +369,7 @@ void Stage01::Exit()
     }
 
     delete m_pBackground;
+
     // Destory texture when game ends.
     delete m_pTiledMap;
 }

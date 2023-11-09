@@ -1,11 +1,14 @@
 #include "InGameUI.h"
 #include "Textures.h"
 #include "ImageDirectory.h"
+#include "TextObject.h"
 
-InGameUI::InGameUI(GameObject* pPlayer)
+InGameUI::InGameUI(GameObject* pPlayer, Fonts* pFonts, SDL_Renderer* pRenderer)
 	:
 	m_pPlayer(pPlayer),
-	m_pHealthBar(nullptr)
+	m_pHealthBar(nullptr),
+	m_pFont(pFonts),
+	m_pRenderer(pRenderer)
 {
 }
 
@@ -22,7 +25,6 @@ void InGameUI::InitUI()
 
 void InGameUI::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 {
-	// TODO : Print Player name text object
 	// Rendering UI objects
 	for (auto& element : m_mpUIObjects)
 	{
@@ -30,10 +32,12 @@ void InGameUI::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 	}
 }
 
+// Update on call
 void InGameUI::UpdateUI()
 {
 	UpdateHealthbar();
 }
+
 
 void InGameUI::UpdateHealthbar()
 {
@@ -65,12 +69,12 @@ void InGameUI::HealthBarSettings()
 		(int)s_kMaxHealthBarSize.m_y		// H
 	};
 
-	// BasicBar
+	// [BasicBar]
 	UIImageObject = new UIObject(UIImageTransform, HEALTHUI,0);
 
 	m_mpUIObjects.push_back(UIImageObject);
 
-	// Health Symbol mark
+	// [Health Symbol]
 	UIImageTransform.x = (int)s_kMaxHealthBarPosition.m_x + 7;
 	UIImageTransform.y = (int)s_kMaxHealthBarPosition.m_y + ((int)s_kMaxHealthBarSize.m_y / 2) - 15;
 	UIImageTransform.w = 30;
@@ -80,7 +84,7 @@ void InGameUI::HealthBarSettings()
 
 	m_mpUIObjects.push_back(UIImageObject);
 
-	// BlankBar
+	// [BlankBar]
 	UIImageTransform.x = (int)s_kMaxHealthBarPosition.m_x + 45;
 	UIImageTransform.y = (int)s_kMaxHealthBarPosition.m_y + 12;
 	UIImageTransform.w = (int)s_kMaxHealthBarSize.m_x - 60;
@@ -91,7 +95,7 @@ void InGameUI::HealthBarSettings()
 	m_mpUIObjects.push_back(UIImageObject);
 	
 
-	// Actual Health Bar
+	// [Health Bar]
 	m_pHealthBar = new UIObject(UIImageTransform, HEALTHUI, 1);	
 
 	m_mpUIObjects.push_back(m_pHealthBar);

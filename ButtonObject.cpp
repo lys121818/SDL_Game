@@ -69,7 +69,12 @@ void ButtonObject::HandleEvent(SDL_Event* pEvent)
 				m_isOnHover = false;
 				m_isClicked = false;
 			}
-
+		}
+		else
+		{
+			m_isAble = false;
+			m_isOnHover = false;
+			m_isClicked = false;
 		}
 
 		break;
@@ -100,6 +105,17 @@ void ButtonObject::HandleEvent(SDL_Event* pEvent)
 	}
 }
 
+
+void ButtonObject::SetAble(bool isAble)
+{
+	m_isAble = isAble;
+
+	if (!isAble)
+	{
+		m_isOnHover = false;
+		m_isClicked = false;
+	}
+}
 
 void ButtonObject::SetTextInButton(TTF_Font* pFont, const char* pText, SDL_Color color, SDL_Renderer* pRenderer)
 {

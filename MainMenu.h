@@ -63,8 +63,10 @@ private:
 	// Every events using keyboards works here
 	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
 
+	// Button Settings
 	void SetButtons();
 
+	// UI settings
 	void SetUI();
 
 	// Updates for background

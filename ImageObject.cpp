@@ -196,6 +196,19 @@ void ImageObject::SetImage(const int index)
 				break;
 			}
 		}
+		else if (strcmp(m_pSpriteName, TEXT_BAR) == 0)
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					m_imageComponent.SetImageFrame("TextBar");
+					break;
+				}
+			default:
+				break;
+			}
+		}
 	}
 
 }

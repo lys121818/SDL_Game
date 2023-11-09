@@ -14,12 +14,16 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 	 m_pSpriteName(directory),
 	 m_isImmune(false),
 	 m_immuneTime(s_kMaxImmuneTime),
-	 m_movingComponent(&m_transform,Vector2{PLAYER_POSITION}, &m_collider)
+	 m_movingComponent(&m_transform,Vector2{PLAYER_POSITION}, &m_collider),
+	 m_nameText(&m_transform)
 {
 	// Get Name from the file
 	std::ifstream file(PLAYER_INFO);
 	file >> m_status.m_name;
 	file.close();
+
+	// Set NameText to under player
+	m_nameText.SetTextPlacement(TextComponent::Placement::kBottm);
 
 	/// STATUS
 	m_status.m_type = type;
@@ -67,7 +71,6 @@ void PlayerObject::Update(double deltaTime)
 	// All the Update of Animation Event
 	UpdateAnimationEvent(deltaTime);
 
-	std::cout << m_status.m_name << std::endl;
 }
 
 void PlayerObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
@@ -77,6 +80,10 @@ void PlayerObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 	// Blink when it's on Immune
 	if(!m_isImmune ||( (blink % 2) != 0))
 		m_animation.Render(pRenderer, pTexture, m_status.m_isRight);
+
+	// Render NameTag
+	m_nameText.DrawTextBox(pRenderer, SDL_Color(GRAY));
+	m_nameText.Render(pRenderer);
 }
 
 // Play the right animation fallowing current state of gameobject
@@ -240,8 +247,13 @@ void PlayerObject::OnOverlapBegin(ColliderComponent* pCollider)
 			m_isWin = true;
 			break;
 		}
-		case (size_t)ObjectType::kDamageZone:
+		case (size_t)ObjectType::kHealingZone:
 		{
+			if (!m_isImmune && m_status.m_health < s_KMaxHealth)
+			{
+				GetDamaged(-OBJECT_DAMAGE);
+				std::cout << "Health: " << m_status.m_health << std::endl;
+			}
 			break;
 		}
 
@@ -269,21 +281,11 @@ void PlayerObject::OnOverlapUpdate()
 		if (!m_isImmune)
 		{
 			GetDamaged(OBJECT_DAMAGE);
-			m_isImmune = true;
 			std::cout << "Health: " << m_status.m_health << std::endl;
 		}
 		break;
 	}
-	case (size_t)ObjectType::kHealingZone:
-	{
-		if (!m_isImmune)
-		{
-			GetDamaged(-OBJECT_DAMAGE);
-			m_isImmune = true;
-			std::cout << "Health: " << m_status.m_health << std::endl;
-		}
-		break;
-	}
+
 	case (size_t)ObjectType::kWinZone:
 	{
 		break;
@@ -311,20 +313,22 @@ void PlayerObject::OnOverlapEnd()
 // All the update function for game events runs here //
 void PlayerObject::UpdateGameEvent(double deltaTime)
 {
-
-
+	m_nameText.Update();
 
 	// Check for jump
 	// check for Vertical
 	if (m_status.m_isOnJump)
 		Jump(deltaTime);
-	// check for Horizontal
-	if (m_status.m_direction.m_x != 0)
-		m_movingComponent.TryMove(deltaTime, m_status.m_speed, Vector2{ m_status.m_direction.m_x,0 });
 
 	// Immune System
 	if (m_isImmune)
+	{
 		OnImmune(deltaTime);
+	}
+
+	// check for Horizontal
+	if (m_status.m_direction.m_x != 0)
+		m_movingComponent.TryMove(deltaTime, m_status.m_speed, Vector2{ m_status.m_direction.m_x,0 });
 
 	// Moving System
 	Gravity(deltaTime);
@@ -349,7 +353,12 @@ void PlayerObject::SetTriggerFunction(const char* name, std::function<void()> fu
 	m_mpTriggers.insert(pair);
 }
 
-void PlayerObject::Jump(double deltaTime)
+void PlayerObject::SetNameTag(TTF_Font* pFont, SDL_Color color, SDL_Renderer* pRenderer)
+{
+	m_nameText.SetText(pFont, m_status.m_name.c_str(), color, pRenderer);
+}
+
+void PlayerObject::Jump(double deltaTime, double jumpPower)
 {
 	// Set jump
 	if (m_status.m_isGrounded)
@@ -357,15 +366,18 @@ void PlayerObject::Jump(double deltaTime)
 		m_jumpPower = (float)s_kMaxJumpPower;
 		m_status.m_isOnJump = true;
 	}
+	
 
-	// Check if the vertical movmenet is valid
+	// Check if the horizontal movmenet is valid
 	m_movingComponent.TryMove(deltaTime, (double)m_jumpPower, Vector2{ UP });
 
 	// decrease power of jumping every deltaTime
 	m_jumpPower -= float(deltaTime * (double)(s_kMaxJumpPower * 2));
 
+
 	if (m_jumpPower <= 0)
 		m_status.m_isOnJump = false;
+
 }
 
 void PlayerObject::OnImmune(double deltaTime)
@@ -373,12 +385,13 @@ void PlayerObject::OnImmune(double deltaTime)
 	// Doesn't get damaged while Immune is set
 	if (m_immuneTime <= 0)
 	{
+
 		m_isImmune = false;
 		m_immuneTime = s_kMaxImmuneTime;
 		return;
 	}
+	
 	m_immuneTime -= deltaTime;
-
 }
 
 void PlayerObject::GetDamaged(int amount)
@@ -386,6 +399,10 @@ void PlayerObject::GetDamaged(int amount)
 	// decrease the health by amount of damage its given
 	m_status.m_health -= amount;
 
+	if (amount > 0)
+	{
+		m_isImmune = true;
+	}
 
 	// Game Over
 	if (m_status.m_health <= 0)

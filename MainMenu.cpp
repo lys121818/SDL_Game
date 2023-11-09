@@ -33,15 +33,17 @@ void MainMenu::Enter()
 	m_background_2.TryMove(Vector2(LEFT), BACKGROUND_MOVE_SPEED);
 
 	// Set button objects
-
 	SetButtons();
 
+	// Set UI
 	SetUI();
 }
 
 void MainMenu::Update(double deltaTime)
 {
 	BackgroundUpdates(deltaTime);
+
+	// When player info is set
 	if (isSetUI)
 	{
 		for (auto& element : m_vpButtons)
@@ -61,6 +63,7 @@ void MainMenu::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 	m_background_1.Render(pRenderer, pTextures->GetTexture(m_background_1.GetTextureName()));
 	m_background_2.Render(pRenderer, pTextures->GetTexture(m_background_1.GetTextureName()));
 
+	// When UserInput is done
 	if (isSetUI)
 	{
 		for (auto& element : m_vpButtons)
@@ -76,11 +79,13 @@ void MainMenu::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
 bool MainMenu::HandleEvent(SDL_Event* pEvent)
 {
-
+	// User Input
 	if (!isSetUI)
 	{
 		isSetUI = m_pMainMenuUI->HandleEvent(pEvent);
 	}
+
+	// Main Menu
 	else
 	{
 		// buttons handles event its own
@@ -92,6 +97,12 @@ bool MainMenu::HandleEvent(SDL_Event* pEvent)
 		// Quit when true returns
 		switch (pEvent->type)
 		{
+			// Reset keyboard index when mouse event happens
+			case SDL_MOUSEMOTION:
+			{
+				m_keyboardButtonIndex = -1;
+				break;
+			}
 			// Mouse Event
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
@@ -216,7 +227,7 @@ void MainMenu::SetButtons()
 	ButtonObject* button;
 	SDL_Rect buttonTransform;
 	
-	// Start Button
+	// [Start Button]
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
@@ -225,19 +236,21 @@ void MainMenu::SetButtons()
 		(int)BUTTON_HEIGHT	// H
 	};
 
+	// Font to use in button object
 	TTF_Font* font = m_pOwner->GetGame()->GetFonts()->GetFont(FONT1);
 
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Start");
 
+	// Set Callback for button
 	button->SetCallback([this]()->void
 		{
 			m_pOwner->LoadScene(Platformer::SceneName::kGamePlay);
 		});
 
 	button->SetTextInButton(font, "START", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
-
 	m_vpButtons.push_back(button);
 
+	// [Settings Button]
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
@@ -252,6 +265,7 @@ void MainMenu::SetButtons()
 	button->SetTextInButton(font, "SETTINGS", SDL_Color(GRAY), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
+	// [Quit Button]
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
@@ -270,7 +284,7 @@ void MainMenu::SetButtons()
 	button->SetTextInButton(font, "QUIT", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
-
+	// [Credits Button]
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
@@ -279,7 +293,7 @@ void MainMenu::SetButtons()
 		(int)BUTTON_HEIGHT	// H
 	};
 
-	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Quit");
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Credits");
 
 	button->SetCallback([this]()->void
 		{
@@ -293,7 +307,8 @@ void MainMenu::SetButtons()
 
 void MainMenu::SetUI()
 {
-	m_pMainMenuUI = new MainMenuUI(m_pOwner->GetGame()->GetFonts()->GetFont(FONT2),
+	// Create UI
+	m_pMainMenuUI = new MainMenuUI(m_pOwner->GetGame()->GetFonts(),
 					m_pOwner->GetGame()->GetRenderer());
 
 	// Set UI
@@ -332,6 +347,8 @@ void MainMenu::Destory()
 
 void MainMenu::ChangeButtonFocus(int direction)
 {
+	assert(m_vpButtons.size() > 0);
+
 	int nextDirectionIndex = (m_keyboardButtonIndex + direction);
 
 	// set to first index if its negative value
@@ -339,26 +356,34 @@ void MainMenu::ChangeButtonFocus(int direction)
 	{
 		m_keyboardButtonIndex = 0;
 	}
-	// set to last index if its over capacity
-	else if (nextDirectionIndex >= m_vpButtons.capacity())
+	// set to last index if its over size
+	else if (nextDirectionIndex >= m_vpButtons.size())
 	{
-		m_keyboardButtonIndex = (int)(m_vpButtons.capacity() - 1);
+		m_keyboardButtonIndex = (int)(m_vpButtons.size() - 1);
 	}
 	else
 	{
 		m_keyboardButtonIndex = nextDirectionIndex;
 	}
 
-
-	if (!m_vpButtons[m_keyboardButtonIndex]->GetAble())
-		ChangeButtonFocus(direction);
-
-	for (size_t i = 0; i < m_vpButtons.capacity(); ++i)
+	// if the button is disable and next index exist
+	if (!m_vpButtons[m_keyboardButtonIndex]->GetAble() &&
+		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < m_vpButtons.size()))
 	{
-		if (i == m_keyboardButtonIndex)
-			m_vpButtons[i]->SetHover(true);
-		else
-			m_vpButtons[i]->SetHover(false);
+
+		ChangeButtonFocus(direction);
+	}
+
+	// Change Hover setting if the button is able
+	for (size_t i = 0; i < m_vpButtons.size(); ++i)
+	{
+		if (m_vpButtons[m_keyboardButtonIndex]->GetAble())
+		{
+			if (i == m_keyboardButtonIndex)
+				m_vpButtons[i]->SetHover(true);
+			else
+				m_vpButtons[i]->SetHover(false);
+		}
 	}
 
 }

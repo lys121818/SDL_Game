@@ -26,6 +26,8 @@ private:
 
 	SDL_Renderer* m_pRenderer;
 
+
+
 public:
 	TextObject(Vector2 position, TTF_Font* pFont, SDL_Color color, SDL_Renderer* pRenderer);
 	~TextObject();
@@ -44,7 +46,6 @@ public:
 	ImageActionComponent::ActionState GetActionState() { return m_imageAction.m_actionState; }
 
 	void SetAction(ImageActionComponent::ActionState state) { m_imageAction.SetAction(state); }
-
 
 	// Inherited via GameObject
 	Status GetStatus() override { return m_status; }

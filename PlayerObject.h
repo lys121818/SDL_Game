@@ -8,6 +8,7 @@
 #include "ColliderComponent.h"
 #include "MovingComponent.h"
 #include "Status.h"
+#include "TextComponent.h"
 #include <unordered_map>
 #include <functional>
 
@@ -49,10 +50,13 @@ private:
     static constexpr int s_kSpeed    = (int)PLAYER_SPEED;
     static constexpr int s_kMixSpeed = (int)PLAYER_MIN_SPEED;
 
-    static constexpr int s_kMaxJumpPower = (int)1000;
+    static constexpr int s_kMaxJumpPower = (int)PLAYER_JUMP_POWER;
 
     // Moving Component
     MovingComponent m_movingComponent;
+
+    // Text Component
+    TextComponent m_nameText;
 
     // Transform of the object
     SDL_Rect m_transform;
@@ -132,6 +136,7 @@ public:
     // add trigger function with key of name
     void SetTriggerFunction(const char* name, std::function<void()> func);
 
+    void SetNameTag(TTF_Font* pFont, SDL_Color color, SDL_Renderer* pRenderer);
 
     // Moving
     // Sprint
@@ -149,8 +154,6 @@ private:
     /// GAME EVENTS
     void UpdateGameEvent(double deltaTime);
 
-
-
     // Immune Mechanics
     void OnImmune(double deltaTime);
 
@@ -159,7 +162,7 @@ private:
 
     void GetDamaged(int amount);
 
-    void Jump(double deltaTime);
+    void Jump(double deltaTime, double jumpPower = s_kMaxJumpPower);
 
     /// ANIMATION EVENTS
     // All the update function for Animation events runs here

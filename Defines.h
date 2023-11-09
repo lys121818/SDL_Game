@@ -35,6 +35,6 @@
 #define STOPUP		DOWN
 
 // Txt file for Tiled Map
-#define TILEMAP		"assets/TiledMap.txt"
+#define TILEMAP		"assets/TxtFile/TiledMap.txt"
 
-#define PLAYER_INFO	"assets/PlayerInfo.txt"
+#define PLAYER_INFO	"assets/TxtFile/PlayerInfo.txt"

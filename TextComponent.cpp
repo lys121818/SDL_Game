@@ -8,7 +8,8 @@ TextComponent::TextComponent(SDL_Rect* transform)
 	m_pObjectTransform(transform),
 	m_transform(SDL_Rect{0,0,0,0}),
 	m_pTexture(nullptr),
-	m_textSize(Vector2(ZERO))
+	m_textSize(Vector2(ZERO)),
+	m_textPlacemenet(Placement::kMiddle)
 {
 }
 
@@ -19,9 +20,38 @@ TextComponent::~TextComponent()
 
 void TextComponent::Update()
 {
-	// Set text to the middle of object
-	m_transform.x = (int)(m_pObjectTransform->x + (m_pObjectTransform->w / 2) - (m_textSize.m_x / 2));
-	m_transform.y = (int)(m_pObjectTransform->y + (m_pObjectTransform->h / 2) - (m_textSize.m_y / 2));
+	// [Position Placement to render Text]
+	switch (m_textPlacemenet)
+	{
+		// Top middle of the object
+		case TextComponent::Placement::kTop:
+		{
+			m_transform.x = (int)(m_pObjectTransform->x + (m_pObjectTransform->w / 2) - (m_textSize.m_x / 2));
+			m_transform.y = (int)(m_pObjectTransform->y - m_textSize.m_y);
+
+			break;
+		}
+
+		// Center of the object
+		case TextComponent::Placement::kMiddle:
+		{
+			// Set text to the middle of object
+			m_transform.x = (int)(m_pObjectTransform->x + (m_pObjectTransform->w / 2) - (m_textSize.m_x / 2));
+			m_transform.y = (int)(m_pObjectTransform->y + (m_pObjectTransform->h / 2) - (m_textSize.m_y / 2));
+			break;
+		}
+
+		// Bottom middle of the object
+		case TextComponent::Placement::kBottm:
+		{
+			m_transform.x = (int)(m_pObjectTransform->x + (m_pObjectTransform->w / 2) - (m_textSize.m_x / 2));
+			m_transform.y = (int)(m_pObjectTransform->y + (m_pObjectTransform->h));
+
+			break;
+		}
+	default:
+		break;
+	}
 }
 
 void TextComponent::Render(SDL_Renderer* pRenderer)
@@ -35,11 +65,6 @@ void TextComponent::Render(SDL_Renderer* pRenderer)
 	SDL_RenderCopy(pRenderer, m_pTexture, nullptr, &m_transform);
 }
 
-void TextComponent::SetTransform(SDL_Rect transform)
-{
-	m_transform = transform;
-}
-
 void TextComponent::SetText(TTF_Font* pFont, const char* pText, SDL_Color color, SDL_Renderer* pRenderer)
 {
 	assert(pFont);
@@ -50,16 +75,20 @@ void TextComponent::SetText(TTF_Font* pFont, const char* pText, SDL_Color color,
 		std::cout << "[TextComponent] Text loading failed Error: " << SDL_GetError() << std::endl;
 	}
 
+	assert(pTextSurface);
+
 	m_pTexture = SDL_CreateTextureFromSurface(pRenderer, pTextSurface);
 
-	// Error when it fails to load the texture
+	// Error when it fails to load the texture and return
 	if (m_pTexture == nullptr)
 	{
 		std::cout << "[TextComponent] Texture loading failed Error: " << SDL_GetError();
+
+		// free surface before it returns
+		SDL_FreeSurface(pTextSurface);
+		return;
 	}
 	
-	assert(pTextSurface);
-
 	m_textSize.m_x = pTextSurface->w;
 	m_textSize.m_y = pTextSurface->h;
 
@@ -78,5 +107,11 @@ void TextComponent::SetText(TTF_Font* pFont, const char* pText, SDL_Color color,
 
 
 	SDL_FreeSurface(pTextSurface);
+}
+
+void TextComponent::DrawTextBox(SDL_Renderer* pRenderer, SDL_Color color)
+{
+	SDL_SetRenderDrawColor(pRenderer, color.r,color.g,color.b,color.a);
+	SDL_RenderFillRect(pRenderer, &m_transform);
 }
 

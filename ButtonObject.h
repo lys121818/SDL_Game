@@ -59,7 +59,7 @@ public:
 
 	void SetClick(bool isClick) { m_isClicked = isClick; }
 
-	void SetAble(bool isAble) { m_isAble = isAble; }
+	void SetAble(bool isAble);
 
 	void SetTextInButton(TTF_Font* pFont, const char* pText, SDL_Color color, SDL_Renderer* pRenderer);
 

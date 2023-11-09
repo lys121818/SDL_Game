@@ -35,6 +35,8 @@
 
 #define PLAYER_ATTACK_POWER	10
 
+#define PLAYER_JUMP_POWER	1000
+
 
 /*	ENEMY	*/
 // * Transform
@@ -61,14 +63,14 @@
 || Calculation  ||	PLAYER
 ||==============================================================================================================*/
 // * size																										||
-#define PLAYER_WIDTH		PLAYER_SIZE				// Width													    ||   
+#define PLAYER_WIDTH		PLAYER_SIZE				// Width												    ||   
 #define PLAYER_HEIGHT	(PLAYER_SIZE * 1.5)		// Height														||
 #define PLAYER_SIZE_VECTOR2	PLAYER_WIDTH, PLAYER_HEIGHT	// Size in Vector2 form									||
 // * speed																										||
-#define PLAYER_MAX_SPEED	(PLAYER_SPEED * 1.5)		// Maximum speed			 									||
-#define PLAYER_MIN_SPEED	(PLAYER_SPEED * 0.5)		// Minimum speed												||
+#define PLAYER_MAX_SPEED	(PLAYER_SPEED * 1.5)		// Maximum speed			 							||
+#define PLAYER_MIN_SPEED	(PLAYER_SPEED * 0.5)		// Minimum speed										||
 // * health																										||
-#define PLAYER_MAX_HEALTH	PLAYER_HEALTH			// Maximum health												||
+#define PLAYER_MAX_HEALTH	PLAYER_HEALTH			// Maximum health											||
 //==============================================================================================================//
 
 
@@ -77,8 +79,8 @@
 ||==============================================================================================================*/
 // * size																										||
 #define ENEMY_WIDTH	ENEMY_SIZE			// Width																||
-#define ENEMY_HEIGHT	(ENEMY_SIZE * 1.5)	// Height																||
-#define ENEMY_SIZE_VECTOR2	ENEMY_WIDTH, ENEMY_HEIGHT	// Size in Vector2 form										||
+#define ENEMY_HEIGHT	(ENEMY_SIZE * 1.5)	// Height															||
+#define ENEMY_SIZE_VECTOR2	ENEMY_WIDTH, ENEMY_HEIGHT	// Size in Vector2 form									||
 //==============================================================================================================//
 
 
@@ -86,9 +88,9 @@
 || Calculation  ||	BUTTON
 ||==============================================================================================================*/
 // * size																										||
-#define BUTTON_WIDTH		BUTTON_SIZE			// Width															||
+#define BUTTON_WIDTH		BUTTON_SIZE			// Width														||
 #define BUTTON_HEIGHT	(BUTTON_SIZE * 0.3)	// Height															||
-#define BUTTON_SIZE_VECTOR2	ENEMY_WIDTH, ENEMY_HEIGHT	// Size in Vector2 form										||
+#define BUTTON_SIZE_VECTOR2	BUTTON_WIDTH, BUTTON_HEIGHT	// Size in Vector2 form									||
 //==============================================================================================================//
 
 
@@ -97,8 +99,8 @@
 ||==============================================================================================================*/
 // * size																										||
 #define HEALTHBAR_WIDTH		HEALTHBAR_SIZE			// Width													||
-#define HEALTHBAR_HEIGHT		(HEALTHBAR_SIZE * 0.25)	// Height													||
-#define HEALTBARH_SIZE_VECTOR2	HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT	// Size in Vector2 form								||
+#define HEALTHBAR_HEIGHT		(HEALTHBAR_SIZE * 0.25)	// Height												||
+#define HEALTBARH_SIZE_VECTOR2	HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT	// Size in Vector2 form						||
 //==============================================================================================================//
 
 

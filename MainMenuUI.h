@@ -2,7 +2,9 @@
 #include "UIInterface.h"
 #include "TextObject.h"
 #include "SDL_ttf.h"
+#include "Fonts.h"
 #include "ButtonObject.h"
+#include "ImageObject.h"
 #include <fstream>
 #include <map>
 #include <string>
@@ -12,7 +14,8 @@ class MainMenuUI : public UIInterface
 {
 	static constexpr size_t s_kMaxCharCount = 10;
 private:
-	TTF_Font* m_pFont;
+	Fonts* m_pFont;
+
 	SDL_Renderer* m_pRenderer;
 
 	// Textbox for User Input
@@ -22,10 +25,16 @@ private:
 	std::string m_text;
 
 	// Input Boxes
-	std::map<SDL_Rect*,SDL_Color*> m_vpTextBoxes;
+	ImageObject* m_pTextBox;
+
+	// Text for Instruction
+	TextObject* m_pInfoText;
 
 	// Buttons
 	std::vector<ButtonObject*> m_vpButtons;
+
+	// Index of selected button
+	int m_keyboardButtonIndex;
 
 	// Check if the job is done
 	bool m_isSet;
@@ -34,19 +43,21 @@ private:
 	bool m_isNew;
 
 public:
-	MainMenuUI(TTF_Font* pFont, SDL_Renderer* pRenderer);
+	MainMenuUI(Fonts* pFont, SDL_Renderer* pRenderer);
 	~MainMenuUI();
 
 	void InitUI() override;
 
 	// Inherited via UIInterface
+	// Update on call
 	void UpdateUI() override;
+
+	// Update in loop
 	void UpdateUI(double deltaTime) override;
+
 	void Render(SDL_Renderer* pRenderer, Textures* pTextures) override;
 
-	virtual bool HandleEvent(SDL_Event* pEvent) override;
-
-
+	bool HandleEvent(SDL_Event* pEvent) override;
 
 private:
 
@@ -54,10 +65,9 @@ private:
 	bool ProcessTextInputEvent(SDL_TextInputEvent* pEvent);
 	// Every events using keyboards works here
 	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
-	// Every events using mouse works here
-	bool ProcessMouseEvent(SDL_MouseButtonEvent* pData);
-	// Every events using Window works here
-	bool ProcessWindowEvent(SDL_WindowEvent* pData);
+
+	// Changes button focus when using keyboard
+	void ChangeButtonFocus(int direction);
 
 	// Save the text in txt file
 	void SaveTextFile(std::string text = "");

@@ -61,6 +61,8 @@ public:
 	// SETTERS
 	virtual void SetPosition(Vector2 position) override;
 
+	void SetTransform(SDL_Rect transform) { m_transform = transform; }
+
 	void SetAction(ImageActionComponent::ActionState state);
 
 private:

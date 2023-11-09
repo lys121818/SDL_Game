@@ -32,6 +32,7 @@ void Fonts::PreloadFonts(size_t sceneNumber)
         // Game Play
         case 1:
         {
+            AddTTFToFonts(ARIAL, 15);
             AddTTFToFonts(FONT2, 35);
             break;
         }
@@ -54,6 +55,7 @@ void Fonts::PreloadFonts(size_t sceneNumber)
             AddTTFToFonts(FONT2, 20);
             AddTTFToFonts(FONT3, 40);
             AddTTFToFonts(SANS, 20);
+            AddTTFToFonts(ARIAL, 20);
             break;
         }
     default:

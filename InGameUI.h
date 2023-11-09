@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include "ImageComponent.h"
 #include "UIObject.h"
+#include "Fonts.h"
+#include <SDL_ttf.h>
 
 // UI controller handles UI of the Game
 class GameState;
@@ -17,12 +19,16 @@ class InGameUI : UIInterface
 private:
 	GameObject* m_pPlayer;
 
+	SDL_Renderer* m_pRenderer;
+
+	Fonts* m_pFont;
+
 	UIObject* m_pHealthBar;
 
-	std::vector<UIObject*> m_mpUIObjects;
+	std::vector<GameObject*> m_mpUIObjects;
 
 public:
-	InGameUI(GameObject* pPlayer);
+	InGameUI(GameObject* pPlayer, Fonts* pFonts, SDL_Renderer* pRenderer);
 	~InGameUI();
 
 	void InitUI();

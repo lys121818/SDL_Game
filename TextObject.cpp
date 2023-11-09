@@ -26,7 +26,6 @@ void TextObject::Update(double deltaTime)
 		m_movingComponent.TryMove(deltaTime, m_status.m_speed, m_status.m_direction);
 		m_textComponent.Update();
 	}
-
 }
 
 void TextObject::Render(SDL_Renderer* pRenderer)
