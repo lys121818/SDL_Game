@@ -8,6 +8,7 @@
 #include "SDL_ttf.h"
 #include "TextObject.h"
 #include "MainMenuUI.h"
+#include "SoundTest.h"
 #include <fstream>
 
 //==================================================================================================//
@@ -16,12 +17,15 @@
 //==================================================================================================//
 
 class Platformer; 
+struct _Mix_Music;
 
 class MainMenu : public GameState
 {
 private:
 	// Pointer to the State Machine running this state.
 	Platformer* m_pOwner;
+
+	SoundTest* m_pSoundTest;
 
 	ImageObject m_background_1;
 	ImageObject m_background_2;
@@ -37,6 +41,8 @@ private:
 	MainMenuUI* m_pMainMenuUI;
 
 	bool isSetUI;
+
+	_Mix_Music* m_pMusic;
 
 public:
 	MainMenu(Platformer* pOwner);
@@ -68,6 +74,9 @@ private:
 
 	// UI settings
 	void SetUI();
+
+	// Music Settings
+	void SetMusic();
 
 	// Updates for background
 	void BackgroundUpdates(double deltaTime);

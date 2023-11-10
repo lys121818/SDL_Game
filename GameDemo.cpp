@@ -70,6 +70,9 @@ void GameDemo::Destroy()
     // Destroy Renderer.
     SDL_DestroyRenderer(m_pRenderer);
 
+    // Destory Audio
+    Mix_CloseAudio();
+
     // Destroy Textures
     delete m_pTextures;
 
@@ -165,13 +168,16 @@ int GameDemo::CreateWindow()
     There are 7 more subsystems(Audio, CDROM, Event Handling, FileI/O, Joystick Handling, Threading, Timers) other than Video.
     this returns 0 if succeeded
     */
-    int m_errorCode;
+    int errorCode;
 
-    m_errorCode = SDL_Init(SDL_INIT_VIDEO);
+    errorCode = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
-    if (m_errorCode != 0)
+    if (errorCode != 0)
     {
         std::cout << "Failed to initialize SDL. Error: " << SDL_GetError() << std::endl;     // indicate the error
+        SDL_DestroyWindow(m_pWindow);
+        SDL_Quit();
+        system("pause");
         return 1;   // initializing error
     }
     else
@@ -193,6 +199,9 @@ int GameDemo::CreateWindow()
     if (m_pWindow == nullptr)
     {
         std::cout << "Failed to create window. Error: " << SDL_GetError() << std::endl;
+        SDL_DestroyWindow(m_pWindow);
+        SDL_Quit();
+        system("pause");
         return 2;   // window creation error
     }
 
@@ -202,14 +211,65 @@ int GameDemo::CreateWindow()
     {
         SDL_DestroyWindow(m_pWindow);
         std::cout << "Failed to create renderer. Error: " << SDL_GetError();
+        SDL_DestroyWindow(m_pWindow);
+        SDL_Quit();
+        system("pause");
         return 3;   // renderer creation error
     }
 
-    m_errorCode = TTF_Init();
+    errorCode = TTF_Init();
 
-    if (m_errorCode != 0)
+    if (errorCode != 0)
     {
         std::cout << "Failed to initialize TTF. Error: " << SDL_GetError() << std::endl;     // indicate the error
+        SDL_DestroyWindow(m_pWindow);
+        SDL_Quit();
+        system("pause");
+        return 4;   // initializing error
+    }
+
+    // Initialize MP3 support.
+    int audioFlags = MIX_INIT_MP3;
+    errorCode = Mix_Init(audioFlags);
+    if (errorCode != audioFlags)
+    {
+        std::cout << "Mixer_Init() failed. Error: " << Mix_GetError() << std::endl;
+        SDL_DestroyWindow(m_pWindow);
+        SDL_Quit();
+        system("pause");
+        return 4;
+    }
+    // Initialize OGG support.
+    audioFlags = MIX_INIT_OGG;
+    errorCode = Mix_Init(audioFlags);
+    if (errorCode != audioFlags)
+    {
+        std::cout << "Mixer_Init() failed. Error: " << Mix_GetError() << std::endl;
+        SDL_DestroyWindow(m_pWindow);
+        SDL_Quit();
+        system("pause");
+        return 4;
+    }
+
+    audioFlags = MIX_INIT_MOD;
+    errorCode = Mix_Init(audioFlags);
+    if (errorCode != audioFlags)
+    {
+        std::cout << "Mixer_Init() failed. Error: " << Mix_GetError() << std::endl;
+        SDL_DestroyWindow(m_pWindow);
+        SDL_Quit();
+        system("pause");
+        return 4;
+    }
+
+    errorCode = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024);
+
+    if (errorCode != 0)
+    {
+        std::cout << "Failed to Open Mix_OpenAudio(). Error: " << SDL_GetError() << std::endl;     // indicate the error
+        SDL_DestroyWindow(m_pWindow);
+        SDL_Quit();
+        system("pause");
         return 4;   // initializing error
     }
 
@@ -218,6 +278,6 @@ int GameDemo::CreateWindow()
     // You must set the blend mode if you want to support alpha.
     SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
 
-    return m_errorCode;
+    return errorCode;
 }
 

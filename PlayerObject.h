@@ -12,6 +12,9 @@
 #include <unordered_map>
 #include <functional>
 
+struct Mix_Chunk;
+struct Mix_Channel;
+
 class PlayerObject : public GameObject
 {
 private:
@@ -29,6 +32,7 @@ private:
     // gameobject's status
     Status m_status;
 
+    Mix_Chunk* m_pSound;
 private:
     // true when Game Over
     bool m_isWin;
@@ -87,7 +91,7 @@ private:
     // Collider for this object
     ColliderComponent m_collider;
 
-
+    int m_activeSoundChannel;
 private:
 
 public:

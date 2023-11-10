@@ -110,5 +110,7 @@ void InGameUI::Destory()
 	{
 		delete element;
 	}
+
+	delete m_pHealthBar;
 }
 

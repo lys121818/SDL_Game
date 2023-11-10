@@ -473,4 +473,7 @@ void MainMenuUI::Destory()
 
 	if(m_pTextImage != nullptr)
 		delete m_pTextImage;
+
+	if (m_pInfoText != nullptr)
+		delete m_pInfoText;
 }

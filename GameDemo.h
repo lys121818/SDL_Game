@@ -11,6 +11,7 @@
 #include "Defines.h"
 #include "Textures.h"
 #include "Fonts.h"
+#include <SDL_mixer.h>
 
 
 class GameStateMachine;

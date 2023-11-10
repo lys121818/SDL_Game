@@ -6,7 +6,9 @@
 #include "Defines.h"
 #include "ButtonType.h"
 #include "Vector2.h"
+#include "SoundDirectory.h"
 #include "GameDemo.h"
+#include <SDL_mixer.h>
 #include <assert.h>
 
 MainMenu::MainMenu(Platformer* pOwner)
@@ -17,7 +19,8 @@ MainMenu::MainMenu(Platformer* pOwner)
 	m_pHoverButton(nullptr),
 	m_keyboardButtonIndex(-1),
 	m_pMainMenuUI(nullptr),
-	isSetUI(false)
+	isSetUI(false),
+	m_pSoundTest(nullptr)
 {
 
 }
@@ -37,6 +40,8 @@ void MainMenu::Enter()
 
 	// Set UI
 	SetUI();
+
+
 }
 
 void MainMenu::Update(double deltaTime)
@@ -79,12 +84,13 @@ void MainMenu::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
 bool MainMenu::HandleEvent(SDL_Event* pEvent)
 {
+	m_pSoundTest->HandleEvent(pEvent);
+
 	// User Input
 	if (!isSetUI)
 	{
 		isSetUI = m_pMainMenuUI->HandleEvent(pEvent);
 	}
-
 	// Main Menu
 	else
 	{
@@ -303,6 +309,8 @@ void MainMenu::SetButtons()
 	button->SetTextInButton(font, "CREDITS", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
+
+	m_pSoundTest = new SoundTest(JUMP_SOUND);
 }
 
 void MainMenu::SetUI()
@@ -314,6 +322,22 @@ void MainMenu::SetUI()
 	// Set UI
 	m_pMainMenuUI->InitUI();
 
+}
+
+void MainMenu::SetMusic()
+{
+	// Load the music
+	m_pMusic = Mix_LoadMUS(JUMP_SOUND);
+
+	// play music if its not null
+	if (m_pMusic == nullptr)
+	{
+		std::cout << "Fail to load music. Error: " << Mix_GetError();
+	}
+	else
+	{
+		Mix_PlayMusic(m_pMusic, 0);
+	}
 }
 
 
@@ -343,6 +367,12 @@ void MainMenu::Destory()
 		delete element;
 	}
 	delete m_pMainMenuUI;
+
+	if (m_pMusic != nullptr)
+	{
+		Mix_HaltMusic();
+		Mix_FreeMusic(m_pMusic);
+	}
 }
 
 void MainMenu::ChangeButtonFocus(int direction)

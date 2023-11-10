@@ -8,7 +8,9 @@ CreditsScene::CreditsScene(Platformer* pOwner)
 	:
 	m_pOwner(pOwner),
 	m_background_1(Vector2{ 0,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
-	m_background_2(Vector2{ WINDOWWIDTH,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND)
+	m_background_2(Vector2{ WINDOWWIDTH,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
+	m_skipInfo_1(nullptr),
+	m_skipInfo_2(nullptr)
 {
 }
 
@@ -240,4 +242,7 @@ void CreditsScene::Destory()
 	{
 		delete element;
 	}
+
+	delete m_skipInfo_1;
+	delete m_skipInfo_2;
 }

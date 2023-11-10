@@ -76,14 +76,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL\include;$(SolutionDir)lib\SDL_Image\include;$(SolutionDir)lib\SDL_ttf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL\include;$(SolutionDir)lib\SDL_Image\include;$(SolutionDir)lib\SDL_ttf\include;$(SolutionDir)lib\SDL_Mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL\lib\x86;$(SolutionDir)lib\SDL_Image\lib\x86;$(SolutionDir)lib\SDL_ttf\lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_Image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL\lib\x86;$(SolutionDir)lib\SDL_Image\lib\x86;$(SolutionDir)lib\SDL_ttf\lib\x86;$(SolutionDir)lib\SDL_Mixer\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_Image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)lib\SDL\lib\x86\SDL2.dll" "$(OutDir)"
@@ -95,6 +95,13 @@ copy "$(SolutionDir)lib\SDL_Image\lib\x86\libwebp-7.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_Image\lib\x86\zlib1.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_ttf\lib\x86\libfreetype-6.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_ttf\lib\x86\SDL2_ttf.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x86\SDL2_mixer.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x86\libFLAC-8.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x86\libmodplug-1.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x86\libmpg123-0.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x86\libogg-0.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x86\libvorbis-0.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x86\libvorbisfile-3.dll" "$(OutDir)"
 xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -133,14 +140,14 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL\include;$(SolutionDir)lib\SDL_Image\include;$(SolutionDir)lib\SDL_ttf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\SDL\include;$(SolutionDir)lib\SDL_Image\include;$(SolutionDir)lib\SDL_ttf\include;$(SolutionDir)lib\SDL_Mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL\lib\x64;$(SolutionDir)lib\SDL_Image\lib\x64;$(SolutionDir)lib\SDL_ttf\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_Image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\SDL\lib\x64;$(SolutionDir)lib\SDL_Image\lib\x64;$(SolutionDir)lib\SDL_ttf\lib\x64;$(SolutionDir)lib\SDL_Mixer\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_Image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)lib\SDL\lib\x64\SDL2.dll" "$(OutDir)"
@@ -152,6 +159,13 @@ copy "$(SolutionDir)lib\SDL_Image\lib\x64\libwebp-7.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_Image\lib\x64\zlib1.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_ttf\lib\x64\libfreetype-6.dll" "$(OutDir)"
 copy "$(SolutionDir)lib\SDL_ttf\lib\x64\SDL2_ttf.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x64\SDL2_mixer.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x64\libFLAC-8.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x64\libmodplug-1.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x64\libmpg123-0.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x64\libogg-0.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x64\libvorbis-0.dll" "$(OutDir)"
+copy "$(SolutionDir)lib\SDL_Mixer\lib\x64\libvorbisfile-3.dll" "$(OutDir)"
 xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -191,6 +205,7 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClCompile Include="CollisionReferee.cpp" />
     <ClCompile Include="CreditsScene.cpp" />
     <ClCompile Include="MainMenuUI.cpp" />
+    <ClCompile Include="SoundTest.cpp" />
     <ClCompile Include="TextObject.cpp" />
     <ClCompile Include="Fonts.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
@@ -221,6 +236,8 @@ xcopy "$(ProjectDir)assets" "$(OutDir)assets" /s /e /i /y</Command>
     <ClInclude Include="CreditsScene.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="MainMenuUI.h" />
+    <ClInclude Include="SoundDirectory.h" />
+    <ClInclude Include="SoundTest.h" />
     <ClInclude Include="TextObject.h" />
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="PlayerObject.h" />

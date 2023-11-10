@@ -144,6 +144,9 @@
     <ClCompile Include="MainMenuUI.cpp">
       <Filter>Source Files\SDL_Game\States\Game_Platformer\UI</Filter>
     </ClCompile>
+    <ClCompile Include="SoundTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PlayerObject.h">
@@ -253,6 +256,12 @@
     </ClInclude>
     <ClInclude Include="Fonts.h">
       <Filter>Header Files\SDL_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundDirectory.h">
+      <Filter>Header Files\SDL_Game\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundTest.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
