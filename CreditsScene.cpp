@@ -157,7 +157,7 @@ void CreditsScene::InitCreditScene()
 	// [CREDITS]
 	text = new TextObject(Vector2{ s_kStartingPosition.m_x,s_kStartingPosition.m_y + 100 }, font, color, pRenderer);
 
-	text->SetText("Programmed by: ");
+	text->SetText("Programmed by: " CREATOR);
 
 	text->TryMove(Vector2{ UP });
 	

@@ -7,7 +7,7 @@
 
 ImageObject::ImageObject(Vector2 position, Vector2 size, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name)
 	:
-	m_transform(SDL_Rect((int)position.m_x, (int)position.m_y, (int)size.m_x, (int)size.m_y)),
+	m_transform(SDL_Rect{ (int)position.m_x, (int)position.m_y, (int)size.m_x, (int)size.m_y }),
 	m_pSpriteName(directory),
 	m_imageComponent(directory, &m_transform),
 	m_collider(this, m_transform, pReferee),
@@ -30,7 +30,7 @@ ImageObject::~ImageObject()
 void ImageObject::Update(double deltaTime)
 {
 	// Movement update when speed or direction is not 0
-	if (m_status.m_speed != 0 || m_status.m_direction != Vector2{ 0,0 });
+	if (m_status.m_speed != 0 || m_status.m_direction != Vector2{ 0,0 })
 		m_movingComponent.TryMove(deltaTime, m_status.m_speed, m_status.m_direction);
 
 	m_imageAction.Update(deltaTime);

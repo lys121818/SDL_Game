@@ -60,5 +60,6 @@ public:
 
 	// Set Collision box active or disactive
 	void SetCollider(bool isActive);
+
 };
 

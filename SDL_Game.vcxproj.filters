@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="header files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="header files\SDL_Game">
+      <UniqueIdentifier>{cafea505-e3c3-425c-8a0a-41aabe5ff24d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State">
+      <UniqueIdentifier>{acb23569-39e7-4554-bf74-16936ee7028d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\Game_Scene">
+      <UniqueIdentifier>{cca460f7-e7cc-4755-ba3a-4bece1e92aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\Components">
+      <UniqueIdentifier>{a9e719fc-a3c7-4bde-91e1-4ce7192e51bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\GameObjects">
+      <UniqueIdentifier>{caf87ca6-5b3f-4c6a-8222-0f53e5d0eee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\GameFeatures">
+      <UniqueIdentifier>{43730050-9a94-438a-9a0c-6fa09cc93ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\Game_UI">
+      <UniqueIdentifier>{730aae0a-0c4d-4c7c-b912-9bbec117e090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\Struct">
+      <UniqueIdentifier>{f037bdc5-1091-41b0-b3a2-14668e7540b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\Virtual">
+      <UniqueIdentifier>{f28953a7-5f02-4a89-a999-278fdfacae72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\Enums">
+      <UniqueIdentifier>{26e49d5a-2638-4069-968e-507ee18cf9b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Defines">
+      <UniqueIdentifier>{8a2f565d-7de2-4376-bad8-81fdda7dac63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="source files\SDL_Game">
+      <UniqueIdentifier>{d68b0fc7-aa64-41a6-a64f-4db31e1a19e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files\SDL_Game\Game_State">
+      <UniqueIdentifier>{878a1bfd-d965-40c3-bf1e-01d3b3c946e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files\SDL_Game\Game_State\Game_Scene">
+      <UniqueIdentifier>{c96486b1-c9e2-403a-93a8-1dddc48b608d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files\SDL_Game\Game_State\Components">
+      <UniqueIdentifier>{e068c818-76ff-40a1-bd8f-531a4d845bc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files\SDL_Game\Game_State\GameObjects">
+      <UniqueIdentifier>{ee1ffd8c-45e2-446a-a240-8dffb6be09b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files\SDL_Game\Game_State\GameFeatures">
+      <UniqueIdentifier>{3ac97eda-797f-49f3-93e9-19a098701d84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files\SDL_Game\Game_State\Game_UI">
+      <UniqueIdentifier>{f6108238-51ed-44bb-aeb6-81f656c3cea1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>header files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>source files\SDL_Game\Game_State\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonObject.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>source files\SDL_Game\Game_State\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionReferee.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditsScene.cpp">
+      <Filter>source files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyObject.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Fonts.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDemo.cpp">
+      <Filter>source files\SDL_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageActionComponent.cpp">
+      <Filter>source files\SDL_Game\Game_State\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageComponent.cpp">
+      <Filter>source files\SDL_Game\Game_State\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageObject.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameUI.cpp">
+      <Filter>source files\SDL_Game\Game_State\Game_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="LossScreen.cpp">
+      <Filter>source files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>source files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuUI.cpp">
+      <Filter>source files\SDL_Game\Game_State\Game_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingComponent.cpp">
+      <Filter>source files\SDL_Game\Game_State\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Platformer.cpp">
+      <Filter>source files\SDL_Game\Game_State</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerObject.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundTest.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage01.cpp">
+      <Filter>source files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TextComponent.cpp">
+      <Filter>source files\SDL_Game\Game_State\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TextObject.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClCompile>
+    <ClCompile Include="TiledMap.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObject.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="WinScreen.cpp">
+      <Filter>source files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundComponent.cpp">
+      <Filter>source files\SDL_Game\Game_State\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundMusicComponent.cpp">
+      <Filter>source files\SDL_Game\Game_State\Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>header files\SDL_Game\Game_State\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonObject.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>header files\SDL_Game\Game_State\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionReferee.h">
+      <Filter>header files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsScene.h">
+      <Filter>header files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>header files\SDL_Game\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyObject.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Fonts.h">
+      <Filter>header files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDemo.h">
+      <Filter>header files\SDL_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>header files\SDL_Game\Game_State\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSetting.h">
+      <Filter>header files\SDL_Game\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>header files\SDL_Game\Game_State\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateMachine.h">
+      <Filter>header files\SDL_Game\Game_State\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageActionComponent.h">
+      <Filter>header files\SDL_Game\Game_State\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageComponent.h">
+      <Filter>header files\SDL_Game\Game_State\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageDirectory.h">
+      <Filter>header files\SDL_Game\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageObject.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameUI.h">
+      <Filter>header files\SDL_Game\Game_State\Game_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="LossScreen.h">
+      <Filter>header files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>header files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuUI.h">
+      <Filter>header files\SDL_Game\Game_State\Game_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingComponent.h">
+      <Filter>header files\SDL_Game\Game_State\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Platformer.h">
+      <Filter>header files\SDL_Game\Game_State</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundDirectory.h">
+      <Filter>header files\SDL_Game\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundTest.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Status.h">
+      <Filter>header files\SDL_Game\Game_State\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage01.h">
+      <Filter>header files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TextComponent.h">
+      <Filter>header files\SDL_Game\Game_State\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextObject.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>header files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="TiledMap.h">
+      <Filter>header files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="WinScreen.h">
+      <Filter>header files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>header files\SDL_Game\Game_State\Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="UIInterface.h">
+      <Filter>header files\SDL_Game\Game_State\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundComponent.h">
+      <Filter>header files\SDL_Game\Game_State\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundMusicComponent.h">
+      <Filter>header files\SDL_Game\Game_State\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectType.h">
+      <Filter>header files\SDL_Game\Game_State\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonType.h">
+      <Filter>header files\SDL_Game\Game_State\Enums</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

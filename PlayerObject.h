@@ -9,11 +9,11 @@
 #include "MovingComponent.h"
 #include "Status.h"
 #include "TextComponent.h"
+#include "SoundComponent.h"
 #include <unordered_map>
 #include <functional>
 
-struct Mix_Chunk;
-struct Mix_Channel;
+
 
 class PlayerObject : public GameObject
 {
@@ -32,10 +32,9 @@ private:
     // gameobject's status
     Status m_status;
 
-    Mix_Chunk* m_pSound;
 private:
     // true when Game Over
-    bool m_isWin;
+    bool m_isGame;
 
     // * PLAYER
     // Width
@@ -61,6 +60,9 @@ private:
 
     // Text Component
     TextComponent m_nameText;
+
+    // Sound Component
+    std::unordered_map<const char*, SoundComponent*> m_mpSounds;
 
     // Transform of the object
     SDL_Rect m_transform;
@@ -91,7 +93,6 @@ private:
     // Collider for this object
     ColliderComponent m_collider;
 
-    int m_activeSoundChannel;
 private:
 
 public:
@@ -134,7 +135,7 @@ public:
     // Get this Object's Status
     virtual Status GetStatus() override { return m_status; }
 
-    bool GetWinState() { return m_isWin; }
+    bool GetWinState() { return m_isGame; }
 
     // SETTER
     // add trigger function with key of name
@@ -148,9 +149,9 @@ public:
     void NormalSpeed() { m_status.m_speed = s_kSpeed; }
     void SlowSpeed() { m_status.m_speed = s_kMixSpeed; }
 
-    void SetJump() { if(m_status.m_isGrounded) m_status.m_isOnJump = true; }
+    void SetJump() {if (m_status.m_isGrounded)	m_status.m_isOnJump = true; }
     
-    bool FinishGame() { return m_isWin; }
+    bool FinishGame() { return m_isGame; }
 
 
 
@@ -178,6 +179,9 @@ private:
     // Check current state before play animation.
     void CheckCurrentState();
 
+    void SoundPlayOnMotion();
+
+    void AddSound(const char* pDir, const char* pKeyName) override;
 
 };
 

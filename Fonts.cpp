@@ -77,7 +77,7 @@ void Fonts::AddTTFToFonts(const char* name, size_t size)
 
 	fontFile.first = name;
 
-    fontFile.second = TTF_OpenFont(name, size);
+    fontFile.second = TTF_OpenFont(name, (int)size);
 
     // Error when it fails to load the texture
     if (fontFile.second == nullptr)

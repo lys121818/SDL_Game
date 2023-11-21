@@ -2,7 +2,7 @@
 #include <iostream>
 #include "GameDemo.h"
 #include "Platformer.h"
-
+//#include <vld.h>
 #include <SDL.h>
 
 

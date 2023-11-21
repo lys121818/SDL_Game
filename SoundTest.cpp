@@ -9,7 +9,7 @@ SoundTest::SoundTest(const char* pPath)
 {
 	m_pSound = Mix_LoadWAV(pPath);
 	if (m_pSound == nullptr)
-		std::cout << "[SoundText] Failed to load sound. Error: " << SDL_GetError() << std::endl;
+		std::cout << "[SoundTest] Failed to load sound. Error: " << SDL_GetError() << std::endl;
 }
 
 SoundTest::~SoundTest()

@@ -25,8 +25,6 @@ private:
 	// Pointer to the State Machine running this state.
 	Platformer* m_pOwner;
 
-	SoundTest* m_pSoundTest;
-
 	ImageObject m_background_1;
 	ImageObject m_background_2;
 
@@ -42,7 +40,6 @@ private:
 
 	bool isSetUI;
 
-	_Mix_Music* m_pMusic;
 
 public:
 	MainMenu(Platformer* pOwner);

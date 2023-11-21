@@ -1,15 +1,18 @@
 #include "EnemyObject.h"
 #include <iostream>
 #include <assert.h>
+#include <math.h>
 #include "GameSetting.h"
 #include "ObjectType.h"
+#include "SoundDirectory.h"
 
 EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, size_t type, const char* name)
-    : m_transform(transform),
-	  m_animation(directory, 6, 200, 300, &m_transform),
-	  m_collider(this, transform,pReferee),
-	  m_pSpriteName(directory),
-	  m_movingComponent(&m_transform, Vector2{ (double)transform.x,(double)transform.y },&m_collider)
+    : 
+	m_transform(transform),
+	m_animation(directory, 6, 200, 300, &m_transform),
+	m_collider(this, transform,pReferee),
+	m_pSpriteName(directory),
+	m_movingComponent(&m_transform, Vector2{ (double)transform.x,(double)transform.y },&m_collider)
 {
 	
 	/// STATUS
@@ -36,11 +39,17 @@ EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const c
 
 	// Animation Default setting
 	m_currentState = AnimationState::kIdle;
+
+	AddSound(ZOMBIE1_SOUND, "Zombie_1");
+
 }
 
 EnemyObject::~EnemyObject()
 {
-
+	for (auto& element : m_mpSounds)
+	{
+		delete element.second;
+	}
 }
 
 /*-----------
@@ -50,6 +59,9 @@ EnemyObject::~EnemyObject()
 void EnemyObject::Update(double deltaTime)
 {
 	Gravity(deltaTime);
+
+	// Play Sounds according to object actions
+	UpdateDistance();
 
 	// if it's moving
 	if (m_status.m_speed > 0)
@@ -187,4 +199,62 @@ void EnemyObject::CheckCurrentState()
 void EnemyObject::Gravity(double deltaTime)
 {
 	m_movingComponent.TryMove(deltaTime, GRAVITY_POWER, Vector2{ 0,1 });
+}
+
+void EnemyObject::PlaySounds()
+{
+	// find distance to player
+	if (m_mpSounds["Zombie_1"]->GetActiveChannel() == -1)
+	{
+		// play in loop
+		m_mpSounds["Zombie_1"]->PlayChunk(-1);
+	}
+
+}
+
+void EnemyObject::UpdateDistance()
+{
+	Vector2 targetPosition;
+	Vector2 thisPosition;
+
+	targetPosition.m_x = (double)m_pTargetObject->GetTransform().x;
+	targetPosition.m_y = (double)m_pTargetObject->GetTransform().y;
+
+	thisPosition.m_x = (double)m_transform.x;
+	thisPosition.m_y = (double)m_transform.y;
+
+	m_distanceToPlayer = Vector2::Distance(targetPosition, thisPosition);
+
+	// If Player is in distance to hear the sound
+	if (m_distanceToPlayer < s_kMinimumDistanceToHear)
+	{
+		// Play Sounds if sounds is not playing
+		PlaySounds();
+
+		// Set volume by distance to the target
+		int volumeSize = (int)((1.0 - (m_distanceToPlayer / s_kMinimumDistanceToHear)) * MAXVOLUME);
+		m_mpSounds["Zombie_1"]->SetChunkVolume(volumeSize);
+
+	}
+	else
+	{
+		// if the loop sound is playing
+		if (m_mpSounds["Zombie_1"]->GetActiveChannel() != -1)
+		{
+			m_mpSounds["Zombie_1"]->StopChunk();
+		}
+	}
+	
+}
+
+void EnemyObject::AddSound(const char* pDir, const char* pKeyName)
+{
+	std::pair<const char*, SoundComponent*> pair;
+
+	pair.second = new SoundComponent();
+
+	pair.first = pKeyName;
+	pair.second->AddSoundChunk(pDir);
+
+	m_mpSounds.insert(pair);
 }

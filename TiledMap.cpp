@@ -57,11 +57,11 @@ void TiledMap::LoadTiledMapFromTxt(size_t* map)
     m_txtFile.open(m_fileName);
     if (m_txtFile.is_open())
     {
-        for (size_t y = 0; y < m_maxTiles.m_y; y++)
+        for (size_t y = 0; y < (size_t)m_maxTiles.m_y; y++)
         {
-            for (size_t x = 0; x < m_maxTiles.m_x; x++)
+            for (size_t x = 0; x < (size_t)m_maxTiles.m_x; x++)
             {
-                m_txtFile >> map[(y * m_maxTiles.m_x) + x];
+                m_txtFile >> map[(y * (size_t)m_maxTiles.m_x) + x];
             }
         }
     }
@@ -90,11 +90,11 @@ void TiledMap::TileSettings(CollisionReferee* pReferee)
     LoadTiledMapFromTxt(map);
     // x[27] y[20]
 
-    for (size_t y = 0; y < m_maxTiles.m_y; y++)
+    for (size_t y = 0; y < (size_t)m_maxTiles.m_y; y++)
     {
-        for (size_t x = 0; x < m_maxTiles.m_x; x++)
+        for (size_t x = 0; x < (size_t)m_maxTiles.m_x; x++)
         {
-            std::cout << map[(y * m_maxTiles.m_x) + x] << " ";
+            std::cout << map[(y * (size_t)m_maxTiles.m_x) + x] << " ";
         }
         std::cout << '\n';
     }

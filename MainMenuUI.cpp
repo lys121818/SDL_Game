@@ -172,7 +172,7 @@ bool MainMenuUI::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 				case SDLK_RETURN:
 				{
 					// Select
-					if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < m_vpButtons.capacity())
+					if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < (int)m_vpButtons.capacity())
 					{
 						if (m_vpButtons[m_keyboardButtonIndex]->GetSelected() == true)
 							m_vpButtons[m_keyboardButtonIndex]->Trigger();
@@ -208,7 +208,7 @@ bool MainMenuUI::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 				case SDLK_RETURN:
 				{
 					// Select
-					if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < m_vpButtons.capacity())
+					if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < (int)m_vpButtons.capacity())
 					{
 						if (m_vpButtons[m_keyboardButtonIndex]->GetSelected() == true)
 							m_vpButtons[m_keyboardButtonIndex]->Trigger();
@@ -237,7 +237,7 @@ void MainMenuUI::ChangeButtonFocus(int direction)
 		m_keyboardButtonIndex = 0;
 	}
 	// set to last index if its over size
-	else if (nextDirectionIndex >= m_vpButtons.size())
+	else if (nextDirectionIndex >= (int)m_vpButtons.size())
 	{
 		m_keyboardButtonIndex = (int)(m_vpButtons.size() - 1);
 	}
@@ -248,14 +248,14 @@ void MainMenuUI::ChangeButtonFocus(int direction)
 
 	// if the button is disable and next index exist
 	if (!m_vpButtons[m_keyboardButtonIndex]->GetAble() &&
-		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < m_vpButtons.size()))
+		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < (int)m_vpButtons.size()))
 	{
 
 		ChangeButtonFocus(direction);
 	}
 
 	// Change Hover setting if the button is able
-	for (size_t i = 0; i < m_vpButtons.size(); ++i)
+	for (size_t i = 0; i < (int)m_vpButtons.size(); ++i)
 	{
 		if (m_vpButtons[m_keyboardButtonIndex]->GetAble())
 		{

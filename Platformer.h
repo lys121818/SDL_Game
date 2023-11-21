@@ -1,5 +1,6 @@
 #pragma once
 #include "GameStateMachine.h"
+#include "BackgroundMusicComponent.h"
 #include <SDL_ttf.h>
 
 class GameDemo;
@@ -27,6 +28,7 @@ private:
 	// Any State waiting to be loaded on the next frame.
 	GameState* m_pNextState;
 
+	BackgroundMusicComponent m_musicComponent;
 
 public:
 	Platformer(GameDemo* pOwner);
@@ -52,6 +54,9 @@ public:
 
 	size_t GetScene() override { return (size_t)m_currentScene; }
 
+	void SetBGMusic(const char* pFirstMusic, const char* pSecondMusic = nullptr) override;
+
+	void ToggleMusic();
 private:
 	// delete all the pointers
 	void Destory();

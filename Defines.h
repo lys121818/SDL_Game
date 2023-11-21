@@ -20,6 +20,9 @@
 // SCENE CHANGE
 #define LOADINGTIME 2.0
 
+// SOUNDS
+#define MAXVOLUME	128
+
 /// VECTOR2 SETTINGS
 // Direction
 #define RIGHT	1,0

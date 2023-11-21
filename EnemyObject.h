@@ -5,12 +5,13 @@
 #include "ColliderComponent.h"
 #include "Status.h"
 #include "MovingComponent.h"
+#include "SoundComponent.h"
 #include <iostream>
 
 class EnemyObject : public GameObject
 {
+	static constexpr double s_kMinimumDistanceToHear = 300.0;
 private:
-
 	// Current Animation States
 	enum class AnimationState
 	{
@@ -45,6 +46,7 @@ private:
 	// Transform of the object
 	SDL_Rect m_transform;
 
+	double m_distanceToPlayer;
 
 	// * ANIMATION
 	// Name Of the Object
@@ -52,11 +54,15 @@ private:
 
 	// AnimationComponent to play animation
 	AnimationComponent m_animation;
-
+	
+	// Sound Component
+	std::unordered_map<const char*, SoundComponent*> m_mpSounds;
 
 	/// * COLLIDER
 	ColliderComponent m_collider;
 
+	// player object
+	GameObject* m_pTargetObject;
 
 public:
 	EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory,size_t type, const char* name = "Enemy");
@@ -89,6 +95,7 @@ public:
 	// Get this Object's Status
 	virtual Status GetStatus() override { return m_status; }
 
+	void SetTargetObject(GameObject* pTargetCollider) override { m_pTargetObject = pTargetCollider; }
 private:
 	///ANIMATION EVENT
 	// Play the right animation fallowing current state of gameobject
@@ -97,5 +104,14 @@ private:
 	void CheckCurrentState();
 
 	void Gravity(double deltaTime);
+
+	// Play sound effect of the enemy
+	void PlaySounds();
+
+	// Update calculate target distance
+	void UpdateDistance();
+
+	void AddSound(const char* pDir, const char* pKeyName) override;
+
 };
 

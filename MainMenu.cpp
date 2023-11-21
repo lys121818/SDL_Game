@@ -19,8 +19,7 @@ MainMenu::MainMenu(Platformer* pOwner)
 	m_pHoverButton(nullptr),
 	m_keyboardButtonIndex(-1),
 	m_pMainMenuUI(nullptr),
-	isSetUI(false),
-	m_pSoundTest(nullptr)
+	isSetUI(false)
 {
 
 }
@@ -41,7 +40,7 @@ void MainMenu::Enter()
 	// Set UI
 	SetUI();
 
-
+	m_pOwner->SetBGMusic(MAINMENU1_SOUND, MAINMENU2_SOUND);
 }
 
 void MainMenu::Update(double deltaTime)
@@ -84,8 +83,6 @@ void MainMenu::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
 bool MainMenu::HandleEvent(SDL_Event* pEvent)
 {
-	m_pSoundTest->HandleEvent(pEvent);
-
 	// User Input
 	if (!isSetUI)
 	{
@@ -192,31 +189,37 @@ bool MainMenu::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 	{
 		switch ((int)pData->keysym.sym)
 		{
-		// Move Up
-		case SDLK_w:
-		case SDLK_UP:
-		{
-			ChangeButtonFocus(-1);
-			break;
-		}
-
-		// Move Down
-		case SDLK_s:
-		case SDLK_DOWN:
-		{
-			ChangeButtonFocus(1);
-			break;
-		}
-		case SDLK_SPACE:
-		case SDLK_RETURN:
-		{
-			if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < m_vpButtons.capacity())
+			// pasue music
+			case SDLK_p:
 			{
-				if (m_vpButtons[m_keyboardButtonIndex]->GetSelected() == true)
-					m_vpButtons[m_keyboardButtonIndex]->Trigger();
+				m_pOwner->ToggleMusic();
+				break;
 			}
-			break;
-		}
+			// Move Up
+			case SDLK_w:
+			case SDLK_UP:
+			{
+				ChangeButtonFocus(-1);
+				break;
+			}
+
+			// Move Down
+			case SDLK_s:
+			case SDLK_DOWN:
+			{
+				ChangeButtonFocus(1);
+				break;
+			}
+			case SDLK_SPACE:
+			case SDLK_RETURN:
+			{
+				if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < (int)m_vpButtons.capacity())
+				{
+					if (m_vpButtons[m_keyboardButtonIndex]->GetSelected() == true)
+						m_vpButtons[m_keyboardButtonIndex]->Trigger();
+				}
+				break;
+			}
 		default:
 			break;
 		}
@@ -226,6 +229,7 @@ bool MainMenu::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 
 void MainMenu::Exit()
 {
+	Destory();
 }
 
 void MainMenu::SetButtons()
@@ -309,8 +313,6 @@ void MainMenu::SetButtons()
 	button->SetTextInButton(font, "CREDITS", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
-
-	m_pSoundTest = new SoundTest(JUMP_SOUND);
 }
 
 void MainMenu::SetUI()
@@ -326,18 +328,7 @@ void MainMenu::SetUI()
 
 void MainMenu::SetMusic()
 {
-	// Load the music
-	m_pMusic = Mix_LoadMUS(JUMP_SOUND);
 
-	// play music if its not null
-	if (m_pMusic == nullptr)
-	{
-		std::cout << "Fail to load music. Error: " << Mix_GetError();
-	}
-	else
-	{
-		Mix_PlayMusic(m_pMusic, 0);
-	}
 }
 
 
@@ -366,13 +357,8 @@ void MainMenu::Destory()
 	{
 		delete element;
 	}
-	delete m_pMainMenuUI;
 
-	if (m_pMusic != nullptr)
-	{
-		Mix_HaltMusic();
-		Mix_FreeMusic(m_pMusic);
-	}
+	delete m_pMainMenuUI;
 }
 
 void MainMenu::ChangeButtonFocus(int direction)
@@ -387,7 +373,7 @@ void MainMenu::ChangeButtonFocus(int direction)
 		m_keyboardButtonIndex = 0;
 	}
 	// set to last index if its over size
-	else if (nextDirectionIndex >= m_vpButtons.size())
+	else if (nextDirectionIndex >= (int)m_vpButtons.size())
 	{
 		m_keyboardButtonIndex = (int)(m_vpButtons.size() - 1);
 	}
@@ -398,7 +384,7 @@ void MainMenu::ChangeButtonFocus(int direction)
 
 	// if the button is disable and next index exist
 	if (!m_vpButtons[m_keyboardButtonIndex]->GetAble() &&
-		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < m_vpButtons.size()))
+		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < (int)m_vpButtons.size()))
 	{
 
 		ChangeButtonFocus(direction);

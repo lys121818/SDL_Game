@@ -28,5 +28,7 @@ public:
 	 
 	virtual size_t GetScene() = 0;
 
+	virtual void SetBGMusic(const char*, const char*) = 0;
+	
 };
 

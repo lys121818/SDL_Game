@@ -2,6 +2,7 @@
 
 #include "ImageDirectory.h"
 #include "ButtonObject.h"
+#include "SoundDirectory.h"
 
 ButtonObject::ButtonObject(SDL_Rect transform, const char* directory, Button_State type, const char* name)
 	:
@@ -21,11 +22,17 @@ ButtonObject::ButtonObject(SDL_Rect transform, const char* directory, Button_Sta
 
 	SetButtonState(m_currentState);
 	SetImage();
-
+	
+	AddSound(BUTTON_HOVER_SOUND, "Hover");
+	AddSound(BUTTON_SELECT_SOUND, "Select");
 }
 
 ButtonObject::~ButtonObject()
 {
+	for (auto& element : m_mpSounds)
+	{
+		delete element.second;
+	}
 }
 
 
@@ -154,6 +161,8 @@ void ButtonObject::SetButtonState(Button_State state)
 	if (m_currentState == state)
 		return;
 
+	PlaySound(state);
+
 	m_currentState = state;
 	SetImage();
 }
@@ -191,12 +200,43 @@ void ButtonObject::SetImage()
 	}
 }
 
+void ButtonObject::PlaySound(Button_State state)
+{
+	switch (state)
+	{
+	case Button_State::kNormal:
+		break;
+	case Button_State::kHover:
+	{
+		m_mpSounds["Hover"]->PlayChunk();
+		break;
+	}
+	case Button_State::kDisable:
+		break;
+	default:
+		break;
+	}
+}
+
 void ButtonObject::Trigger()
 {
 	if (m_callback != nullptr)
 	{
+		m_mpSounds["Select"]->PlayChunk();
 		m_callback();
 	}
+}
+
+void ButtonObject::AddSound(const char* pDir, const char* pKeyName)
+{
+	std::pair<const char*, SoundComponent*> pair;
+
+	pair.second = new SoundComponent();
+
+	pair.first = pKeyName;
+	pair.second->AddSoundChunk(pDir);
+
+	m_mpSounds.insert(pair);
 }
 
 bool ButtonObject::HitTest(int x, int y)

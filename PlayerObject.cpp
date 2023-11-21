@@ -3,12 +3,13 @@
 #include "Vector2.h"
 #include <assert.h>
 #include "ObjectType.h"
+#include "SoundDirectory.h"
 #include <fstream>
 
 PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_t type, const char* directory)
 	:
 	 m_transform(transform),
-	 m_isWin(false),
+	 m_isGame(false),
 	 m_animation(directory, 6, 200, 300, &m_transform),
 	 m_collider(this, transform, pReferee),
 	 m_pSpriteName(directory),
@@ -52,11 +53,20 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 	// Animation Default setting
 	m_currentState = AnimationState::kIdle;
 	
-
+	/// SOUNDS
+	AddSound(JUMP_SOUND, "Jump");
+	AddSound(DEAD_SOUND, "GameOver");
+	AddSound(WIN_SOUND, "Victory");
+	AddSound(FOOTSTEP_SOUND, "Step");
+	AddSound(HURT_SOUND, "Hurt");
 }
 
 PlayerObject::~PlayerObject()
 {
+	for (auto& element : m_mpSounds)
+	{
+		delete element.second;
+	}
 }
 
 /*-----------
@@ -160,19 +170,8 @@ void PlayerObject::CheckCurrentState()
 		}
 	}
 	else
-		m_currentState = AnimationState::kIdle;
-
-}
-
-// Gravity mechanics
-void PlayerObject::Gravity(double deltaTime)
-{
-	
-	m_status.m_isGrounded = m_movingComponent.TryMove(deltaTime, GRAVITY_POWER, Vector2{ DOWN });
-	if (m_status.m_isGrounded)
 	{
-		m_status.m_isOnJump = false;
-		m_jumpPower = 0;
+		m_currentState = AnimationState::kIdle;
 	}
 
 }
@@ -194,7 +193,6 @@ void PlayerObject::OnCollision(ColliderComponent* pCollider)
 			{
 				GetDamaged(10);
 				m_isImmune = true;
-				std::cout << "Health: " << m_status.m_health << std::endl;
 			}
 			break;
 		}
@@ -202,7 +200,6 @@ void PlayerObject::OnCollision(ColliderComponent* pCollider)
 		case (size_t)ObjectType::kWall:
 		case (size_t)ObjectType::kGround:
 		{
-			//m_status.m_isOnJump = false;
 			// if Ground is under player
 			if (pCollider->GetTransform().y > m_transform.y)
 			{
@@ -212,12 +209,10 @@ void PlayerObject::OnCollision(ColliderComponent* pCollider)
 				}
 			
 			}
-			else if (pCollider->GetTransform().y + pCollider->GetTransform().h >= m_transform.y && m_status.m_isOnJump)
+			else if (pCollider->GetTransform().y + pCollider->GetTransform().h > m_transform.y && m_status.m_isOnJump)
 			{
 				m_status.m_isOnJump = false;
 			}
-			else if (m_status.m_isOnJump)
-				m_status.m_isOnJump = false;
 			break;
 		}
 
@@ -236,15 +231,19 @@ void PlayerObject::OnOverlapBegin(ColliderComponent* pCollider)
 	m_status.m_pTargetCollider = pCollider;
 	Status triggerStatus = pCollider->GetOwner()->GetStatus();
 
-	std::cout << "Entered the Collision Triger with: " << triggerStatus.m_name << std::endl;
-
 	// On Enter Trigger Event
 	switch (triggerStatus.m_type)
 	{
 		case (size_t)ObjectType::kWinZone:
 		{
 			std::cout << "You Have Entered the Win Zone!" << std::endl;
-			m_isWin = true;
+
+			if(m_mpSounds["Step"]->GetActiveChannel() != -1)
+				m_mpSounds["Step"]->StopChunk();	// stop loop playing
+
+			m_mpSounds["Victory"]->PlayChunk();
+
+			m_isGame = true;
 			break;
 		}
 		case (size_t)ObjectType::kHealingZone:
@@ -281,7 +280,6 @@ void PlayerObject::OnOverlapUpdate()
 		if (!m_isImmune)
 		{
 			GetDamaged(OBJECT_DAMAGE);
-			std::cout << "Health: " << m_status.m_health << std::endl;
 		}
 		break;
 	}
@@ -313,6 +311,10 @@ void PlayerObject::OnOverlapEnd()
 // All the update function for game events runs here //
 void PlayerObject::UpdateGameEvent(double deltaTime)
 {
+	// Sound play
+	SoundPlayOnMotion();
+
+	// Nametag
 	m_nameText.Update();
 
 	// Check for jump
@@ -365,6 +367,7 @@ void PlayerObject::Jump(double deltaTime, double jumpPower)
 	{
 		m_jumpPower = (float)s_kMaxJumpPower;
 		m_status.m_isOnJump = true;
+		m_mpSounds["Jump"]->PlayChunk();
 	}
 	
 
@@ -401,14 +404,16 @@ void PlayerObject::GetDamaged(int amount)
 
 	if (amount > 0)
 	{
+		m_mpSounds["Hurt"]->PlayChunk();
 		m_isImmune = true;
 	}
 
 	// Game Over
 	if (m_status.m_health <= 0)
 	{
+		m_mpSounds["GameOver"]->PlayChunk();
 		std::cout << "You died \n";
-		m_isWin = true;
+		m_isGame = true;
 
 	}
 	// Over Healed
@@ -423,6 +428,45 @@ void PlayerObject::GetDamaged(int amount)
 		m_mpTriggers[HEALTHBAR_UI_FUNCTION]();
 }
 
+void PlayerObject::SoundPlayOnMotion()
+{
+	if (m_currentState == AnimationState::kWalk || m_currentState == AnimationState::kRun)
+		m_mpSounds["Step"]->PlayChunk(-1);
+	else
+	{
+		if (m_mpSounds["Step"]->GetActiveChannel() != -1)
+		{
+
+			m_mpSounds["Step"]->StopChunk();
+		}
+	}
+}
+
+void PlayerObject::AddSound(const char* pDir, const char* pKeyName)
+{
+	std::pair<const char*, SoundComponent*> pair;
+
+	pair.second = new SoundComponent();
+
+	pair.first = pKeyName;
+	pair.second->AddSoundChunk(pDir);
+
+	m_mpSounds.insert(pair);
+}
+
+// Gravity mechanics
+void PlayerObject::Gravity(double deltaTime)
+{
+
+	m_status.m_isGrounded = m_movingComponent.TryMove(deltaTime, GRAVITY_POWER, Vector2{ DOWN });
+	if (m_status.m_isGrounded)
+	{
+		m_status.m_isOnJump = false;
+		m_jumpPower = 0;
+	}
+
+}
+
 
 ////////////////////////////
 // ANIMATION UPDATE EVENT //////////////////////////////////
@@ -433,3 +477,4 @@ void PlayerObject::UpdateAnimationEvent(double deltaTime)
 
 	AnimationState();
 }
+

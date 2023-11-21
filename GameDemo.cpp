@@ -8,6 +8,7 @@
 #include <SDL_ttf.h>
 #include "GameDemo.h"
 #include "Platformer.h"
+#include "SoundDirectory.h"
 
 ////////////
 // PUBLIC //
@@ -97,16 +98,16 @@ void GameDemo::Quit()
 // PRIVATE //
 /////////////
 
+// load textures being used in the scene
 void GameDemo::PreloadTexture()
 {
-    std::cout << "Current Scene" << m_pStateMachine->GetScene() << std::endl;
     m_pTextures->PreloadTextures(m_pStateMachine->GetScene());
 
 }
 
+// load Fonts being used in the scene
 void GameDemo::PreloadFonts()
 {
-    std::cout << "Current Scene" << m_pStateMachine->GetScene() << std::endl;
     m_pFonts->PreloadFonts(m_pStateMachine->GetScene());
 }
 
@@ -228,21 +229,9 @@ int GameDemo::CreateWindow()
         return 4;   // initializing error
     }
 
-    // Initialize MP3 support.
-    int audioFlags = MIX_INIT_MP3;
-    errorCode = Mix_Init(audioFlags);
-    if (errorCode != audioFlags)
-    {
-        std::cout << "Mixer_Init() failed. Error: " << Mix_GetError() << std::endl;
-        SDL_DestroyWindow(m_pWindow);
-        SDL_Quit();
-        system("pause");
-        return 4;
-    }
-    // Initialize OGG support.
-    audioFlags = MIX_INIT_OGG;
-    errorCode = Mix_Init(audioFlags);
-    if (errorCode != audioFlags)
+    // Initialize file types support.
+    errorCode = Mix_Init(MIX_INIT_MP3 | MIX_INIT_MOD | MIX_INIT_OGG);
+    if (errorCode == 0)
     {
         std::cout << "Mixer_Init() failed. Error: " << Mix_GetError() << std::endl;
         SDL_DestroyWindow(m_pWindow);
@@ -251,18 +240,8 @@ int GameDemo::CreateWindow()
         return 4;
     }
 
-    audioFlags = MIX_INIT_MOD;
-    errorCode = Mix_Init(audioFlags);
-    if (errorCode != audioFlags)
-    {
-        std::cout << "Mixer_Init() failed. Error: " << Mix_GetError() << std::endl;
-        SDL_DestroyWindow(m_pWindow);
-        SDL_Quit();
-        system("pause");
-        return 4;
-    }
 
-    errorCode = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024);
+    errorCode = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY * 2, MIX_DEFAULT_FORMAT, 6, 1024 * 4);
 
     if (errorCode != 0)
     {
@@ -272,8 +251,6 @@ int GameDemo::CreateWindow()
         system("pause");
         return 4;   // initializing error
     }
-
-
 
     // You must set the blend mode if you want to support alpha.
     SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);

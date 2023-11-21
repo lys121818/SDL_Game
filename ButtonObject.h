@@ -7,6 +7,7 @@
 #include "Status.h"
 #include "ButtonType.h"
 #include "TextComponent.h"
+#include "SoundComponent.h"
 
 class ButtonObject : public GameObject
 {
@@ -23,6 +24,9 @@ private:
 
 	// Text on button image
 	TextComponent m_textComponent;
+
+	// Sound component
+	std::unordered_map<const char*, SoundComponent*> m_mpSounds;
 
 	// Not Needed in this game object (considering of other ways to handle this)
 	Status m_status;
@@ -71,6 +75,7 @@ public:
 	// Executes the callback
 	void Trigger();
 
+
 private:
 	void ButtonState();
 
@@ -80,8 +85,10 @@ private:
 	// Set the right image according to the state
 	void SetImage();
 
-
+	void PlaySound(Button_State state);
 
 	// Returns whether (x,y) is within the bounds of the button.
 	bool HitTest(int x, int y);
+
+	void AddSound(const char* pDir, const char* pKeyName) override;
 };

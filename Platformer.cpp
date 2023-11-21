@@ -7,10 +7,12 @@
 #include "LossScreen.h"
 #include "ImageDirectory.h"
 #include "CreditsScene.h"
+#include "SoundDirectory.h"
 
 Platformer::Platformer(GameDemo* pOwner)
-    : m_pOwner(pOwner),
-      m_currentScene(SceneName::kMainMenu)
+    : 
+    m_pOwner(pOwner),
+    m_currentScene(SceneName::kMainMenu)
 {
 
     LoadScene(m_currentScene);
@@ -25,7 +27,7 @@ Platformer::~Platformer()
         m_pCurrentState->Exit();
     }
 
-    // delete the old state
+    // delete the old stateb
     Destory();
 }
 
@@ -44,6 +46,7 @@ void Platformer::UpdateCurrentState(double deltaTime)
     {
         m_pCurrentState->Update(deltaTime);
     }
+    m_musicComponent.UpdateBGMusic();
 }
 
 void Platformer::RenderCurrentState(SDL_Renderer* pRenderer, Textures* pTextures)
@@ -60,6 +63,7 @@ bool Platformer::HandleEvent(SDL_Event* pEvent)
     {
         return m_pCurrentState->HandleEvent(pEvent);
     }
+
     return false;
 }
 
@@ -125,9 +129,19 @@ void Platformer::LoadScene(SceneName scene)
 }
 
 
+void Platformer::SetBGMusic(const char* pFirstMusic, const char* pSecondMusic)
+{
+    m_musicComponent.SetBGMusic(pFirstMusic, pSecondMusic);
+}
+
+void Platformer::ToggleMusic()
+{
+    m_musicComponent.ToggleMusic();
+}
+
 void Platformer::Destory()
 {
 
     delete m_pNextState;
-    delete m_pCurrentState;
+
 }

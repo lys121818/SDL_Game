@@ -14,6 +14,7 @@ private:
 	Vector2 m_OwnerSize;
 
 	Vector2 m_currentSize;
+	Vector2 m_currentPosition;
 
 	SDL_Rect* m_OwnerTransform;
 

@@ -3,6 +3,7 @@
 #include "ImageDirectory.h"
 #include "Platformer.h"
 #include "GameDemo.h"
+#include "SoundDirectory.h"
 
 #include <iomanip>
 
@@ -26,7 +27,7 @@ Stage01::~Stage01()
 void Stage01::Enter()
 {
     InitGame();
-
+    m_pOwner->SetBGMusic(GAMEPLAY_SOUND);
 }
 
 void Stage01::Update(double deltaTime)
@@ -133,6 +134,12 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
     {
         switch ((int)pData->keysym.sym)
         {
+            // pasue music
+            case SDLK_p:
+            {
+                m_pOwner->ToggleMusic();
+                break;
+            }
                 // Run
             case SDLK_LSHIFT:
             {
@@ -307,11 +314,13 @@ void Stage01::InitGame()
     objectTransform.x = 100;
     objectTransform.y = 50;
     stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEFEMALE, (size_t)ObjectType::kEnemy, "Zombie_Female");
+    stationary->SetTargetObject(m_pPlayer);
     AddGameObject(stationary);
 
     objectTransform.x = 650; // X
     objectTransform.y = 50; // Y
     stationary = new EnemyObject(objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::kEnemy, "Zombie_Male");
+    stationary->SetTargetObject(m_pPlayer);
     AddGameObject(stationary);
 
     m_pInGameUI = new InGameUI(m_pPlayer, m_pOwner->GetGame()->GetFonts(),m_pOwner->GetGame()->GetRenderer());
@@ -331,6 +340,7 @@ void Stage01::DestoryGameObjects(std::vector<GameObject*> vector)
     {
         delete element;
     }
+    delete m_pInGameUI;
 }
 
 // Add gameobject to vector

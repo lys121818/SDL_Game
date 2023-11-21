@@ -31,6 +31,7 @@ public:
 	// Handles this even in the context of this object
 	virtual void HandleEvent(SDL_Event*) {}
 
+
 	//GETTERS
 	// Return Name of the Texture
 	virtual const char* GetTextureName() { return "UnNamed"; }
@@ -47,4 +48,9 @@ public:
 	// SETTERS
 
 	virtual void SetPosition(Vector2) {}
+
+	virtual void SetTargetObject(GameObject*) {}
+
+private:
+	virtual void AddSound(const char*, const char*) {}
 };

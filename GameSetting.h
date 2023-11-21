@@ -46,6 +46,7 @@
 
 #define ENEMY_ATTACK_POWER	10
 
+#define ENEMY_CHANNEL	5
 
 /* BUTTON */
 // * Transform

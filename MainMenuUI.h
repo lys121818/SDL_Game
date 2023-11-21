@@ -59,6 +59,7 @@ public:
 
 	bool HandleEvent(SDL_Event* pEvent) override;
 
+
 private:
 
 	// PROCESSING EVENT

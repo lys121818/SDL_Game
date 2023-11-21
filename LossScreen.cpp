@@ -23,12 +23,14 @@ void LossScreen::Enter()
 {
 	SetButtons();
 	m_lossImage.SetAction(ImageActionComponent::ActionState::kPoping);
+	m_pOwner->ToggleMusic();
 }
 
 void LossScreen::Update(double deltaTime)
 {
 	if (isOnAction && m_lossImage.GetActionState() == ImageActionComponent::ActionState::kNormal)
 	{
+		m_pOwner->ToggleMusic();
 		isOnAction = false;
 	}
 	// Render when action is done
@@ -173,7 +175,7 @@ bool LossScreen::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 		case SDLK_SPACE:
 		case SDLK_RETURN:
 		{
-			if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < m_vpButtons.capacity())
+			if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < (int)m_vpButtons.capacity())
 			{
 				if (m_vpButtons[m_keyboardButtonIndex]->GetSelected() == true)
 					m_vpButtons[m_keyboardButtonIndex]->Trigger();
@@ -279,7 +281,7 @@ void LossScreen::ChangeButtonFocus(int direction)
 		m_keyboardButtonIndex = 0;
 	}
 	// set to last index if its over size
-	else if (nextDirectionIndex >= m_vpButtons.size())
+	else if (nextDirectionIndex >= (int)m_vpButtons.size())
 	{
 		m_keyboardButtonIndex = (int)(m_vpButtons.size() - 1);
 	}
@@ -290,7 +292,7 @@ void LossScreen::ChangeButtonFocus(int direction)
 
 	// if the button is disable and next index exist
 	if (!m_vpButtons[m_keyboardButtonIndex]->GetAble() &&
-		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < m_vpButtons.size()))
+		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < (int)m_vpButtons.size()))
 	{
 
 		ChangeButtonFocus(direction);

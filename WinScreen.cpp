@@ -2,6 +2,7 @@
 #include "ImageDirectory.h"
 #include "Platformer.h"
 #include "GameDemo.h"
+#include <SDL.h>
 #include <assert.h>
 
 WinScreen::WinScreen(Platformer* pOwner)
@@ -23,12 +24,14 @@ void WinScreen::Enter()
 {
 	SetButtons();
 	m_winImage.SetAction(ImageActionComponent::ActionState::kPoping);
+	m_pOwner->ToggleMusic();
 }
 
 void WinScreen::Update(double deltaTime)
 {
 	if (isOnAction && m_winImage.GetActionState() == ImageActionComponent::ActionState::kNormal)
 	{
+		m_pOwner->ToggleMusic();
 		isOnAction = false;
 	}
 	// Render when action is done
@@ -174,7 +177,7 @@ bool WinScreen::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 		case SDLK_SPACE:
 		case SDLK_RETURN:
 		{
-			if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < m_vpButtons.capacity())
+			if (m_keyboardButtonIndex >= 0 && m_keyboardButtonIndex < (int)m_vpButtons.capacity())
 			{
 				if (m_vpButtons[m_keyboardButtonIndex]->GetSelected() == true)
 					m_vpButtons[m_keyboardButtonIndex]->Trigger();
@@ -218,8 +221,8 @@ void WinScreen::SetButtons()
 		{
 			m_pOwner->LoadScene(Platformer::SceneName::kMainMenu);
 		});
-
-	button->SetTextInButton(font, "MAIN MENU", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
+	SDL_Color color = SDL_Color{ 0,0,0,0 };
+	button->SetTextInButton(font, "MAIN MENU", SDL_Color{ BLUE }, m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
 	// [Restart]
@@ -238,7 +241,7 @@ void WinScreen::SetButtons()
 			m_pOwner->LoadScene(Platformer::SceneName::kGamePlay);
 		});
 
-	button->SetTextInButton(font, "RESTART", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
+	button->SetTextInButton(font, "RESTART", SDL_Color{ BLUE }, m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
 	// [Quit]
@@ -257,7 +260,7 @@ void WinScreen::SetButtons()
 			m_pOwner->GetGame()->Quit();
 		});
 
-	button->SetTextInButton(font, "Q U I T", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
+	button->SetTextInButton(font, "Q U I T", SDL_Color{BLUE}, m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
 
@@ -282,7 +285,7 @@ void WinScreen::ChangeButtonFocus(int direction)
 		m_keyboardButtonIndex = 0;
 	}
 	// set to last index if its over size
-	else if (nextDirectionIndex >= m_vpButtons.size())
+	else if (nextDirectionIndex >= (int)m_vpButtons.size())
 	{
 		m_keyboardButtonIndex = (int)(m_vpButtons.size() - 1);
 	}
@@ -293,7 +296,7 @@ void WinScreen::ChangeButtonFocus(int direction)
 
 	// if the button is disable and next index exist
 	if (!m_vpButtons[m_keyboardButtonIndex]->GetAble() &&
-		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < m_vpButtons.size()))
+		(m_keyboardButtonIndex + direction >= 0 && m_keyboardButtonIndex + direction < (int)m_vpButtons.size()))
 	{
 
 		ChangeButtonFocus(direction);
