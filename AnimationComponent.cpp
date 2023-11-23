@@ -2,7 +2,7 @@
 #include "SDL_image.h"
 #include <iostream>
 
-AnimationComponent::AnimationComponent(const char* pSpriteSheetPath, double frameRate, int frameWidth, int frameHeight, SDL_Rect* transform)
+AnimationComponent::AnimationComponent(const char* pSpriteSheetPath, double frameRate, SDL_Rect* transform)
 	: 
 	m_kFrameRate(frameRate),
 	m_transform(transform)
@@ -15,11 +15,8 @@ AnimationComponent::AnimationComponent(const char* pSpriteSheetPath, double fram
 	m_sourceTransform.y = m_transform->y;
 
 	// Size
-	m_sourceTransform.w = frameWidth;
-	m_sourceTransform.h = frameHeight;
-
-	// Calculate the number of colums.
-	m_numSpriteSheetColums = IMG_Load(pSpriteSheetPath)->w / frameWidth;
+	m_sourceTransform.w = m_transform->w;
+	m_sourceTransform.h = m_transform->h;
 
 	// Reset on build
 	ResetFrameTime();
@@ -29,10 +26,10 @@ AnimationComponent::~AnimationComponent()
 {
 }
 
-void AnimationComponent::AddAnimationSequence(std::string name, int firstFrame, int lastFrame)
+void AnimationComponent::AddAnimationSequence(std::string name, Vector2<int> size)
 {
 	// Create animation sequence.
-	m_allAnimations[name] = AnimationSequence{ name, firstFrame,lastFrame };
+	m_allAnimations[name] = AnimationSequence{ name, size};
 }
 
 void AnimationComponent::PlayAnimation(std::string sequenceName)
@@ -44,11 +41,7 @@ void AnimationComponent::PlayAnimation(std::string sequenceName)
 		return;
 	}
 
-	// Access the sequence with this name and set its first frame.
-	AnimationSequence& newSequence = m_allAnimations[sequenceName];
-
-	m_currentFrame = newSequence.m_firstFrame;
-
+	m_currentFrame = 0;
 
 	// Update current sequence name, frame time, and source transform.
 	m_currentSequenceName = sequenceName;
@@ -67,17 +60,18 @@ void AnimationComponent::ResetFrameTime()
 void AnimationComponent::UpdateSourceTransform()
 {
 	//  Calculate Position of source transform from the sprite sheet
-	int frameX = m_currentFrame % m_numSpriteSheetColums;
-	int frameY = m_currentFrame / m_numSpriteSheetColums;
+	Vector2<int> colAndRows = m_allAnimations[m_currentSequenceName].m_colRows;
+	Vector2<int> size = m_allAnimations[m_currentSequenceName].m_size;
 
-	m_sourceTransform.x = frameX * m_sourceTransform.w;
-	m_sourceTransform.y = frameY * m_sourceTransform.h;
-
-
+	// set rect animation to load
+	m_sourceTransform.x = colAndRows.m_x * size.m_x;
+	m_sourceTransform.y = colAndRows.m_y * size.m_y;
 }
 
 void AnimationComponent::Update(double deltaTime)
 {
+	// TODO: Working on animation 
+	
 
 	// See if an animation is playing.
 	if (m_currentFrame == -1)

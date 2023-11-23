@@ -11,10 +11,10 @@ public:
 		kPoping
 	}m_actionState;
 private:
-	Vector2 m_OwnerSize;
+	Vector2<double> m_OwnerSize;
 
-	Vector2 m_currentSize;
-	Vector2 m_currentPosition;
+	Vector2<double> m_currentSize;
+	Vector2<double> m_currentPosition;
 
 	SDL_Rect* m_OwnerTransform;
 

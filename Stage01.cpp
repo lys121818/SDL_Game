@@ -157,7 +157,7 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Move Right
             case SDLK_RIGHT:
             {
-                m_pPlayer->TryMove(Vector2{ RIGHT });
+                m_pPlayer->TryMove(Vector2<int>{ RIGHT });
                 break;
             }
 
@@ -193,13 +193,13 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // Stop Moving Left
             case SDLK_LEFT:
             {
-                m_pPlayer->TryMove(Vector2{ STOPLEFT });
+                m_pPlayer->TryMove(Vector2<int>{ STOPLEFT });
                 break;
             }
             // Stop Moving Right
             case SDLK_RIGHT:
             {
-                m_pPlayer->TryMove(Vector2{ STOPRIGHT });
+                m_pPlayer->TryMove(Vector2<int>{ STOPRIGHT });
                 break;
             }
         default:
@@ -278,8 +278,8 @@ void Stage01::InitGame()
 
     /// GAMEOBJECT
 
-    Vector2 position;
-    Vector2 size;
+    Vector2<double> position;
+    Vector2<double> size;
 
     position.m_x = 0;
     position.m_y = 0;

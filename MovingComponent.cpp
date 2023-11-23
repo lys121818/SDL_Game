@@ -1,7 +1,7 @@
 #include "MovingComponent.h"
 #include "ColliderComponent.h"
 
-MovingComponent::MovingComponent(SDL_Rect* transform, Vector2 position, ColliderComponent* objectCollider)
+MovingComponent::MovingComponent(SDL_Rect* transform, Vector2<double> position, ColliderComponent* objectCollider)
 	:m_transform(transform),
 	 m_objectCollider(objectCollider),
 	 m_position(position)
@@ -13,7 +13,7 @@ MovingComponent::~MovingComponent()
 
 }
 
-bool MovingComponent::TryMove(double deltaTime, double speed, Vector2 direction)
+bool MovingComponent::TryMove(double deltaTime, double speed, Vector2<int> direction)
 {
 
 	// Amount of position its moving
@@ -23,7 +23,7 @@ bool MovingComponent::TryMove(double deltaTime, double speed, Vector2 direction)
 	bool isAble = false;
 
 	// Direction of position its moving
-	Vector2 deltaDirection
+	Vector2<double> deltaDirection
 	{
 		deltaPosition * direction.m_x, // Move Horizontal
 		deltaPosition * direction.m_y  // Move Vertical

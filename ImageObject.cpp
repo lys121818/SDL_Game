@@ -5,18 +5,18 @@
 #include "ImageDirectory.h"
 
 
-ImageObject::ImageObject(Vector2 position, Vector2 size, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name)
+ImageObject::ImageObject(Vector2<double> position, Vector2<double> size, CollisionReferee* pReferee, const char* directory, const int index, size_t type, const char* name)
 	:
 	m_transform(SDL_Rect{ (int)position.m_x, (int)position.m_y, (int)size.m_x, (int)size.m_y }),
 	m_pSpriteName(directory),
 	m_imageComponent(directory, &m_transform),
 	m_collider(this, m_transform, pReferee),
-	m_movingComponent(&m_transform, Vector2(m_transform.x, m_transform.y)),
+	m_movingComponent(&m_transform, Vector2<double>(m_transform.x, m_transform.y)),
 	m_imageAction(&m_transform)
 {
 	m_status.m_type = type;
 	m_status.m_name = name;
-	m_status.m_direction = Vector2{ 0.0,0.0 };
+	m_status.m_direction = Vector2<int>{ 0,0 };
 	m_status.m_speed = 0;
 
 	SetImage(index);
@@ -42,13 +42,13 @@ void ImageObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 	m_imageComponent.Render(pRenderer, pTexture);
 }
 
-void ImageObject::TryMove(const Vector2& direction, const int& speed)
+void ImageObject::TryMove(const Vector2<int>& direction, const int& speed)
 {
 	m_status.m_direction = direction;
 	m_status.m_speed = speed;
 }
 
-void ImageObject::SetPosition(Vector2 position)
+void ImageObject::SetPosition(Vector2<double> position)
 {
 	m_transform.x = (int)position.m_x;
 	m_transform.y = (int)position.m_y;

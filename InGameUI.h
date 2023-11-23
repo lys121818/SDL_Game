@@ -14,8 +14,8 @@ class Textures;
 
 class InGameUI : UIInterface
 {
-	static constexpr Vector2 s_kMaxHealthBarPosition = { HEALTHBAR_POSITION };
-	static constexpr Vector2 s_kMaxHealthBarSize = { HEALTBARH_SIZE_VECTOR2 };
+	static constexpr Vector2<double> s_kMaxHealthBarPosition = { HEALTHBAR_POSITION };
+	static constexpr Vector2<double> s_kMaxHealthBarSize = { HEALTBARH_SIZE_VECTOR2 };
 private:
 	GameObject* m_pPlayer;
 

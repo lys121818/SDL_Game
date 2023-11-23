@@ -69,7 +69,7 @@ public:
 
 	void SetCallback(std::function<void()> callback) { m_callback = callback; }
 
-	void SetPosition(Vector2 position) { m_transform.x = (int)position.m_x; 
+	void SetPosition(Vector2<double> position) { m_transform.x = (int)position.m_x;
 										 m_transform.y = (int)position.m_y; }
 
 	// Executes the callback

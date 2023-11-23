@@ -19,15 +19,15 @@ private:
 	SDL_Rect* m_transform;
 
 	// Position to check if the move is valid
-	Vector2 m_position;
+	Vector2<double> m_position;
 
 
 public:
-	MovingComponent(SDL_Rect* transform, Vector2 position, ColliderComponent* objectCollider = nullptr);
+	MovingComponent(SDL_Rect* transform, Vector2<double> position, ColliderComponent* objectCollider = nullptr);
 	~MovingComponent();
 
-	bool TryMove(double deltaTime, double speed, Vector2 direction);
-	void SetPosition(Vector2 position) { m_position = position; }
+	bool TryMove(double deltaTime, double speed, Vector2<int> direction);
+	void SetPosition(Vector2<double> position) { m_position = position; }
 private:
 };
 

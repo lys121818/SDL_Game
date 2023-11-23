@@ -7,8 +7,8 @@
 CreditsScene::CreditsScene(Platformer* pOwner)
 	:
 	m_pOwner(pOwner),
-	m_background_1(Vector2{ 0,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
-	m_background_2(Vector2{ WINDOWWIDTH,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
+	m_background_1(Vector2<double>{ 0,0 }, Vector2<double>{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
+	m_background_2(Vector2<double>{ WINDOWWIDTH,0 }, Vector2<double>{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
 	m_skipInfo_1(nullptr),
 	m_skipInfo_2(nullptr)
 {
@@ -115,7 +115,7 @@ void CreditsScene::InitCreditScene()
 	font = m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL);
 
 	m_skipInfo_1 = new TextObject(
-		Vector2{ (WINDOWWIDTH - 120),(WINDOWHEIGHT - 50) },
+		Vector2<double>{ (WINDOWWIDTH - 120),(WINDOWHEIGHT - 50) },
 		font,
 		color,
 		m_pOwner->GetGame()->GetRenderer()
@@ -125,7 +125,7 @@ void CreditsScene::InitCreditScene()
 
 	// B
 	m_skipInfo_2 = new TextObject(
-		Vector2{ (WINDOWWIDTH - 120),(WINDOWHEIGHT - 30) },
+		Vector2<double>{ (WINDOWWIDTH - 120),(WINDOWHEIGHT - 30) },
 		font,
 		color,
 		m_pOwner->GetGame()->GetRenderer()
@@ -149,26 +149,26 @@ void CreditsScene::InitCreditScene()
 	text->SetText("[PLATFORMER]");
 
 	// Direction to move
-	text->TryMove(Vector2{ UP });
+	text->TryMove(Vector2<int>{ UP });
 
 	// Add to vector
 	m_vpCreditsText.push_back(text);
 
 	// [CREDITS]
-	text = new TextObject(Vector2{ s_kStartingPosition.m_x,s_kStartingPosition.m_y + 100 }, font, color, pRenderer);
+	text = new TextObject(Vector2<double>( s_kStartingPosition.m_x,s_kStartingPosition.m_y + 100 ), font, color, pRenderer);
 
 	text->SetText("Programmed by: " CREATOR);
 
-	text->TryMove(Vector2{ UP });
+	text->TryMove(Vector2<int>{ UP });
 	
 	m_vpCreditsText.push_back(text);
 
 
-	text = new TextObject(Vector2{ s_kStartingPosition.m_x,s_kStartingPosition.m_y + 200 }, font, color, pRenderer);
+	text = new TextObject(Vector2<double>( s_kStartingPosition.m_x,s_kStartingPosition.m_y + 200 ), font, color, pRenderer);
 
 	text->SetText("Thank You!");
 
-	text->TryMove(Vector2{ UP });
+	text->TryMove(Vector2<int>{ UP });
 
 	m_vpCreditsText.push_back(text);
 
@@ -228,11 +228,11 @@ void CreditsScene::UpdateBackgrounds(double deltaTime)
 	// Change position to loop
 	if (m_background_1.GetTransform().x <= -WINDOWWIDTH)
 	{
-		m_background_1.SetPosition(Vector2{ WINDOWWIDTH ,0.0 });
+		m_background_1.SetPosition(Vector2<double>{ WINDOWWIDTH ,0.0 });
 	}
 	else if (m_background_2.GetTransform().x <= -WINDOWWIDTH)
 	{
-		m_background_2.SetPosition(Vector2{ WINDOWWIDTH ,0.0 });
+		m_background_2.SetPosition(Vector2<double>{ WINDOWWIDTH ,0.0 });
 	}
 }
 

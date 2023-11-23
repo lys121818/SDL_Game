@@ -26,7 +26,7 @@ public:
 
 	virtual void OnOverlapEnd() {}
 
-	virtual void TryMove(Vector2) {}
+	virtual void TryMove(Vector2<int>) {}
 
 	// Handles this even in the context of this object
 	virtual void HandleEvent(SDL_Event*) {}
@@ -47,7 +47,7 @@ public:
 
 	// SETTERS
 
-	virtual void SetPosition(Vector2) {}
+	virtual void SetPosition(Vector2<double>) {}
 
 	virtual void SetTargetObject(GameObject*) {}
 

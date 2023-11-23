@@ -9,7 +9,7 @@ class Platformer;
 
 class CreditsScene : public GameState
 {
-	static constexpr Vector2 s_kStartingPosition = Vector2{ (WINDOWWIDTH / 2), (WINDOWHEIGHT + 100) };
+	static constexpr Vector2<double> s_kStartingPosition = Vector2<double>{ (WINDOWWIDTH / 2), (WINDOWHEIGHT + 100) };
 private:
 	Platformer* m_pOwner;
 

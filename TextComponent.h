@@ -26,7 +26,7 @@ private:
 	SDL_Texture* m_pTexture;
 
 	// Size of the text using font
-	Vector2 m_textSize;
+	Vector2<int> m_textSize;
 
 
 public:

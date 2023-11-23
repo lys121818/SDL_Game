@@ -23,7 +23,7 @@ private:
 	// Poisition and dimensions.
 	SDL_Rect m_transform;
 
-	Vector2 m_position;
+	Vector2<double> m_position;
 
 	// Pointer to referee for registering and collision checking.
 	CollisionReferee* m_pReferee;
@@ -43,14 +43,14 @@ public:
 	SDL_Rect GetTransform() { return m_transform; }
 
 	// Updates position.
-	void SetPosition(Vector2 newPosition);
+	void SetPosition(Vector2<double> newPosition);
 
 	// Updates size
-	void SetSize(Vector2 newSize);
+	void SetSize(Vector2<double> newSize);
 
 	// Attempts to move by the given amount.
 	// Return whether the collision was successful.
-	bool TryMove(Vector2 deltaPosition);
+	bool TryMove(Vector2<double> deltaPosition);
 
 	// Check for collision Check
 	bool CollisionCheck(ColliderComponent* collider);

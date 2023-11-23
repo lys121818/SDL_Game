@@ -32,7 +32,7 @@ class ImageObject : public GameObject
 	ImageActionComponent m_imageAction;
 
 public:
-	ImageObject(Vector2 position, Vector2 size, CollisionReferee* pReferee, const char* directory, const int index = 0, size_t type = 0, const char* name = "UnNamed");
+	ImageObject(Vector2<double> position, Vector2<double> size, CollisionReferee* pReferee, const char* directory, const int index = 0, size_t type = 0, const char* name = "UnNamed");
 	~ImageObject();
 
 
@@ -44,7 +44,7 @@ public:
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 	// Move to the direction
-	void TryMove(const Vector2& direction,const int& speed = s_kSpeed);
+	void TryMove(const Vector2<int>& direction,const int& speed = s_kSpeed);
 
 	// GETTERS
 	SDL_Rect GetTransform() override { return m_transform; }
@@ -59,7 +59,7 @@ public:
 	ImageActionComponent::ActionState GetActionState() { return m_imageAction.m_actionState; }
 
 	// SETTERS
-	virtual void SetPosition(Vector2 position) override;
+	virtual void SetPosition(Vector2<double> position) override;
 
 	void SetTransform(SDL_Rect transform) { m_transform = transform; }
 

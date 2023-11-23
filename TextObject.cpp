@@ -1,6 +1,6 @@
 #include "TextObject.h"
 
-TextObject::TextObject(Vector2 position, TTF_Font* pFont, SDL_Color color, SDL_Renderer* pRenderer)
+TextObject::TextObject(Vector2<double> position, TTF_Font* pFont, SDL_Color color, SDL_Renderer* pRenderer)
 	:
 	m_pFont(pFont),
 	m_color(color),
@@ -33,7 +33,7 @@ void TextObject::Render(SDL_Renderer* pRenderer)
 	m_textComponent.Render(pRenderer);
 }
 
-void TextObject::TryMove(Vector2 direction)
+void TextObject::TryMove(Vector2<int> direction)
 {
 	m_status.m_direction = direction;
 }

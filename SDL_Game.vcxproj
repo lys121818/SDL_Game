@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AiStateMachine.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="BackgroundMusicComponent.cpp" />
     <ClCompile Include="ButtonObject.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="WinScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AiStateMachine.h" />
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="BackgroundMusicComponent.h" />
     <ClInclude Include="ButtonObject.h" />
@@ -81,6 +83,7 @@
     <ClInclude Include="SoundDirectory.h" />
     <ClInclude Include="SoundTest.h" />
     <ClInclude Include="Stage01.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="TextComponent.h" />
     <ClInclude Include="TextObject.h" />

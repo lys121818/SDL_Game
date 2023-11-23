@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <string>
 #include <map>
+#include "Vector2.h"
 
 //==================================================================================================//
 /// ANIMATION COMPONENT
@@ -18,16 +19,13 @@ private:
 	{
 	public:
 		std::string m_name;
-		int m_firstFrame;
-		int m_lastFrame;
+		Vector2<int> m_size{0,0};
+		Vector2<int> m_colRows;
 	};
 
 private:
 	// Speed of the animation play
 	const double m_kFrameRate;	
-
-	// Frames in a single row
-	int m_numSpriteSheetColums;
 
 	// Object's location on screen
 	SDL_Rect* m_transform;		
@@ -47,7 +45,6 @@ public:
 	AnimationComponent(
 		const char* pSpriteSheetPath,	// Location of the Sprite Sheet
 		double frameRate, 
-		int frameWidth, int frameHeight,
 		SDL_Rect* transform				// GameObject's Transform information
 	);
 	~AnimationComponent();
@@ -56,7 +53,7 @@ public:
 
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture, bool isRight);
 
-	void AddAnimationSequence(std::string name, int firstFrame, int lastFrame);
+	void AddAnimationSequence(std::string name, Vector2<int> size);
 
 	void PlayAnimation(std::string sequenceName);
 

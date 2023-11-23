@@ -29,7 +29,7 @@ private:
 
 
 public:
-	TextObject(Vector2 position, TTF_Font* pFont, SDL_Color color, SDL_Renderer* pRenderer);
+	TextObject(Vector2<double> position, TTF_Font* pFont, SDL_Color color, SDL_Renderer* pRenderer);
 	~TextObject();
 
 
@@ -37,7 +37,7 @@ public:
 
 	void Render(SDL_Renderer* pRenderer);
 
-	virtual void TryMove(Vector2 direction) override;
+	virtual void TryMove(Vector2<int> direction) override;
 
 	void SetText(const char* pText);
 

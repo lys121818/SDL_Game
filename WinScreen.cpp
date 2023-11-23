@@ -8,9 +8,9 @@
 WinScreen::WinScreen(Platformer* pOwner)
 	:
 	m_pOwner(pOwner),
-	m_Background(Vector2{ 0,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
+	m_Background(Vector2<double>{ 0,0 }, Vector2<double>{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND),
 	m_pHoverButton(nullptr),
-	m_winImage(Vector2{ 200,-10 }, Vector2{400,500} , nullptr, WIN_STATE, 0, 0, "Win"),
+	m_winImage(Vector2<double>{ 200,-10 }, Vector2<double>{400,500} , nullptr, WIN_STATE, 0, 0, "Win"),
 	m_keyboardButtonIndex(-1)
 {
 	isOnAction = true;

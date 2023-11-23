@@ -130,7 +130,7 @@ public:
 
 
     // Check if it's able to move
-    virtual void TryMove(Vector2 deltaDirection) override;
+    virtual void TryMove(Vector2<int> deltaDirection) override;
 
     // Get this Object's Status
     virtual Status GetStatus() override { return m_status; }

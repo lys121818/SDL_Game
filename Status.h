@@ -15,7 +15,7 @@ struct Status
 
 	// Current direction.x movement. -1 for left, 1for right.
 	// Current direction.y movement. -1 for down, 1 for up.
-	Vector2 m_direction = Vector2{ 0.0,0.0 };
+	Vector2<int> m_direction = Vector2<int>{ 0,0 };
 
 	// Game Object Status
 	int m_health = 0;

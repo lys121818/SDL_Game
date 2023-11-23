@@ -44,11 +44,11 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 
 	/// ANIMATION
 	// Animation sequence
-	m_animation.AddAnimationSequence("idle", 0, 9);
-	m_animation.AddAnimationSequence("walk", 10, 19);
-	m_animation.AddAnimationSequence("run", 20, 27);
-	m_animation.AddAnimationSequence("jump", 30, 39);
-	m_animation.AddAnimationSequence("slide", 40, 49);
+	m_animation.AddAnimationSequence("idle", 0, 9,Vector2<int>{200,300});
+	m_animation.AddAnimationSequence("walk", 10, 19, Vector2<int>{200, 300});
+	m_animation.AddAnimationSequence("run", 20, 27, Vector2<int>{200, 300});
+	m_animation.AddAnimationSequence("jump", 30, 39, Vector2<int>{200, 300});
+	m_animation.AddAnimationSequence("slide", 40, 49, Vector2<int>{200, 300});
 
 	// Animation Default setting
 	m_currentState = AnimationState::kIdle;
@@ -338,7 +338,7 @@ void PlayerObject::UpdateGameEvent(double deltaTime)
 }
 
 // Move to the direction
-void PlayerObject::TryMove(Vector2 deltaDirection)
+void PlayerObject::TryMove(Vector2<int> deltaDirection)
 {
 	m_status.m_direction.m_x += deltaDirection.m_x;
 	m_status.m_direction.m_y += deltaDirection.m_y;

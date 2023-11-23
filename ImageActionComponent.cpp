@@ -7,9 +7,9 @@ ImageActionComponent::ImageActionComponent(SDL_Rect* transform)
 	:
 	m_OwnerTransform(transform)
 {
-	m_OwnerSize = Vector2{ (double)transform->w,(double)transform->h };
-	m_currentSize = Vector2{ 0,0 };
-	m_currentPosition = Vector2{ 0,0 };
+	m_OwnerSize = Vector2<double>{ (double)transform->w,(double)transform->h };
+	m_currentSize = Vector2<double>{ 0.0,0.0 };
+	m_currentPosition = Vector2<double>{ 0.0,0.0 };
 	m_actionState = ActionState::kNormal;
 }
 
@@ -34,7 +34,7 @@ void ImageActionComponent::SetAction(ActionState action)
 	{
 		m_actionState = ActionState::kPoping;
 
-		Vector2 StartPosition;
+		Vector2<double> StartPosition;
 
 		StartPosition.m_x = (int) (m_OwnerTransform->x + (m_OwnerSize.m_x / 2));
 		StartPosition.m_y = (int) (m_OwnerTransform->y + (m_OwnerSize.m_y / 2));
@@ -44,7 +44,7 @@ void ImageActionComponent::SetAction(ActionState action)
 		m_OwnerTransform->y = (int)StartPosition.m_y;
 
 		// Set size to 0
-		m_currentSize = Vector2{ 0,0 };
+		m_currentSize = Vector2<double>{ 0.0,0.0 };
 		m_currentPosition = StartPosition;
 
 		m_OwnerTransform->w = 0;
@@ -70,7 +70,7 @@ void ImageActionComponent::UpdateImageAction(double deltaTime)
 		}
 		case ActionState::kPoping:
 		{
-			Vector2 deltaSize;
+			Vector2<double> deltaSize;
 
 			deltaSize.m_x = (m_OwnerSize.m_x / 2) * deltaTime;
 			deltaSize.m_y = (m_OwnerSize.m_y / 2) * deltaTime;

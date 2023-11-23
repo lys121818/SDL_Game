@@ -76,7 +76,7 @@ void TiledMap::LoadTiledMapFromTxt(size_t* map)
 void TiledMap::TileSettings(CollisionReferee* pReferee)
 {
     // Set Background tiles
-    Vector2 tilePosition{0.0,0.0};
+    Vector2<double> tilePosition{0.0,0.0};
 
     if constexpr (WINDOWWIDTH % s_kBackgroundWidth != 0)
         ++m_maxTiles.m_x;   // add extra if it's short
@@ -108,8 +108,8 @@ void TiledMap::TileSettings(CollisionReferee* pReferee)
         {
             size_t currentLocation = (static_cast<size_t>(y) * m_maxTiles.m_x) + x;
             /// TRANSFORM
-            Vector2 position;
-            Vector2 size;
+            Vector2<double> position;
+            Vector2<double> size;
 
             // Position
             position.m_x = x * s_kBackgroundWidth;

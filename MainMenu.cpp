@@ -14,8 +14,8 @@
 MainMenu::MainMenu(Platformer* pOwner)
 	:
 	m_pOwner(pOwner),
-	m_background_1(Vector2{ 0,0 }, Vector2{WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
-	m_background_2(Vector2{ WINDOWWIDTH,0 }, Vector2{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
+	m_background_1(Vector2<double>{ 0,0 }, Vector2<double>{WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
+	m_background_2(Vector2<double>{ WINDOWWIDTH,0 }, Vector2<double>{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
 	m_pHoverButton(nullptr),
 	m_keyboardButtonIndex(-1),
 	m_pMainMenuUI(nullptr),
@@ -31,8 +31,8 @@ MainMenu::~MainMenu()
 void MainMenu::Enter()
 {
 	// Background Setups
-	m_background_1.TryMove(Vector2(LEFT), BACKGROUND_MOVE_SPEED);
-	m_background_2.TryMove(Vector2(LEFT), BACKGROUND_MOVE_SPEED);
+	m_background_1.TryMove(Vector2<int>(LEFT), BACKGROUND_MOVE_SPEED);
+	m_background_2.TryMove(Vector2<int>(LEFT), BACKGROUND_MOVE_SPEED);
 
 	// Set button objects
 	SetButtons();
@@ -343,11 +343,11 @@ void MainMenu::BackgroundUpdates(double deltaTime)
 
 	if (m_background_1.GetTransform().x <= -WINDOWWIDTH)
 	{
-		m_background_1.SetPosition(Vector2{ WINDOWWIDTH ,0.0 });
+		m_background_1.SetPosition(Vector2<double>{ WINDOWWIDTH ,0.0 });
 	}
 	else if (m_background_2.GetTransform().x <= -WINDOWWIDTH)
 	{
-		m_background_2.SetPosition(Vector2{ WINDOWWIDTH ,0.0 });
+		m_background_2.SetPosition(Vector2<double>{ WINDOWWIDTH ,0.0 });
 	}
 }
 

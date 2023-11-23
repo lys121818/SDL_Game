@@ -28,21 +28,21 @@ ColliderComponent::~ColliderComponent()
 }
 
 // Change position of Collider
-void ColliderComponent::SetPosition(Vector2 newPosition)
+void ColliderComponent::SetPosition(Vector2<double> newPosition)
 {
 	m_transform.x = (int)newPosition.m_x;
 	m_transform.y = (int)newPosition.m_y;
 }
 
 // Change Size of the Collider
-void ColliderComponent::SetSize(Vector2 newSize)
+void ColliderComponent::SetSize(Vector2<double> newSize)
 {
 	m_transform.w = (int)newSize.m_x;
 	m_transform.h = (int)newSize.m_y;
 }
 
 // Check if move is valid
-bool ColliderComponent::TryMove(Vector2 deltaPosition)
+bool ColliderComponent::TryMove(Vector2<double> deltaPosition)
 {
 
 	// Make sure there's referee assigned

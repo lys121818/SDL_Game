@@ -341,13 +341,13 @@ void MainMenuUI::TextBoxSettings()
 	m_vpButtons.push_back(newButton);
 
 	// [User Input]
-	m_pTextImage = new TextObject(Vector2{ WINDOWWIDTH / 2,WINDOWHEIGHT / 2}, font, SDL_Color{ BLACK }, m_pRenderer);
+	m_pTextImage = new TextObject(Vector2<double>{ WINDOWWIDTH / 2,WINDOWHEIGHT / 2}, font, SDL_Color{ BLACK }, m_pRenderer);
 
 	// [Box]
 	m_pTextBox = new ImageObject
 	(
-		Vector2{ (WINDOWWIDTH / 2) - 165,(WINDOWHEIGHT / 2) - 30 },
-		Vector2{ 330,60 },
+		Vector2<double>{ (WINDOWWIDTH / 2) - 165,(WINDOWHEIGHT / 2) - 30 },
+		Vector2<double>{ 330,60 },
 		nullptr,
 		TEXT_BAR
 	);
@@ -355,7 +355,7 @@ void MainMenuUI::TextBoxSettings()
 	// [Instruction]
 	m_pInfoText = new TextObject
 	(
-		Vector2{ (WINDOWWIDTH / 2),(WINDOWHEIGHT / 2) - 50 },
+		Vector2<double>{ (WINDOWWIDTH / 2),(WINDOWHEIGHT / 2) - 50 },
 		font, SDL_Color{ BLACK },
 		m_pRenderer
 	);
@@ -384,7 +384,7 @@ void MainMenuUI::CreateMode()
 	m_vpButtons[0]->SetAble(false);
 
 	// Set position
-	m_vpButtons[0]->SetPosition(Vector2{ (int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2), (int)(WINDOWHEIGHT / 2) + 100 });
+	m_vpButtons[0]->SetPosition(Vector2<double>{ (WINDOWWIDTH / 2) - (BUTTON_WIDTH / 2), (WINDOWHEIGHT / 2) + 100 });
 
 	// Set Text
 	m_vpButtons[0]->SetTextInButton(m_pFont->GetFont(FONT2), "ACCEPT", SDL_Color{BLACK}, m_pRenderer);
@@ -415,7 +415,7 @@ void MainMenuUI::SelectMode()
 	m_vpButtons[0]->SetAble(true);
 
 	// Set position
-	m_vpButtons[0]->SetPosition(Vector2{ (int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2) - 150, (int)(WINDOWHEIGHT / 2) + 100 });
+	m_vpButtons[0]->SetPosition(Vector2<double>{ (WINDOWWIDTH / 2) - (BUTTON_WIDTH / 2) - 150, (WINDOWHEIGHT / 2) + 100 });
 
 	// Set Text
 	m_vpButtons[0]->SetTextInButton(m_pFont->GetFont(FONT2), "YES", SDL_Color{ BLACK }, m_pRenderer);
@@ -437,7 +437,7 @@ void MainMenuUI::SelectMode()
 	m_vpButtons[1]->SetAble(true);
 
 	// Set position
-	m_vpButtons[1]->SetPosition(Vector2{ (int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2) + 150, (int)(WINDOWHEIGHT / 2) + 100 });
+	m_vpButtons[1]->SetPosition(Vector2<double>{ (WINDOWWIDTH / 2) - (BUTTON_WIDTH / 2) + 150, (WINDOWHEIGHT / 2) + 100 });
 
 	// Set Text
 	m_vpButtons[1]->SetTextInButton(m_pFont->GetFont(FONT2), "NO", SDL_Color{ BLACK }, m_pRenderer);

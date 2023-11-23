@@ -33,9 +33,9 @@ EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const c
 
 	/// ANIMATION
 	// Animation sequence
-	m_animation.AddAnimationSequence("idle", 0, 14);
-	m_animation.AddAnimationSequence("walk", 20, 29);
-	m_animation.AddAnimationSequence("attack", 30, 37);
+	m_animation.AddAnimationSequence("idle", 0, 14,Vector2<int>{200,300});
+	m_animation.AddAnimationSequence("walk", 20, 29, Vector2<int>{200, 300});
+	m_animation.AddAnimationSequence("attack", 30, 37, Vector2<int>{200, 300});
 
 	// Animation Default setting
 	m_currentState = AnimationState::kIdle;
@@ -214,8 +214,8 @@ void EnemyObject::PlaySounds()
 
 void EnemyObject::UpdateDistance()
 {
-	Vector2 targetPosition;
-	Vector2 thisPosition;
+	Vector2<double> targetPosition;
+	Vector2<double> thisPosition;
 
 	targetPosition.m_x = (double)m_pTargetObject->GetTransform().x;
 	targetPosition.m_y = (double)m_pTargetObject->GetTransform().y;
@@ -223,7 +223,7 @@ void EnemyObject::UpdateDistance()
 	thisPosition.m_x = (double)m_transform.x;
 	thisPosition.m_y = (double)m_transform.y;
 
-	m_distanceToPlayer = Vector2::Distance(targetPosition, thisPosition);
+	m_distanceToPlayer = Vector2<double>::Distance(targetPosition, thisPosition);
 
 	// If Player is in distance to hear the sound
 	if (m_distanceToPlayer < s_kMinimumDistanceToHear)
