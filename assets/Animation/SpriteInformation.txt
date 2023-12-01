@@ -1,0 +1,20 @@
+Image Sprites
+- Tiles: 	128 * 128
+- Objects: 	64 * 64
+
+Animation Sprites
+- Pumpkin 	200 * 300
+- ZombieFemale 	200 * 300
+- ZombieMale 	200 * 300
+
+Robotic
+Idle	175 * 300
+Jump	250 * 300
+Run	250 * 300
+Melee
+ Idle	300 * 300
+ Jump	350 * 300
+Shoot
+ Idle	250 * 300
+ Run	250 * 300
+Dead	350 * 300
