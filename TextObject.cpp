@@ -33,7 +33,7 @@ void TextObject::Render(SDL_Renderer* pRenderer)
 	m_textComponent.Render(pRenderer);
 }
 
-void TextObject::TryMove(Vector2<int> direction)
+void TextObject::TryMove(Vector2<double> direction)
 {
 	m_status.m_direction = direction;
 }

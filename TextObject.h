@@ -37,7 +37,7 @@ public:
 
 	void Render(SDL_Renderer* pRenderer);
 
-	virtual void TryMove(Vector2<int> direction) override;
+	virtual void TryMove(Vector2<double> direction) override;
 
 	void SetText(const char* pText);
 

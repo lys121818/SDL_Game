@@ -13,7 +13,7 @@ MovingComponent::~MovingComponent()
 
 }
 
-bool MovingComponent::TryMove(double deltaTime, double speed, Vector2<int> direction)
+bool MovingComponent::TryMove(double deltaTime, double speed, Vector2<double> direction)
 {
 
 	// Amount of position its moving

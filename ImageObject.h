@@ -44,7 +44,7 @@ public:
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture) override;
 
 	// Move to the direction
-	void TryMove(const Vector2<int>& direction,const int& speed = s_kSpeed);
+	void TryMove(const Vector2<double>& direction,const int& speed = s_kSpeed);
 
 	// GETTERS
 	SDL_Rect GetTransform() override { return m_transform; }

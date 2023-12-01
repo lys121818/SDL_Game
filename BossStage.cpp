@@ -1,5 +1,5 @@
-#include "Stage01.h"
-#include "AiStateMachineEnemy.h"
+#include "BossStage.h"
+
 #include "ImageDirectory.h"
 #include "Platformer.h"
 #include "GameDemo.h"
@@ -8,45 +8,39 @@
 
 #include <iomanip>
 
-Stage01::Stage01(Platformer* pOwner)
-    :
-    m_pOwner(pOwner),
-    m_pInGameUI(nullptr),
-    m_pBackground(nullptr),
-    m_pPlayer(nullptr),
-    m_pTiledMap(nullptr)
+BossStage::BossStage(Platformer* pOwner)
+	:
+	m_pOwner(pOwner),
+	m_pInGameUI(nullptr),
+	m_pBackground(nullptr),
+	m_pPlayer(nullptr),
+	m_pTiledMap(nullptr)
 {
-    m_CurrentTime = 0.0;
-
-    // GameObject and Tiles Setting
-}
-
-Stage01::~Stage01()
-{
-}
-
-void Stage01::Enter()
-{
-    InitGame();
-    m_pOwner->SetBGMusic(GAMEPLAY_SOUND);
-}
-
-void Stage01::Update(double deltaTime)
-{
-    // current time
-    m_CurrentTime += deltaTime;
-    if (m_CurrentTime < LOADINGTIME)
-        std::cout << "Game Starts in " << std::setprecision(1) << (LOADINGTIME - m_CurrentTime) << std::endl;
-    else if (m_CurrentTime > LOADINGTIME)
-    {
-        UpdateGamestate(deltaTime);
-        
-    }
+	m_CurrentTime = 0.0;
 
 }
 
-// Rendering any objects in the game.
-void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
+BossStage::~BossStage()
+{
+}
+
+void BossStage::Enter()
+{
+	InitGame();
+}
+
+void BossStage::Update(double deltaTime)
+{
+	m_CurrentTime += deltaTime;
+	if (m_CurrentTime < LOADINGTIME)
+		std::cout << "Game Starts in " << std::setprecision(1) << (LOADINGTIME - m_CurrentTime) << std::endl;
+	else if (m_CurrentTime > LOADINGTIME)
+	{
+		UpdateGamestate(deltaTime);
+	}
+}
+
+void BossStage::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 {
     m_pBackground->Render(pRenderer, pTextures->GetTexture(m_pBackground->GetTextureName()));
 
@@ -70,9 +64,13 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
         for (auto& bullet : m_vpBullets)
         {
-            bullet->Render(pRenderer,pTextures->GetTexture(bullet->GetTextureName()));
+            bullet->Render(pRenderer, pTextures->GetTexture(bullet->GetTextureName()));
         }
 
+        for (auto& bullet : m_vpBossBullets)
+        {
+            bullet->Render(pRenderer, pTextures->GetTexture(bullet->GetTextureName()));
+        }
         // Render Tiles
         m_pTiledMap->Render(pRenderer, pTextures);
 
@@ -82,17 +80,16 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
         // Render UI
         m_pInGameUI->Render(pRenderer, pTextures);
     }
-    
 
 }
 
-bool Stage01::HandleEvent(SDL_Event* pEvent)
+bool BossStage::HandleEvent(SDL_Event* pEvent)
 {
-    // Check if the game is over
-
-    switch ((int)pEvent->type)
+    if (m_CurrentTime > LOADINGTIME)
     {
-        // KeyBoard Event
+        switch ((int)pEvent->type)
+        {
+            // KeyBoard Event
         case SDL_KEYDOWN:
         case SDL_KEYUP:
         {
@@ -104,17 +101,6 @@ bool Stage01::HandleEvent(SDL_Event* pEvent)
             }
             break;
         }
-
-        // Mouse Event
-        // Quit when true returns
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-        {
-            if (ProcessMouseEvent(&pEvent->button) == true)
-                return true;
-            break;
-        }
-
         // Window Event
         case SDL_WINDOWEVENT:
         {
@@ -122,67 +108,67 @@ bool Stage01::HandleEvent(SDL_Event* pEvent)
                 return true;
             break;
         }
-    default:
-        break;
+        default:
+            break;
+        }
     }
 
-	return false;
+    return false;
 }
 
 
-// Every events using keyboards works here
-bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
+bool BossStage::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
 {
     if ((int)pData->state == 1 && (int)pData->repeat == 0)   // Key Press, ignore repeat keys
     {
         switch ((int)pData->keysym.sym)
         {
-            case SDLK_x:
-            {
-                SpawnBullets();
-                break;
-            }
-            // pasue
-            case SDLK_p:
-            {
-                break;
-            }
-                // Run
-            case SDLK_LSHIFT:
-            {
-                m_pPlayer->SprintSpeed();
-                break;
-            }
+        case SDLK_x:
+        {
+            SpawnBullets();
+            break;
+        }
+        // pasue
+        case SDLK_p:
+        {
+            break;
+        }
+        // Run
+        case SDLK_LSHIFT:
+        {
+            m_pPlayer->SprintSpeed();
+            break;
+        }
 
-            // Move Left
-            case SDLK_LEFT:
-            {
-                m_pPlayer->TryMove(Vector2{ LEFT });
-                break;
-            }
+        // Move Left
+        case SDLK_LEFT:
+        {
+            m_pPlayer->TryMove(Vector2<double>{ LEFT });
+            break;
+        }
 
-            // Move Right
-            case SDLK_RIGHT:
-            {
-                m_pPlayer->TryMove(Vector2<double>{ RIGHT });
-                break;
-            }
+        // Move Right
+        case SDLK_RIGHT:
+        {
+            m_pPlayer->TryMove(Vector2<double>{ RIGHT });
+            break;
+        }
 
 
-            // Jumping
-            case SDLK_SPACE:
-            {
-                m_pPlayer->SetJump();
-                break;
-            }
+        // Jumping
+        case SDLK_SPACE:
+        {
+            m_pPlayer->SetJump();
+            break;
+        }
 
-            // Quit
-            case SDLK_q:
-            {
-                if (pData->keysym.mod & KMOD_LCTRL)
-                    return true;
-                break;
-            }
+        // Quit
+        case SDLK_q:
+        {
+            if (pData->keysym.mod & KMOD_LCTRL)
+                return true;
+            break;
+        }
         default:
             break;
         }
@@ -191,59 +177,22 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
     {
         switch ((int)pData->keysym.sym)
         {
-                // Stop Run
-            case SDLK_LSHIFT:
-            {
-                m_pPlayer->NormalSpeed();
-                break;
-            }
-            // Stop Moving Left
-            case SDLK_LEFT:
-            {
-                m_pPlayer->TryMove(Vector2<double>{ STOPLEFT });
-                break;
-            }
-            // Stop Moving Right
-            case SDLK_RIGHT:
-            {
-                m_pPlayer->TryMove(Vector2<double>{ STOPRIGHT });
-                break;
-            }
-        default:
+            // Stop Run
+        case SDLK_LSHIFT:
+        {
+            m_pPlayer->NormalSpeed();
             break;
         }
-    }
-    return false;
-}
-// Every events using mouse works here
-bool Stage01::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
-{
-    if ((int)pData->type == SDL_MOUSEBUTTONDOWN)
-    {
-        switch ((int)pData->button)
+        // Stop Moving Left
+        case SDLK_LEFT:
         {
-        case SDL_BUTTON_LEFT:
-        {
+            m_pPlayer->TryMove(Vector2<double>{ STOPLEFT });
             break;
         }
-        case SDL_BUTTON_RIGHT:
+        // Stop Moving Right
+        case SDLK_RIGHT:
         {
-            break;
-        }
-        default:
-            break;
-        }
-    }
-    else if ((int)pData->type == SDL_MOUSEBUTTONUP)
-    {
-        switch ((int)pData->button)
-        {
-        case SDL_BUTTON_LEFT:
-        {
-            break;
-        }
-        case SDL_BUTTON_RIGHT:
-        {
+            m_pPlayer->TryMove(Vector2<double>{ STOPRIGHT });
             break;
         }
         default:
@@ -252,8 +201,8 @@ bool Stage01::ProcessMouseEvent(SDL_MouseButtonEvent* pData)
     }
     return false;
 }
-// Every events using Window works here
-bool Stage01::ProcessWindowEvent(SDL_WindowEvent* pData)
+
+bool BossStage::ProcessWindowEvent(SDL_WindowEvent* pData)
 {
     switch ((int)pData->event)
     {
@@ -267,21 +216,16 @@ bool Stage01::ProcessWindowEvent(SDL_WindowEvent* pData)
         break;
     }
     return false;
+
 }
 
-
-
-void Stage01::InitGame()
+void BossStage::InitGame()
 {
-    //m_vpBullets.reserve(s_kMaxBulletCount);
-
-    // Temperary gameobject
-    GameObject* stationary;
     // Set GameTime to 0sec
     m_CurrentTime = (double)0.0;
 
     /// TILEMAP
-    m_pTiledMap = new TiledMap(TILEMAP);
+    m_pTiledMap = new TiledMap(BOSSMAP);
     m_pTiledMap->Init(&m_collisionReferee);
 
     /// GAMEOBJECT
@@ -294,14 +238,14 @@ void Stage01::InitGame()
     size.m_x = WINDOWWIDTH;
     size.m_y = WINDOWHEIGHT;
 
-    m_pBackground = new ImageObject(position,size, nullptr, BACKGROUND, 0, (size_t)ObjectType::kBackGround, "BackGround");
+    m_pBackground = new ImageObject(position, size, nullptr, BACKGROUND, 0, (size_t)ObjectType::kBackGround, "BackGround");
 
 
     // Set Player Object
     // Player ColliderBox Setting
     SDL_Rect playerTransform{
-        (int)s_kPlayerStartingPoisition.m_x, // X position of collider box
-        (int)s_kPlayerStartingPoisition.m_y, // Y position of collider box
+        (int)200, // X position of collider box
+        (int)100, // Y position of collider box
         (int)s_kPlayerStartingSize.m_x,      // Width of collider box
         (int)s_kPlayerStartingSize.m_y       // Height of collider box
     };
@@ -312,46 +256,46 @@ void Stage01::InitGame()
         SDL_Color(BLACK),
         m_pOwner->GetGame()->GetRenderer()
     );
-    
-    // Add GameObjects to m_vpGameObjects
-    SDL_Rect objectTransform;
-    objectTransform.w = (int)ENEMY_WIDTH;
-    objectTransform.h = (int)ENEMY_HEIGHT;
-
-    // Setting starting position of the enemy
-    objectTransform.x = 100;
-    objectTransform.y = 50;
-    stationary = new AiStateMachineEnemy(m_pPlayer, objectTransform, &m_collisionReferee, ZOMBIEFEMALE, (size_t)ObjectType::kEnemy, "Zombie_Female");
-    stationary->SetTargetObject(m_pPlayer);
-    AddGameObject(stationary);
-
-    objectTransform.x = 650; // X
-    objectTransform.y = 50; // Y
-    stationary = new AiStateMachineEnemy(m_pPlayer, objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::kEnemy, "Zombie_Male");
-    stationary->SetTargetObject(m_pPlayer);
-    AddGameObject(stationary);
-
-    m_pInGameUI = new InGameUI(m_pPlayer, m_pOwner->GetGame()->GetFonts(),m_pOwner->GetGame()->GetRenderer());
-    m_pInGameUI->InitUI();
-    
-    m_pPlayer->SetTriggerFunction(HEALTHBAR_UI_FUNCTION, [this]()->void
-        {
-            m_pInGameUI->UpdateUI();
-        });
 
     AddGameObject(m_pPlayer);
 
+
+    // Add GameObjects to m_vpGameObjects
+    SDL_Rect objectTransform;
+    objectTransform.w = (int)300;
+    objectTransform.h = (int)300;
+
+    // Setting starting position of the enemy
+    objectTransform.x = 500;
+    objectTransform.y = 150;
+    m_pBossEnemy = new AiStateMachineEnemyBoss(m_pPlayer, objectTransform, &m_collisionReferee, BOSS, (size_t)ObjectType::kEnemy, "Boss");
+    m_pBossEnemy->SetTargetObject(m_pPlayer);
+    AddGameObject(m_pBossEnemy);
+
+    m_pBossEnemy->SetCallBack([this]()->void
+        {
+            SpawnBossBullet(m_pBossEnemy->GetRage(), m_pBossEnemy->GetTransform());
+        });
+
+    // UI
+    m_pInGameUI = new InGameUI(m_pPlayer, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
+    m_pInGameUI->InitUI();
 }
 
-// Destory the elements in vector of GameObject
-void Stage01::DestoryGameObjects()
+void BossStage::DestoryGameObjects()
 {
     for (auto& element : m_vpGameObjects)
     {
         delete element;
     }
-    
+
     if (m_vpBullets.empty() != true)
+    {
+        for (auto& element : m_vpBullets)
+            delete element;
+    }
+
+    if (m_vpBossBullets.empty() != true)
     {
         for (auto& element : m_vpBullets)
             delete element;
@@ -365,17 +309,13 @@ void Stage01::DestoryGameObjects()
     delete m_pTiledMap;
 }
 
-// Add gameobject to vector
-void Stage01::AddGameObject(GameObject* object)
+void BossStage::AddGameObject(GameObject* object)
 {
-    // Creates the Object only if it's under amount of s_kMaxGameObjectCount
-    if (m_vpGameObjects.size() >= s_kMaxGameObjectCount)
-        return;
     // add the gameobject to vector
     m_vpGameObjects.push_back(object);
 }
 
-bool Stage01::UpdateGamestate(double deltaTime)
+bool BossStage::UpdateGamestate(double deltaTime)
 {
     UpdateGameObjects(deltaTime);
 
@@ -384,7 +324,7 @@ bool Stage01::UpdateGamestate(double deltaTime)
     {
         if (m_pPlayer->GetStatus().m_health > 0)
         {
-            m_pOwner->LoadScene(Platformer::SceneName::kBoss);
+            m_pOwner->LoadScene(Platformer::SceneName::kVictory);
         }
         else
         {
@@ -395,7 +335,7 @@ bool Stage01::UpdateGamestate(double deltaTime)
     return false;
 }
 
-void Stage01::SpawnBullets()
+void BossStage::SpawnBullets()
 {
     if (m_vpBullets.size() >= s_kMaxBulletCount)
         return;
@@ -438,11 +378,26 @@ void Stage01::SpawnBullets()
         m_vpBullets.push_back(newBullet);
     }
 
-
-
 }
 
-void Stage01::UpdateGameObjects(double deltaTime)
+void BossStage::SpawnBossBullet(bool isAutoLock, SDL_Rect spawnTransform)
+{
+    SDL_Rect startingTransform
+    {
+        spawnTransform.x,
+        spawnTransform.y + (spawnTransform.h / 2),
+        (int)BULLET_SIZE,
+        (int)BULLET_SIZE
+    };
+
+    Bullet* newBullet = new Bullet(startingTransform, &m_collisionReferee, (size_t)ObjectType::kEnemeyBullet,m_pPlayer,isAutoLock);
+
+    newBullet->TryMove();
+
+    m_vpBossBullets.push_back(newBullet);
+}
+
+void BossStage::UpdateGameObjects(double deltaTime)
 {
     // Update GameObjects
     std::vector<GameObject*>::iterator iter;
@@ -457,8 +412,6 @@ void Stage01::UpdateGameObjects(double deltaTime)
         }
         else
         {
-            if ((*iter)->GetStatus().m_type == (size_t)ObjectType::kEnemy)
-                --m_enemyCount;
             delete* iter;
             iter = m_vpGameObjects.erase(iter);
             break;
@@ -477,10 +430,26 @@ void Stage01::UpdateGameObjects(double deltaTime)
             }
             else
             {
-                delete *iter;
+                delete* iter;
                 iter = m_vpBullets.erase(iter);
                 break;
             }
+        }
+    }
+
+    // Boss Bullets
+    iter = m_vpBossBullets.begin();
+    for (iter; iter < m_vpBossBullets.end(); ++iter)
+    {
+        if ((*iter)->GetActive())
+        {
+            (*iter)->Update(deltaTime);
+        }
+        else
+        {
+            delete* iter;
+            iter = m_vpBossBullets.erase(iter);
+            break;
         }
     }
 
@@ -490,13 +459,8 @@ void Stage01::UpdateGameObjects(double deltaTime)
 
 }
 
-void Stage01::Exit()
+void BossStage::Exit()
 {
-    // Delete the vectors I've created
-    {
-        m_pTiledMap->Delete();
-        DestoryGameObjects();
-    }
-
-
+    m_pTiledMap->Delete();
+    DestoryGameObjects();
 }

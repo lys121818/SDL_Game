@@ -26,10 +26,10 @@ AnimationComponent::~AnimationComponent()
 {
 }
 
-void AnimationComponent::AddAnimationSequence(std::string name, Vector2<int> size)
+void AnimationComponent::AddAnimationSequence(std::string name, Vector2<int> size, Vector2<int> colRow, int maxFrame, float widthMultyplier, bool isLoop)
 {
 	// Create animation sequence.
-	m_allAnimations[name] = AnimationSequence{ name, size};
+	m_allAnimations[name] = AnimationSequence{ name, size, colRow, widthMultyplier, maxFrame, isLoop};
 }
 
 void AnimationComponent::PlayAnimation(std::string sequenceName)
@@ -60,8 +60,16 @@ void AnimationComponent::ResetFrameTime()
 void AnimationComponent::UpdateSourceTransform()
 {
 	//  Calculate Position of source transform from the sprite sheet
-	Vector2<int> colAndRows = m_allAnimations[m_currentSequenceName].m_colRows;
-	Vector2<int> size = m_allAnimations[m_currentSequenceName].m_size;
+	AnimationSequence& currentSequence = m_allAnimations[m_currentSequenceName];
+	
+	Vector2<int> colAndRows;
+	Vector2<int> size = currentSequence.m_size;
+
+	colAndRows.m_x = m_currentFrame % currentSequence.m_colRows.m_x;
+	colAndRows.m_y = (m_currentFrame / currentSequence.m_colRows.m_x) + currentSequence.m_colRows.m_y;
+
+	m_sourceTransform.w = size.m_x;
+	m_sourceTransform.h = size.m_y;
 
 	// set rect animation to load
 	m_sourceTransform.x = colAndRows.m_x * size.m_x;
@@ -70,8 +78,6 @@ void AnimationComponent::UpdateSourceTransform()
 
 void AnimationComponent::Update(double deltaTime)
 {
-	// TODO: Working on animation 
-	
 
 	// See if an animation is playing.
 	if (m_currentFrame == -1)
@@ -92,9 +98,15 @@ void AnimationComponent::Update(double deltaTime)
 		ResetFrameTime();
 
 		//Check for loop
-		if (currentSequence.m_lastFrame == m_currentFrame)	// if on the last frame
+		if (currentSequence.m_maxFrame - 1 == m_currentFrame)	// if on the last frame
 		{
-			m_currentFrame = currentSequence.m_firstFrame;	// loop back to first frame
+			if(currentSequence.m_isLoop)
+				m_currentFrame = 0;	// loop back to first frame
+			else
+			{
+				if (m_callback)
+					m_callback();
+			}
 		}
 		else
 		{
@@ -115,14 +127,24 @@ void AnimationComponent::Update(double deltaTime)
 // Have Set the default value to Right
 void AnimationComponent::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture,bool isRight)
 {
+	float transformWidth = m_transform->w * m_allAnimations[m_currentSequenceName].m_timesToWidthSize;
+	SDL_Rect renderTransform
+	{
+		m_transform->x,// - (transformWidth / 2),
+		m_transform->y,
+		(int)transformWidth,
+		m_transform->h
+	};
 	// Render sprite sheet according to direction Object is facing at
 	if (isRight)
 	{
-		SDL_RenderCopy(pRenderer, pTexture, &m_sourceTransform, m_transform);
+		SDL_RenderCopy(pRenderer, pTexture, &m_sourceTransform, &renderTransform);
 	}
 	else
 	{
+		if (transformWidth != m_transform->w)
+			renderTransform.x -= (int)(transformWidth - m_transform->w);
 		SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
-		SDL_RenderCopyEx(pRenderer, pTexture, &m_sourceTransform, m_transform, double(0.0), nullptr, flip);
+		SDL_RenderCopyEx(pRenderer, pTexture, &m_sourceTransform, &renderTransform, double(0.0), nullptr, flip);
 	}
 }

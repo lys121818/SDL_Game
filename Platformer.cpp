@@ -4,6 +4,7 @@
 #include "MainMenu.h"
 #include "WinScreen.h"
 #include "Stage01.h"
+#include "BossStage.h"
 #include "LossScreen.h"
 #include "ImageDirectory.h"
 #include "CreditsScene.h"
@@ -102,6 +103,12 @@ void Platformer::LoadScene(SceneName scene)
         {
             m_pNextState = new Stage01(this);
             m_currentScene = SceneName::kGamePlay;
+            break;
+        }
+        case SceneName::kBoss:
+        {
+            m_pNextState = new BossStage(this);
+            m_currentScene = SceneName::kBoss;
             break;
         }
         case SceneName::kVictory:

@@ -26,7 +26,7 @@ public:
 
 	virtual void OnOverlapEnd() {}
 
-	virtual void TryMove(Vector2<int>) {}
+	virtual void TryMove(Vector2<double>) {}
 
 	// Handles this even in the context of this object
 	virtual void HandleEvent(SDL_Event*) {}
@@ -45,11 +45,18 @@ public:
 	// Return transform of object
 	virtual SDL_Rect GetTransform() = 0;
 
+	// Get if the game object is active in game (dead/destroy or live)
+	virtual bool GetActive() { return true; }
+
 	// SETTERS
 
 	virtual void SetPosition(Vector2<double>) {}
 
 	virtual void SetTargetObject(GameObject*) {}
+
+	virtual void Damaged(int) {}
+
+	virtual void SetActive(bool) {}
 
 private:
 	virtual void AddSound(const char*, const char*) {}

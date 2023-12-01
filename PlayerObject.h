@@ -125,23 +125,29 @@ public:
     // return the transform of object
     SDL_Rect GetTransform() override { return m_transform; }
 
-    // Return Name of the object
+    // Return Name of the object texture directory
     const char* GetTextureName() override { return m_pSpriteName; }
 
 
     // Check if it's able to move
-    virtual void TryMove(Vector2<int> deltaDirection) override;
+    virtual void TryMove(Vector2<double> deltaDirection) override;
 
     // Get this Object's Status
     virtual Status GetStatus() override { return m_status; }
 
     bool GetWinState() { return m_isGame; }
 
+    virtual bool GetActive() override { return m_status.m_isActive; }
+
     // SETTER
     // add trigger function with key of name
     void SetTriggerFunction(const char* name, std::function<void()> func);
 
     void SetNameTag(TTF_Font* pFont, SDL_Color color, SDL_Renderer* pRenderer);
+
+    void Damaged(int amount) override;
+
+    virtual void SetActive(bool active) { m_status.m_isActive = active; }
 
     // Moving
     // Sprint
@@ -165,7 +171,6 @@ private:
     //Gravity Mechanics
     void Gravity(double deltaTime);
 
-    void GetDamaged(int amount);
 
     void Jump(double deltaTime, double jumpPower = s_kMaxJumpPower);
 
@@ -179,6 +184,7 @@ private:
     // Check current state before play animation.
     void CheckCurrentState();
 
+    /// SOUNDS
     void SoundPlayOnMotion();
 
     void AddSound(const char* pDir, const char* pKeyName) override;

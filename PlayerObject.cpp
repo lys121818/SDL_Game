@@ -10,12 +10,12 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 	:
 	 m_transform(transform),
 	 m_isGame(false),
-	 m_animation(directory, 6, 200, 300, &m_transform),
+	 m_animation(directory, 6, &m_transform),
 	 m_collider(this, transform, pReferee),
 	 m_pSpriteName(directory),
 	 m_isImmune(false),
 	 m_immuneTime(s_kMaxImmuneTime),
-	 m_movingComponent(&m_transform,Vector2{PLAYER_POSITION}, &m_collider),
+	 m_movingComponent(&m_transform, Vector2<double>{(double)transform.x,(double)transform.y}, & m_collider),
 	 m_nameText(&m_transform)
 {
 	// Get Name from the file
@@ -44,11 +44,14 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 
 	/// ANIMATION
 	// Animation sequence
-	m_animation.AddAnimationSequence("idle", 0, 9,Vector2<int>{200,300});
-	m_animation.AddAnimationSequence("walk", 10, 19, Vector2<int>{200, 300});
-	m_animation.AddAnimationSequence("run", 20, 27, Vector2<int>{200, 300});
-	m_animation.AddAnimationSequence("jump", 30, 39, Vector2<int>{200, 300});
-	m_animation.AddAnimationSequence("slide", 40, 49, Vector2<int>{200, 300});
+	m_animation.AddAnimationSequence("idle", Vector2<int>{175, 300}, Vector2<int>{10, 0},10);
+	m_animation.AddAnimationSequence("walk", Vector2<int>{250, 300}, Vector2<int>{8, 2}, 8, 1.5);
+	m_animation.AddAnimationSequence("jump", Vector2<int>{250, 300}, Vector2<int>{10, 1},10, 1.5);
+	m_animation.AddAnimationSequence("attack_melee", Vector2<int>{300, 300}, Vector2<int>{8, 3},8);
+
+	m_animation.SetCallback([this]() {
+		m_status.m_isActive = false;
+		});
 
 	// Animation Default setting
 	m_currentState = AnimationState::kIdle;
@@ -87,6 +90,8 @@ void PlayerObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
 	int blink = (int)(m_immuneTime * 100);
 
+	m_collider.DrawColliderBox(pRenderer);
+
 	// Blink when it's on Immune
 	if(!m_isImmune ||( (blink % 2) != 0))
 		m_animation.Render(pRenderer, pTexture, m_status.m_isRight);
@@ -94,6 +99,7 @@ void PlayerObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 	// Render NameTag
 	m_nameText.DrawTextBox(pRenderer, SDL_Color(GRAY));
 	m_nameText.Render(pRenderer);
+
 }
 
 // Play the right animation fallowing current state of gameobject
@@ -191,7 +197,7 @@ void PlayerObject::OnCollision(ColliderComponent* pCollider)
 		{
 			if (!m_isImmune)
 			{
-				GetDamaged(10);
+				Damaged(10);
 				m_isImmune = true;
 			}
 			break;
@@ -250,10 +256,18 @@ void PlayerObject::OnOverlapBegin(ColliderComponent* pCollider)
 		{
 			if (!m_isImmune && m_status.m_health < s_KMaxHealth)
 			{
-				GetDamaged(-OBJECT_DAMAGE);
+				Damaged(-OBJECT_DAMAGE);
 				std::cout << "Health: " << m_status.m_health << std::endl;
 			}
 			break;
+		}
+		case (size_t)ObjectType::kEnemeyBullet:
+		{
+			if (!m_isImmune)
+			{
+				Damaged(BULLET_POWER);
+				std::cout << "Health: " << m_status.m_health << std::endl;
+			}
 		}
 
 	default:
@@ -279,7 +293,7 @@ void PlayerObject::OnOverlapUpdate()
 	{
 		if (!m_isImmune)
 		{
-			GetDamaged(OBJECT_DAMAGE);
+			Damaged(OBJECT_DAMAGE);
 		}
 		break;
 	}
@@ -300,6 +314,41 @@ void PlayerObject::OnOverlapEnd()
 {
 	m_status.m_pTargetCollider = nullptr;
 }
+
+
+void PlayerObject::Damaged(int amount)
+{
+	// decrease the health by amount of damage its given
+	m_status.m_health -= amount;
+
+	std::cout << m_status.m_health << std::endl;
+
+	if (amount > 0)
+	{
+		m_mpSounds["Hurt"]->PlayChunk();
+		m_isImmune = true;
+	}
+
+	// Game Over
+	if (m_status.m_health <= 0)
+	{
+		m_mpSounds["GameOver"]->PlayChunk();
+		std::cout << "You died \n";
+		m_isGame = true;
+
+	}
+	// Over Healed
+	else if (m_status.m_health > s_KMaxHealth)
+	{
+		std::cout << "Your Health is already Full \n";
+		m_status.m_health = s_KMaxHealth;
+	}
+
+	// if trigger key has allocated in m_mpTriggers
+	if (m_mpTriggers[HEALTHBAR_UI_FUNCTION] != nullptr)
+		m_mpTriggers[HEALTHBAR_UI_FUNCTION]();
+}
+
 
 /*-----------
 // PRIVATE //
@@ -330,7 +379,7 @@ void PlayerObject::UpdateGameEvent(double deltaTime)
 
 	// check for Horizontal
 	if (m_status.m_direction.m_x != 0)
-		m_movingComponent.TryMove(deltaTime, m_status.m_speed, Vector2{ m_status.m_direction.m_x,0 });
+		m_movingComponent.TryMove(deltaTime, m_status.m_speed, Vector2<double>{ m_status.m_direction.m_x,0 });
 
 	// Moving System
 	Gravity(deltaTime);
@@ -338,7 +387,7 @@ void PlayerObject::UpdateGameEvent(double deltaTime)
 }
 
 // Move to the direction
-void PlayerObject::TryMove(Vector2<int> deltaDirection)
+void PlayerObject::TryMove(Vector2<double> deltaDirection)
 {
 	m_status.m_direction.m_x += deltaDirection.m_x;
 	m_status.m_direction.m_y += deltaDirection.m_y;
@@ -395,37 +444,6 @@ void PlayerObject::OnImmune(double deltaTime)
 	}
 	
 	m_immuneTime -= deltaTime;
-}
-
-void PlayerObject::GetDamaged(int amount)
-{
-	// decrease the health by amount of damage its given
-	m_status.m_health -= amount;
-
-	if (amount > 0)
-	{
-		m_mpSounds["Hurt"]->PlayChunk();
-		m_isImmune = true;
-	}
-
-	// Game Over
-	if (m_status.m_health <= 0)
-	{
-		m_mpSounds["GameOver"]->PlayChunk();
-		std::cout << "You died \n";
-		m_isGame = true;
-
-	}
-	// Over Healed
-	else if (m_status.m_health > s_KMaxHealth)
-	{
-		std::cout << "Your Health is already Full \n";
-		m_status.m_health = s_KMaxHealth;
-	}
-
-	// if trigger key has allocated in m_mpTriggers
-	if(m_mpTriggers[HEALTHBAR_UI_FUNCTION] != nullptr)
-		m_mpTriggers[HEALTHBAR_UI_FUNCTION]();
 }
 
 void PlayerObject::SoundPlayOnMotion()

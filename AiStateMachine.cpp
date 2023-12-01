@@ -1,5 +1,9 @@
 #include "AiStateMachine.h"
+
 #include "State.h"
+#include "AiStateChase.h"
+#include "AiStateWandering.h"
+#include "AiStateAttack.h"
 
 AiStateMachine::AiStateMachine(GameObject* pOwner, GameObject* pTarget, StateName initState)
 	:
@@ -40,7 +44,31 @@ void AiStateMachine::ChangeToState(StateName state)
 	}
 
 	// TODO: allocate the new state
+	switch (state)
+	{
+	case AiStateMachine::kNone:
+		break;
+	case AiStateMachine::kIdle:
+	{
+		m_pCurrentState = new AiStateWandering(this,m_pTarget);
+		break;
+	}
+	case AiStateMachine::kChase:
+	{
+		m_pCurrentState = new AiStateChase(this, m_pTarget);
+		break;
+	}
+	case AiStateMachine::kAttack:
+	{
+		m_pCurrentState = new AiStateAttack(this, m_pTarget);
+		break;
+	}
+	default:
+		break;
+	}
 
 	m_currentStateName = state;
-	m_pCurrentState->Enter();
+
+	if (m_pCurrentState != nullptr)
+		m_pCurrentState->Enter();
 }

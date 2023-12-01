@@ -25,11 +25,11 @@
 
 /// VECTOR2 SETTINGS
 // Direction
-#define RIGHT	1,0
-#define LEFT	-1,0
-#define DOWN	0,1
-#define UP		0,-1
-#define ZERO	0,0
+#define RIGHT	1.0,0.0
+#define LEFT	-1.0,0.0
+#define DOWN	0.0,1.0
+#define UP		0.0,-1.0
+#define ZERO	0.0,0.0
 
 // Counter Direction
 #define STOPRIGHT	LEFT
@@ -39,5 +39,6 @@
 
 // Txt file for Tiled Map
 #define TILEMAP		"assets/TxtFile/TiledMap.txt"
+#define BOSSMAP		"assets/TxtFile/BossMap.txt"
 
 #define PLAYER_INFO	"assets/TxtFile/PlayerInfo.txt"

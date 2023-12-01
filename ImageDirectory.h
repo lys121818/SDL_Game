@@ -4,8 +4,8 @@
 // Single Image
 #define BACKGROUND	"assets/BackGround.png"	// 1000 * 750
 
-#define PLAYER		"assets/Pig.bmp"
-#define BULLET		"assets/Globe.gif"
+#define PLAYER		"assets/Animation/Robot.png"
+#define BULLET		"assets/Animation/Bullet.png"
 #define STATIONARY1	"assets/Cat.jpg"
 #define STATIONARY2	"assets/Dice.png"
 
@@ -19,6 +19,7 @@
 #define PUMPKIN			"assets/Animation/Pumpkin.png"		// 200 * 300
 #define ZOMBIEMALE		"assets/Animation/ZombieMale.png"		// 200 * 300
 #define ZOMBIEFEMALE	"assets/Animation/ZombieFemale.png"	// 200 * 300
+#define BOSS			"assets/Animation/Boss.png"	// 200 * 200
 
 // Buttons
 #define BUTTONS	"assets/Buttons.png"		// 200 * 80

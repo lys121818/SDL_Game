@@ -17,6 +17,24 @@ struct Vector2
 		return (m_x != other.m_x || m_y != other.m_y);
 	}
 
+	Vector2 operator -(const Vector2& right) const
+	{
+		Vector2 vec;
+		vec.m_x = m_x - right.m_x;
+		vec.m_y = m_y - right.m_y;
+
+		return vec;
+	}
+
+	Vector2 operator *(const Vector2& right) const
+	{
+		Vector2 vec;
+		vec.m_x = m_x * right.m_x;
+		vec.m_y = m_y * right.m_y;
+
+		return vec;
+	}
+
 	static float Distance (const Vector2& object_A, const Vector2& object_B)
 	{
 		float distance_x;
@@ -37,7 +55,7 @@ struct Vector2
 	Vector2 Normalized()
 	{
 		// calculate the length
-		float length = sqrtf(SquareLength);
+		float length = sqrtf(SquareLength());
 
 		if (length == 0)
 			return Vector2(0.0, 0.0);

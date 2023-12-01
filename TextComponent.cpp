@@ -8,7 +8,7 @@ TextComponent::TextComponent(SDL_Rect* transform)
 	m_pObjectTransform(transform),
 	m_transform(SDL_Rect{0,0,0,0}),
 	m_pTexture(nullptr),
-	m_textSize(Vector2(ZERO)),
+	m_textSize(Vector2<int>(0,0)),
 	m_textPlacemenet(Placement::kMiddle)
 {
 }

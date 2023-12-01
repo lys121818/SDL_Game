@@ -16,7 +16,8 @@ public:
 		kGamePlay,
 		kVictory,
 		kLoss,
-		kCredit
+		kCredit,
+		kBoss
 	}m_currentScene;
 private:
 	// GameDemo object that is running this state machine.

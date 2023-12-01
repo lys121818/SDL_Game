@@ -20,7 +20,7 @@
 
 /*	PLAYER	*/ 
 // Sprite Sheet
-#define PLAYER_SPRITE	PUMPKIN
+#define PLAYER_SPRITE	PLAYER
 // * Position
 #define PLAYER_POSITION 600.0, 450.0
 
@@ -46,7 +46,21 @@
 
 #define ENEMY_ATTACK_POWER	10
 
-#define ENEMY_CHANNEL	5
+/*	BOSS	*/
+#define BOSS_MAX_HEALTH	200
+
+/*	BULLET	*/
+// * Transform
+#define BULLET_SIZE	20.0
+// * Speed
+#define BULLET_SPEED 500.0
+
+#define BULLET_POWER 10
+
+#define BULLET_MAXDISTANCE 300.0
+
+#define MAX_BULLET 5	// max amount of bullet can spawn
+
 
 /* BUTTON */
 // * Transform

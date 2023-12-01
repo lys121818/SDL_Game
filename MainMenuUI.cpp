@@ -325,7 +325,7 @@ void MainMenuUI::TextBoxSettings()
 	// Accept Button
 	font = m_pFont->GetFont(FONT2);
 
-	buttonTransform = SDL_Rect{ ZERO, (int)BUTTON_WIDTH,(int)BUTTON_HEIGHT };
+	buttonTransform = SDL_Rect{ 0,0, (int)BUTTON_WIDTH,(int)BUTTON_HEIGHT };
 	
 	newButton = new ButtonObject(buttonTransform, BUTTONS, Button_State::kDisable, "Accept");
 

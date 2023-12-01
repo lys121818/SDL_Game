@@ -58,6 +58,13 @@ void Fonts::PreloadFonts(size_t sceneNumber)
             AddTTFToFonts(ARIAL, 20);
             break;
         }
+        // Boss
+        case 5:
+        {
+            AddTTFToFonts(ARIAL, 15);
+            AddTTFToFonts(FONT2, 35);
+            break;
+        }
     default:
         break;
     }

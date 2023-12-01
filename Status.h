@@ -15,11 +15,12 @@ struct Status
 
 	// Current direction.x movement. -1 for left, 1for right.
 	// Current direction.y movement. -1 for down, 1 for up.
-	Vector2<int> m_direction = Vector2<int>{ 0,0 };
+	Vector2<double> m_direction = Vector2<double>{ 0,0 };
 
 	// Game Object Status
 	int m_health = 0;
 	double m_speed = 0;
+	bool m_isActive = true;
 	bool m_isGrounded = false;
 	bool m_isRight = true;
 	bool m_isOnJump = false;

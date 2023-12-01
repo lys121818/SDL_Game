@@ -96,8 +96,8 @@ void CreditsScene::Exit()
 void CreditsScene::InitCreditScene()
 {
 	// Set Background movement
-	m_background_1.TryMove(Vector2{ LEFT });
-	m_background_2.TryMove(Vector2{ LEFT });
+	m_background_1.TryMove(Vector2<double>{ LEFT });
+	m_background_2.TryMove(Vector2<double>{ LEFT });
 
 	// Color of the text
 	SDL_Color color;
@@ -149,7 +149,7 @@ void CreditsScene::InitCreditScene()
 	text->SetText("[PLATFORMER]");
 
 	// Direction to move
-	text->TryMove(Vector2<int>{ UP });
+	text->TryMove(Vector2<double>{ UP });
 
 	// Add to vector
 	m_vpCreditsText.push_back(text);
@@ -159,7 +159,7 @@ void CreditsScene::InitCreditScene()
 
 	text->SetText("Programmed by: " CREATOR);
 
-	text->TryMove(Vector2<int>{ UP });
+	text->TryMove(Vector2<double>{ UP });
 	
 	m_vpCreditsText.push_back(text);
 
@@ -168,7 +168,7 @@ void CreditsScene::InitCreditScene()
 
 	text->SetText("Thank You!");
 
-	text->TryMove(Vector2<int>{ UP });
+	text->TryMove(Vector2<double>{ UP });
 
 	m_vpCreditsText.push_back(text);
 

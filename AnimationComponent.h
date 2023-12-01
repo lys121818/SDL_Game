@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include "Vector2.h"
+#include <functional>
 
 //==================================================================================================//
 /// ANIMATION COMPONENT
@@ -19,8 +20,19 @@ private:
 	{
 	public:
 		std::string m_name;
+
+		// size of sprite frame
 		Vector2<int> m_size{0,0};
+
+		// x is col count and row is starting row
 		Vector2<int> m_colRows;
+
+		// multiply to actual rendering size
+		float m_timesToWidthSize;
+
+		int m_maxFrame;
+
+		bool m_isLoop;
 	};
 
 private:
@@ -41,6 +53,8 @@ private:
 	int m_currentFrame;
 	double m_frameTime;
 
+	std::function<void()> m_callback;
+
 public:
 	AnimationComponent(
 		const char* pSpriteSheetPath,	// Location of the Sprite Sheet
@@ -53,11 +67,13 @@ public:
 
 	void Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture, bool isRight);
 
-	void AddAnimationSequence(std::string name, Vector2<int> size);
+	void AddAnimationSequence(std::string name, Vector2<int> size, Vector2<int> colRow, int maxFrame, float widthMultyplier = 1.0, bool isLoop = true);
 
 	void PlayAnimation(std::string sequenceName);
 
 	void ResetFrameTime();
+
+	void SetCallback(std::function<void()> func) { m_callback = func; }
 
 	void UpdateSourceTransform();
 

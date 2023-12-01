@@ -1,14 +1,24 @@
 #pragma once
+#include <functional>
 
 class GameObject;
 class State;
+
+
+//==================================================================================================//
+/// AI STATE MACHINE
+/// A basic state machine for AI
+//==================================================================================================//
 
 class AiStateMachine
 {
 public:
 	enum StateName
 	{
-		None
+		kNone,
+		kIdle,
+		kChase,
+		kAttack
 	};
 
 private:
@@ -29,4 +39,5 @@ public:
 	void ChangeToState(StateName state);
 
 	GameObject* GetOwner() { return m_pOwner; }
+
 };

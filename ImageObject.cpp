@@ -16,7 +16,7 @@ ImageObject::ImageObject(Vector2<double> position, Vector2<double> size, Collisi
 {
 	m_status.m_type = type;
 	m_status.m_name = name;
-	m_status.m_direction = Vector2<int>{ 0,0 };
+	m_status.m_direction = Vector2<double>{ 0,0 };
 	m_status.m_speed = 0;
 
 	SetImage(index);
@@ -30,7 +30,7 @@ ImageObject::~ImageObject()
 void ImageObject::Update(double deltaTime)
 {
 	// Movement update when speed or direction is not 0
-	if (m_status.m_speed != 0 || m_status.m_direction != Vector2{ 0,0 })
+	if (m_status.m_speed != 0 || m_status.m_direction != Vector2<double>{ 0,0 })
 		m_movingComponent.TryMove(deltaTime, m_status.m_speed, m_status.m_direction);
 
 	m_imageAction.Update(deltaTime);
@@ -42,7 +42,7 @@ void ImageObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 	m_imageComponent.Render(pRenderer, pTexture);
 }
 
-void ImageObject::TryMove(const Vector2<int>& direction, const int& speed)
+void ImageObject::TryMove(const Vector2<double>& direction, const int& speed)
 {
 	m_status.m_direction = direction;
 	m_status.m_speed = speed;

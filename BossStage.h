@@ -1,31 +1,20 @@
 #pragma once
 #include "GameState.h"
-#include "ImageObject.h"
-#include "Textures.h"
 #include "PlayerObject.h"
-#include "TiledMap.h"
+#include "GameObject.h"
+#include "Textures.h"
+#include "ImageObject.h"
 #include "CollisionReferee.h"
 #include "AnimationComponent.h"
-#include "GameObject.h"
-#include "GameSetting.h"
+#include "AiStateMachineEnemyBoss.h"
+#include "TiledMap.h"
 #include "InGameUI.h"
-#include <fstream>
-
-//============================================================//
-/// STAGE 01
-/// Game state representing the STAGE 01.
-//============================================================//
 
 class Platformer;
 
-class Stage01 : public GameState
+class BossStage : public GameState
 {
 private:
-
-	static constexpr int s_kMaxEnemyObjectCount = 2;
-
-	// Max value of gameobject to be create
-	static constexpr size_t s_kMaxGameObjectCount = MAX_GAMEOBJECT;
 
 	static constexpr size_t s_kMaxBulletCount = MAX_BULLET;
 
@@ -33,17 +22,18 @@ private:
 	static constexpr Vector2 s_kPlayerStartingPoisition = Vector2{ PLAYER_POSITION };
 	static constexpr Vector2 s_kPlayerStartingSize = Vector2{ PLAYER_SIZE_VECTOR2 };
 
+private:
+
 	// Game Playing Timer
 	double m_CurrentTime;
-
-	// Enemy count
-	int m_enemyCount = s_kMaxGameObjectCount;
 
 	// Pointer to the State Machine running this state.
 	Platformer* m_pOwner;
 
 	// Player Object
 	PlayerObject* m_pPlayer;
+
+	AiStateMachineEnemyBoss* m_pBossEnemy;
 
 	// BackGround Image
 	ImageObject* m_pBackground;
@@ -60,13 +50,15 @@ private:
 	// Vector of Bullets
 	std::vector<GameObject*> m_vpBullets;
 
+	std::vector<GameObject*> m_vpBossBullets;
+
 	// Controlls the UI
 	InGameUI* m_pInGameUI;
 
 public:
-	Stage01(Platformer* pOwner);
-	~Stage01();
-	// Initializes the scene.
+	BossStage(Platformer* pOwner);
+	~BossStage();
+
 	void Enter() override;
 
 	// Update the scene
@@ -88,8 +80,7 @@ private:
 	// PROCESSING EVENT
 	// Every events using keyboards works here
 	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
-	// Every events using mouse works here
-	bool ProcessMouseEvent(SDL_MouseButtonEvent* pData);
+
 	// Every events using Window works here
 	bool ProcessWindowEvent(SDL_WindowEvent* pData);
 
@@ -102,6 +93,8 @@ private:
 	bool UpdateGamestate(double deltaTime);
 
 	void SpawnBullets();
+
+	void SpawnBossBullet(bool isAutoLock,SDL_Rect spawnTransform);
 
 	void UpdateGameObjects(double deltaTime);
 

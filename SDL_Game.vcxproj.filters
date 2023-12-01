@@ -63,6 +63,30 @@
     <Filter Include="source files\SDL_Game\Game_State\Game_UI">
       <UniqueIdentifier>{f6108238-51ed-44bb-aeb6-81f656c3cea1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source files\SDL_Game\Game_State\GameObjects\Enemy">
+      <UniqueIdentifier>{cd426a2d-19bc-4d28-93e9-e104aa55b3bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files\SDL_Game\Game_State\GameObjects\Enemy\AIControl">
+      <UniqueIdentifier>{1a6c1f69-6ad0-4349-a742-dd6d0a17fe6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\GameObjects\Enemy">
+      <UniqueIdentifier>{db624b92-dfb5-4858-b364-bba79f5efc7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\GameObjects\UI">
+      <UniqueIdentifier>{f1636138-de57-4b8e-beab-ec03451e4df8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\GameObjects\Enemy\Mob">
+      <UniqueIdentifier>{aaf2821f-542c-4079-974f-8b52e988008c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\GameObjects\Enemy\Mob\AIControl">
+      <UniqueIdentifier>{486a37dc-53de-4c7e-8983-e5f310025103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\GameObjects\Enemy\Boss">
+      <UniqueIdentifier>{4bd217af-330e-47d0-95b4-6200e8c0dd6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header files\SDL_Game\Game_State\GameObjects\Enemy\Boss\AIControl">
+      <UniqueIdentifier>{179259c5-789b-4e0b-b1e6-e5d890fa59e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -82,9 +106,6 @@
     </ClCompile>
     <ClCompile Include="CreditsScene.cpp">
       <Filter>source files\SDL_Game\Game_State\Game_Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyObject.cpp">
-      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Fonts.cpp">
       <Filter>source files\SDL_Game\Game_State\GameFeatures</Filter>
@@ -122,9 +143,6 @@
     <ClCompile Include="PlayerObject.cpp">
       <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="SoundTest.cpp">
-      <Filter>source files\SDL_Game\Game_State\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Stage01.cpp">
       <Filter>source files\SDL_Game\Game_State\Game_Scene</Filter>
     </ClCompile>
@@ -152,7 +170,34 @@
     <ClCompile Include="BackgroundMusicComponent.cpp">
       <Filter>source files\SDL_Game\Game_State\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyObject.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="AiStateChase.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects\Enemy\AIControl</Filter>
+    </ClCompile>
+    <ClCompile Include="AiStateMachineEnemy.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameObjects\Enemy\AIControl</Filter>
+    </ClCompile>
     <ClCompile Include="AiStateMachine.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClCompile>
+    <ClCompile Include="AiStateWandering.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+    <ClCompile Include="BossStage.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+    <ClCompile Include="BossEnemy.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+    <ClCompile Include="AiStateMachineEnemyBoss.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+    <ClCompile Include="AiStateAttack.cpp">
       <Filter>source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -174,9 +219,6 @@
     </ClInclude>
     <ClInclude Include="Defines.h">
       <Filter>header files\SDL_Game\Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyObject.h">
-      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Fonts.h">
       <Filter>header files\SDL_Game\Game_State\GameFeatures</Filter>
@@ -232,9 +274,6 @@
     <ClInclude Include="SoundDirectory.h">
       <Filter>header files\SDL_Game\Defines</Filter>
     </ClInclude>
-    <ClInclude Include="SoundTest.h">
-      <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Status.h">
       <Filter>header files\SDL_Game\Game_State\Struct</Filter>
     </ClInclude>
@@ -280,8 +319,35 @@
     <ClInclude Include="State.h">
       <Filter>header files\SDL_Game\Game_State\Virtual</Filter>
     </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>header files</Filter>
+    </ClInclude>
     <ClInclude Include="AiStateMachine.h">
-      <Filter>header files\SDL_Game\Game_State\Virtual</Filter>
+      <Filter>header files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="AiStateChase.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects\Enemy\Mob\AIControl</Filter>
+    </ClInclude>
+    <ClInclude Include="AiStateMachineEnemy.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects\Enemy\Mob\AIControl</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyObject.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="BossStage.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="BossEnemy.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="AiStateWandering.h">
+      <Filter>header files\SDL_Game\Game_State\GameObjects\Enemy\Mob\AIControl</Filter>
+    </ClInclude>
+    <ClInclude Include="AiStateMachineEnemyBoss.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="AiStateAttack.h">
+      <Filter>header files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

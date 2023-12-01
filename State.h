@@ -8,7 +8,8 @@
 class State
 {
 public:
-	virtual ~State();
+	State() {}
+	virtual ~State() {}
 
 	virtual void Enter() {}
 	virtual void Update(double) {}

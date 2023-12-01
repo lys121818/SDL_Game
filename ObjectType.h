@@ -7,7 +7,6 @@ enum class ObjectType
 	// 0 is empty
 	kWall = 1,
 	kGround,
-
 	kPlayer,
 	kEnemy,
 
@@ -15,6 +14,7 @@ enum class ObjectType
 	kDamageZone,
 	kHealingZone,
 	kWinZone,
-
+	kPlayerBullet,
+	kEnemeyBullet,
 	kUNINIT = 999
 };

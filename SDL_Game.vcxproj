@@ -19,9 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AiStateAttack.cpp" />
+    <ClCompile Include="AiStateChase.cpp" />
     <ClCompile Include="AiStateMachine.cpp" />
+    <ClCompile Include="AiStateMachineEnemy.cpp" />
+    <ClCompile Include="AiStateMachineEnemyBoss.cpp" />
+    <ClCompile Include="AiStateWandering.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="BackgroundMusicComponent.cpp" />
+    <ClCompile Include="BossEnemy.cpp" />
+    <ClCompile Include="BossStage.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="ButtonObject.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="CollisionReferee.cpp" />
@@ -41,7 +49,6 @@
     <ClCompile Include="Platformer.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="SoundComponent.cpp" />
-    <ClCompile Include="SoundTest.cpp" />
     <ClCompile Include="Stage01.cpp" />
     <ClCompile Include="TextComponent.cpp" />
     <ClCompile Include="TextObject.cpp" />
@@ -51,9 +58,17 @@
     <ClCompile Include="WinScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AiStateAttack.h" />
+    <ClInclude Include="AiStateChase.h" />
     <ClInclude Include="AiStateMachine.h" />
+    <ClInclude Include="AiStateMachineEnemy.h" />
+    <ClInclude Include="AiStateMachineEnemyBoss.h" />
+    <ClInclude Include="AiStateWandering.h" />
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="BackgroundMusicComponent.h" />
+    <ClInclude Include="BossEnemy.h" />
+    <ClInclude Include="BossStage.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="ButtonObject.h" />
     <ClInclude Include="ButtonType.h" />
     <ClInclude Include="ColliderComponent.h" />
@@ -81,7 +96,6 @@
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="SoundComponent.h" />
     <ClInclude Include="SoundDirectory.h" />
-    <ClInclude Include="SoundTest.h" />
     <ClInclude Include="Stage01.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Status.h" />

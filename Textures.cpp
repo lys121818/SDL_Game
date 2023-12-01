@@ -34,7 +34,6 @@ void Textures::PreloadTextures(size_t sceneNumber)
         {
             // Simple adding by using directory of the image
             // IMAGES
-            AddImagesToTexture(PLAYER);
             AddImagesToTexture(BACKGROUND);
 
             // IMAGE SPRITES
@@ -42,9 +41,11 @@ void Textures::PreloadTextures(size_t sceneNumber)
             AddImagesToTexture(OBJECTS);       
 
             // ANIMATION SPRITES
+            AddImagesToTexture(PLAYER);
             AddImagesToTexture(PUMPKIN);
             AddImagesToTexture(ZOMBIEMALE);
             AddImagesToTexture(ZOMBIEFEMALE);
+            AddImagesToTexture(BULLET);
 
             // UI SPRITES
             AddImagesToTexture(HEALTHUI);
@@ -71,6 +72,22 @@ void Textures::PreloadTextures(size_t sceneNumber)
         case 4:
         {
             AddImagesToTexture(BACKGROUND);
+
+            break;
+        }
+        case 5:
+        {
+            AddImagesToTexture(BACKGROUND);
+
+            // IMAGE SPRITES
+            AddImagesToTexture(TILES);
+            AddImagesToTexture(OBJECTS);
+
+            AddImagesToTexture(PLAYER);
+            AddImagesToTexture(BOSS);
+            AddImagesToTexture(BULLET);
+
+            AddImagesToTexture(HEALTHUI);
 
             break;
         }

@@ -31,8 +31,8 @@ MainMenu::~MainMenu()
 void MainMenu::Enter()
 {
 	// Background Setups
-	m_background_1.TryMove(Vector2<int>(LEFT), BACKGROUND_MOVE_SPEED);
-	m_background_2.TryMove(Vector2<int>(LEFT), BACKGROUND_MOVE_SPEED);
+	m_background_1.TryMove(Vector2<double>(LEFT), BACKGROUND_MOVE_SPEED);
+	m_background_2.TryMove(Vector2<double>(LEFT), BACKGROUND_MOVE_SPEED);
 
 	// Set button objects
 	SetButtons();

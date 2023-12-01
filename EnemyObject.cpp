@@ -9,7 +9,7 @@
 EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, size_t type, const char* name)
     : 
 	m_transform(transform),
-	m_animation(directory, 6, 200, 300, &m_transform),
+	m_animation(directory, 6,&m_transform),
 	m_collider(this, transform,pReferee),
 	m_pSpriteName(directory),
 	m_movingComponent(&m_transform, Vector2{ (double)transform.x,(double)transform.y },&m_collider)
@@ -20,7 +20,7 @@ EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const c
 	m_status.m_type = type;
 	m_status.m_health = 100;
 	m_status.m_speed = s_kSpeed;
-	m_status.m_direction = Vector2{ RIGHT };
+	m_status.m_direction = Vector2{ ZERO };
 	m_status.m_isGrounded = false;
 	m_status.m_isOnCollision = false;
 	m_status.m_pTargetCollider = nullptr;
@@ -31,11 +31,15 @@ EnemyObject::EnemyObject(SDL_Rect transform, CollisionReferee* pReferee, const c
 	m_transform.w = s_kWidth;
 	m_transform.h = s_kHeight;
 
-	/// ANIMATION
+	/// ANIMATION	[Robotic]
 	// Animation sequence
-	m_animation.AddAnimationSequence("idle", 0, 14,Vector2<int>{200,300});
-	m_animation.AddAnimationSequence("walk", 20, 29, Vector2<int>{200, 300});
-	m_animation.AddAnimationSequence("attack", 30, 37, Vector2<int>{200, 300});
+	m_animation.AddAnimationSequence("idle", Vector2<int>{200,300}, Vector2<int>{10,0},15);
+	m_animation.AddAnimationSequence("walk", Vector2<int>{200, 300}, Vector2<int>{10, 2},10);
+	m_animation.AddAnimationSequence("attack", Vector2<int>{200, 300}, Vector2<int>{8, 3},8);
+
+	m_animation.SetCallback([this]() {
+		m_status.m_isActive = false;
+		});
 
 	// Animation Default setting
 	m_currentState = AnimationState::kIdle;
@@ -56,38 +60,10 @@ EnemyObject::~EnemyObject()
 //  PUBLIC  //
 -----------*/
 
-void EnemyObject::Update(double deltaTime)
-{
-	Gravity(deltaTime);
-
-	// Play Sounds according to object actions
-	UpdateDistance();
-
-	// if it's moving
-	if (m_status.m_speed > 0)
-	{
-		// Check if it's able to move
-		m_movingComponent.TryMove(deltaTime, m_status.m_speed, m_status.m_direction);
-
-	}
-
-	if (m_transform.x > ( WINDOWWIDTH - m_transform.w )|| m_transform.x < 0)
-	{
-		m_status.m_direction.m_x *= -1;	// change the direction by multiply negative value
-	}
-
-	m_animation.Update(deltaTime);
-	AnimationState();
-
-
-}
 
 void EnemyObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
-	//m_collider.DrawColliderBox(pRenderer);
-
 	m_animation.Render(pRenderer, pTexture, m_status.m_isRight);
-
 }
 
 void EnemyObject::OnCollision(ColliderComponent* pCollider)
@@ -127,6 +103,16 @@ void EnemyObject::OnOverlapBegin(ColliderComponent* pCollider)
 	Status targetStaus = pCollider->GetOwner()->GetStatus();
 	assert(targetStaus.m_type >= COLLISION_INDEX);
 
+	switch (targetStaus.m_type)
+	{
+		case (size_t)ObjectType::kPlayerBullet:
+		{
+			Damaged(BULLET_POWER);
+			break;
+		}
+	default:
+		break;
+	}
 	m_status.m_isOnCollision = true;
 
 	m_status.m_pTargetCollider = pCollider;
@@ -186,7 +172,7 @@ void EnemyObject::CheckCurrentState()
 	{
 		m_status.m_isRight = false;
 	}
-	if (m_status.m_speed > 0)	// if player is moving x direction
+	if (m_status.m_direction.m_x != 0)	// if object is moving x direction
 	{
 
 		m_currentState = AnimationState::kWalk;
@@ -196,9 +182,14 @@ void EnemyObject::CheckCurrentState()
 
 }
 
+void EnemyObject::TryMove(Vector2<double> direction)
+{
+	m_status.m_direction = direction;
+}
+
 void EnemyObject::Gravity(double deltaTime)
 {
-	m_movingComponent.TryMove(deltaTime, GRAVITY_POWER, Vector2{ 0,1 });
+	m_movingComponent.TryMove(deltaTime, GRAVITY_POWER, Vector2<double>{ 0,1 });
 }
 
 void EnemyObject::PlaySounds()
@@ -234,6 +225,7 @@ void EnemyObject::UpdateDistance()
 		// Set volume by distance to the target
 		int volumeSize = (int)((1.0 - (m_distanceToPlayer / s_kMinimumDistanceToHear)) * MAXVOLUME);
 		m_mpSounds["Zombie_1"]->SetChunkVolume(volumeSize);
+
 
 	}
 	else
