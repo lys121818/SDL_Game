@@ -18,7 +18,13 @@ public:
 		kNone,
 		kIdle,
 		kChase,
-		kAttack
+		kAttack,
+
+		// BOSS
+		kPage01 = 5,
+		kPage02,
+		kPage03
+
 	};
 
 private:
@@ -37,6 +43,8 @@ public:
 	void Update(double deltaTime);
 
 	void ChangeToState(StateName state);
+
+	size_t GetState() { return (size_t)m_currentStateName; }
 
 	GameObject* GetOwner() { return m_pOwner; }
 

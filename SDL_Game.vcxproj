@@ -20,6 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AiStateAttack.cpp" />
+    <ClCompile Include="AiStateBossPage01.cpp" />
+    <ClCompile Include="AiStateBossPage02.cpp" />
+    <ClCompile Include="AiStateBossPage03.cpp" />
     <ClCompile Include="AiStateChase.cpp" />
     <ClCompile Include="AiStateMachine.cpp" />
     <ClCompile Include="AiStateMachineEnemy.cpp" />
@@ -48,6 +51,8 @@
     <ClCompile Include="MovingComponent.cpp" />
     <ClCompile Include="Platformer.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
+    <ClCompile Include="RGN.cpp" />
+    <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="SoundComponent.cpp" />
     <ClCompile Include="Stage01.cpp" />
     <ClCompile Include="TextComponent.cpp" />
@@ -59,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AiStateAttack.h" />
+    <ClInclude Include="AiStateBossPage01.h" />
+    <ClInclude Include="AiStateBossPage02.h" />
+    <ClInclude Include="AiStateBossPage03.h" />
     <ClInclude Include="AiStateChase.h" />
     <ClInclude Include="AiStateMachine.h" />
     <ClInclude Include="AiStateMachineEnemy.h" />
@@ -94,6 +102,8 @@
     <ClInclude Include="ObjectType.h" />
     <ClInclude Include="Platformer.h" />
     <ClInclude Include="PlayerObject.h" />
+    <ClInclude Include="RNG.h" />
+    <ClInclude Include="SaveData.h" />
     <ClInclude Include="SoundComponent.h" />
     <ClInclude Include="SoundDirectory.h" />
     <ClInclude Include="Stage01.h" />

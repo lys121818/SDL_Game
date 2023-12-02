@@ -2,6 +2,11 @@
 
 #define CREATOR	"Jason Lee"
 
+#define SEED -1
+
+#define SAVE_FOLDER	"saves\\"
+#define SAVE_FILE	"savedata.save"
+
 /// COLOR
 #define BLACK   0,0,0,SDL_ALPHA_OPAQUE
 #define WHITE	255,255,255,SDL_ALPHA_OPAQUE
@@ -42,3 +47,4 @@
 #define BOSSMAP		"assets/TxtFile/BossMap.txt"
 
 #define PLAYER_INFO	"assets/TxtFile/PlayerInfo.txt"
+

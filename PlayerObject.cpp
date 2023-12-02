@@ -28,13 +28,15 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 
 	/// STATUS
 	m_status.m_type = type;
-	m_status.m_health = s_KMaxHealth;	// Player Speed
-	m_status.m_speed = s_kSpeed;		// Player Health
+	m_status.m_health = s_KMaxHealth;	// Player Health
+	m_status.m_maxHealth = s_KMaxHealth;
+	m_status.m_speed = s_kSpeed;		// Player speed
 	m_status.m_isGrounded = false;
 	m_status.m_isOnCollision = false;
 	m_status.m_pTargetCollider = nullptr;
 	m_status.m_isRight = false;
 	m_status.m_attackPower = PLAYER_ATTACK_POWER;
+	m_status.m_cirtChace = 2;
 
 	m_jumpPower = 0;
 	/// TRANSFORM
@@ -267,6 +269,7 @@ void PlayerObject::OnOverlapBegin(ColliderComponent* pCollider)
 			{
 				Damaged(BULLET_POWER);
 				std::cout << "Health: " << m_status.m_health << std::endl;
+				break;
 			}
 		}
 

@@ -2,8 +2,10 @@
 #include "BossEnemy.h"
 #include "AiStateMachine.h"
 #include <functional>
+
 class AiStateMachineEnemyBoss : public BossEnemy
 {
+
 private:
 	AiStateMachine m_stateMachine;
 
@@ -15,9 +17,7 @@ public:
 
 	virtual void Update(double deltaTime) override;
 
-	void SetCallBack(std::function<void()> func) { BossEnemy::SetCallback(func); }
+	void SetCallBack(const char* name, std::function<void()> func) { BossEnemy::SetCallback(name, func); }
 
 private:
-	void BossPage();
 };
-

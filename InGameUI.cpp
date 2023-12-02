@@ -3,9 +3,9 @@
 #include "ImageDirectory.h"
 #include "TextObject.h"
 
-InGameUI::InGameUI(GameObject* pPlayer, Fonts* pFonts, SDL_Renderer* pRenderer)
+InGameUI::InGameUI(GameObject* pObject, Fonts* pFonts, SDL_Renderer* pRenderer)
 	:
-	m_pPlayer(pPlayer),
+	m_pGameObject(pObject),
 	m_pHealthBar(nullptr),
 	m_pFont(pFonts),
 	m_pRenderer(pRenderer)
@@ -19,7 +19,6 @@ InGameUI::~InGameUI()
 
 void InGameUI::InitUI()
 {
-	HealthBarSettings();
 }
 
 
@@ -42,7 +41,7 @@ void InGameUI::UpdateUI()
 void InGameUI::UpdateHealthbar()
 {
 	// Calculate current health in percentage
-	float percentage = ((float)m_pPlayer->GetStatus().m_health / (float)PLAYER_MAX_HEALTH);
+	float percentage = ((float)m_pGameObject->GetStatus().m_health / (float)m_pGameObject->GetStatus().m_maxHealth);
 
 	// transform for current health bar
 	SDL_Rect currentHealthUI
@@ -56,17 +55,17 @@ void InGameUI::UpdateHealthbar()
 	m_pHealthBar->SetTransform(currentHealthUI);
 }
 
-void InGameUI::HealthBarSettings()
+void InGameUI::AddHealthBar(Vector2<double> position, Vector2<double> size)
 {
 	UIObject* UIImageObject;
 
 	// Basic Transform of the Health bar
 	SDL_Rect UIImageTransform
 	{
-		(int)s_kMaxHealthBarPosition.m_x,	// X
-		(int)s_kMaxHealthBarPosition.m_y,	// Y
-		(int)s_kMaxHealthBarSize.m_x,		// W
-		(int)s_kMaxHealthBarSize.m_y		// H
+		(int)position.m_x,	// X
+		(int)position.m_y,	// Y
+		(int)size.m_x,		// W
+		(int)size.m_y		// H
 	};
 
 	// [BasicBar]
@@ -75,8 +74,8 @@ void InGameUI::HealthBarSettings()
 	m_mpUIObjects.push_back(UIImageObject);
 
 	// [Health Symbol]
-	UIImageTransform.x = (int)s_kMaxHealthBarPosition.m_x + 7;
-	UIImageTransform.y = (int)s_kMaxHealthBarPosition.m_y + ((int)s_kMaxHealthBarSize.m_y / 2) - 15;
+	UIImageTransform.x = (int)position.m_x + 7;
+	UIImageTransform.y = (int)position.m_y + ((int)size.m_y / 2) - 15;
 	UIImageTransform.w = 30;
 	UIImageTransform.h = 30;
 
@@ -85,10 +84,10 @@ void InGameUI::HealthBarSettings()
 	m_mpUIObjects.push_back(UIImageObject);
 
 	// [BlankBar]
-	UIImageTransform.x = (int)s_kMaxHealthBarPosition.m_x + 45;
-	UIImageTransform.y = (int)s_kMaxHealthBarPosition.m_y + 12;
-	UIImageTransform.w = (int)s_kMaxHealthBarSize.m_x - 60;
-	UIImageTransform.h = (int)s_kMaxHealthBarSize.m_y - 25;
+	UIImageTransform.x = (int)position.m_x + 45;
+	UIImageTransform.y = (int)position.m_y + 12;
+	UIImageTransform.w = (int)size.m_x - 60;
+	UIImageTransform.h = (int)size.m_y - 25;
 
 	UIImageObject = new UIObject(UIImageTransform, HEALTHUI, 2);
 

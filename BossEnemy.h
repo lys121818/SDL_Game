@@ -3,6 +3,7 @@
 #include "MovingComponent.h"
 #include "AnimationComponent.h"
 #include "SoundComponent.h"
+#include <unordered_map>
 #include <functional>
 
 class BossEnemy : public GameObject
@@ -24,6 +25,7 @@ private:
 	bool m_isRage = false;
 
 	double m_attackTimer;
+
 public:
 	BossEnemy(SDL_Rect transform, CollisionReferee* pReferee, const char* directory, size_t type, const char* name = "Boss");
 	~BossEnemy();
@@ -63,7 +65,8 @@ protected:
 	// Transform of the object
 	SDL_Rect m_transform;
 
-	std::function<void()> m_callback;
+	// callback on death
+	std::unordered_map<const char*, std::function<void()>> m_mCallback;
 
 
 	// * MOVEMENT
@@ -84,19 +87,23 @@ protected:
 	// Play the right animation fallowing current state of gameobject
 	void AnimationState();
 
-	// Check current state before play animation.
-	void CheckCurrentState();
-
 	void AttackUpdate(double deltaTime);
+
+	void MovementUpdate(double deltaTime);
 
 	// gameobject's status
 	Status m_status;
 
-	void SetCallback(std::function<void()> callback) { m_callback = callback; }
+	void SetCallback(const char* pName, std::function<void()> callback);
 
 	void SetRage() { m_isRage = true; }
 
 	void SetAttackTimer(double time) { m_timerSet = time; }
+
+	void OnCallBack(const char* name);
+
+	void SetSpeed(const int& speed) { m_status.m_speed = speed; }
+
 private:
 	void AddSound(const char* pDir, const char* pKeyName) override;
 

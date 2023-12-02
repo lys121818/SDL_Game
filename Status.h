@@ -19,6 +19,8 @@ struct Status
 
 	// Game Object Status
 	int m_health = 0;
+	int m_maxHealth = 0;
+	int m_cirtChace = 0;	// 0(0%) ~ 10 (100%)
 	double m_speed = 0;
 	bool m_isActive = true;
 	bool m_isGrounded = false;

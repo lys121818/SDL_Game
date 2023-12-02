@@ -260,7 +260,7 @@ void MainMenu::SetButtons()
 	button->SetTextInButton(font, "START", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 	m_vpButtons.push_back(button);
 
-	// [Settings Button]
+	// [Load Button]
 	buttonTransform = SDL_Rect
 	{
 		(int)(WINDOWWIDTH / 2) - (int)(BUTTON_WIDTH / 2),	// X
@@ -269,10 +269,16 @@ void MainMenu::SetButtons()
 		(int)BUTTON_HEIGHT	// H
 	};
 
-	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kDisable, "Settings");
+	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Load");
 
 
-	button->SetTextInButton(font, "SETTINGS", SDL_Color(GRAY), m_pOwner->GetGame()->GetRenderer());
+	button->SetTextInButton(font, "LOAD", SDL_Color(GRAY), m_pOwner->GetGame()->GetRenderer());
+
+	button->SetCallback([this]()->void
+		{
+			m_pOwner->GetSave()->Load();
+		});
+
 	m_vpButtons.push_back(button);
 
 	// [Quit Button]

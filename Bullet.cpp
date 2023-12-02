@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-Bullet::Bullet(SDL_Rect transform, CollisionReferee* pReferee,size_t type, GameObject* pTarget,bool isAutoLock, const char* directory)
+Bullet::Bullet(GameObject* pOwnerObject, SDL_Rect transform, CollisionReferee* pReferee,size_t type, GameObject* pTarget,bool isAutoLock, const char* directory)
 	:
 	m_pSpriteName(directory),
 	m_transform(transform),
@@ -18,6 +18,8 @@ Bullet::Bullet(SDL_Rect transform, CollisionReferee* pReferee,size_t type, GameO
 
 	m_status.m_speed = (int)BULLET_SPEED;
 
+	m_status.m_cirtChace = pOwnerObject->GetStatus().m_cirtChace;
+
 	m_status.m_type = type;
 
 	m_status.m_name = "Bullet";
@@ -29,6 +31,7 @@ Bullet::Bullet(SDL_Rect transform, CollisionReferee* pReferee,size_t type, GameO
 		SetActive(false);
 		});
 
+	// has the target but not chasing the target
 	if (m_pTargetObject != nullptr && !m_isAutoLock)
 	{
 		m_targetDirection = Vector2{ (double)m_pTargetObject->GetTransform().x,(double)m_pTargetObject->GetTransform().y };
@@ -93,21 +96,28 @@ void Bullet::OnOverlapBegin(ColliderComponent* pCollider)
 {
 	size_t objectType = pCollider->GetOwner()->GetStatus().m_type;
 
-	if (m_status.m_type == (size_t)ObjectType::kPlayerBullet)
+	switch (m_status.m_type)
 	{
-		if (objectType < 10 && objectType  != (size_t)ObjectType::kPlayer )
+		case (size_t)ObjectType::kPlayerBullet:
 		{
-			m_collider.SetCollider(false);
-			m_currentState = AnimationState::kMuzzle;
+			if (objectType < 10 && objectType != (size_t)ObjectType::kPlayer)
+			{
+				m_collider.SetCollider(false);
+				m_currentState = AnimationState::kMuzzle;
+			}
+			break;
 		}
-	}
-	else if (m_status.m_type == (size_t)ObjectType::kEnemeyBullet)
-	{
-		if (objectType < 10 && objectType != (size_t)ObjectType::kEnemy)
+		case (size_t)ObjectType::kEnemeyBullet:
 		{
-			m_collider.SetCollider(false);
-			m_currentState = AnimationState::kMuzzle;
+			if (objectType < 10 && objectType != (size_t)ObjectType::kEnemy)
+			{
+				m_collider.SetCollider(false);
+				m_currentState = AnimationState::kMuzzle;
+			}
+			break;
 		}
+	default:
+		break;
 	}
 
 }

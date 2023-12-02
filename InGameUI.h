@@ -14,10 +14,9 @@ class Textures;
 
 class InGameUI : UIInterface
 {
-	static constexpr Vector2<double> s_kMaxHealthBarPosition = { HEALTHBAR_POSITION };
-	static constexpr Vector2<double> s_kMaxHealthBarSize = { HEALTBARH_SIZE_VECTOR2 };
 private:
-	GameObject* m_pPlayer;
+
+	GameObject* m_pGameObject;
 
 	SDL_Renderer* m_pRenderer;
 
@@ -28,7 +27,7 @@ private:
 	std::vector<GameObject*> m_mpUIObjects;
 
 public:
-	InGameUI(GameObject* pPlayer, Fonts* pFonts, SDL_Renderer* pRenderer);
+	InGameUI(GameObject* pObject, Fonts* pFonts, SDL_Renderer* pRenderer);
 	~InGameUI();
 
 	void InitUI();
@@ -37,11 +36,13 @@ public:
 
 	void UpdateUI() override;
 
+	void AddHealthBar(Vector2<double> position, Vector2<double> size);
 
+	void SetGameObject(GameObject* pObject) { m_pGameObject = pObject; }
 private:
 	void UpdateHealthbar();
 
-	void HealthBarSettings();
+
 
 	void Destory();
 };

@@ -5,6 +5,7 @@
 #include "GameDemo.h"
 #include "SoundDirectory.h"
 #include "Bullet.h"
+#include "SaveData.h"
 
 #include <iomanip>
 
@@ -27,6 +28,33 @@ Stage01::~Stage01()
 
 void Stage01::Enter()
 {
+    // Get the save data reference
+    SaveData* pSave = m_pOwner->GetSave();
+    SaveData::Data& data = pSave->GetData();
+
+    pSave->Load();
+    // Check if it has been loaded.
+    if (pSave->GetIsLoaded() == false)
+    {
+        // set default data
+        std::cout << "Load Fail";
+    }
+
+    std::cout << "Player Position X: " << data.m_playerPosition.m_x << std::endl;
+    std::cout << "Player Position Y: " << data.m_playerPosition.m_y << std::endl;
+
+    //for (std::vector<Vector2<int>>::iterator iter = data.m_enemyPositions.begin(); iter < data.m_enemyPositions.end(); ++iter)
+    //{
+    //    int index = 0;
+    //    std::cout << "Enemy Position X: " << (*iter).m_x << std::endl;
+    //    std::cout << "Enemy Position Y: " << (*iter).m_y << std::endl;
+    //    
+    //    std::cout << "Sprite Name: " << data.m_enemySprite[index] << std::endl;
+    //    ++index;
+    //}
+    // If it has not, we need to write some default data.
+
+
     InitGame();
     m_pOwner->SetBGMusic(GAMEPLAY_SOUND);
 }
@@ -35,9 +63,9 @@ void Stage01::Update(double deltaTime)
 {
     // current time
     m_CurrentTime += deltaTime;
-    if (m_CurrentTime < LOADINGTIME)
-        std::cout << "Game Starts in " << std::setprecision(1) << (LOADINGTIME - m_CurrentTime) << std::endl;
-    else if (m_CurrentTime > LOADINGTIME)
+    //if (m_CurrentTime < LOADINGTIME)
+    //    std::cout << "Game Starts in " << std::setprecision(1) << (LOADINGTIME - m_CurrentTime) << std::endl;
+    if (m_CurrentTime > LOADINGTIME)
     {
         UpdateGamestate(deltaTime);
         
@@ -145,6 +173,14 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
             // pasue
             case SDLK_p:
             {
+                m_CurrentTime = 0.0;
+                bool success = true;
+
+                if (success)
+                    std::cout << "[Stage01] Saved successfully" << std::endl;
+                else
+                    std::cout << "[Stage01] Failed to Save" << std::endl;
+
                 break;
             }
                 // Run
@@ -332,8 +368,8 @@ void Stage01::InitGame()
     AddGameObject(stationary);
 
     m_pInGameUI = new InGameUI(m_pPlayer, m_pOwner->GetGame()->GetFonts(),m_pOwner->GetGame()->GetRenderer());
-    m_pInGameUI->InitUI();
-    
+    m_pInGameUI->AddHealthBar(Vector2<double> {HEALTHBAR_POSITION}, Vector2<double> {HEALTBARH_SIZE_VECTOR2});
+
     m_pPlayer->SetTriggerFunction(HEALTHBAR_UI_FUNCTION, [this]()->void
         {
             m_pInGameUI->UpdateUI();
@@ -414,7 +450,7 @@ void Stage01::SpawnBullets()
             (int)BULLET_SIZE,
             (int)BULLET_SIZE
         };
-        Bullet* newBullet = new Bullet(startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
+        Bullet* newBullet = new Bullet(m_pPlayer, startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
 
         newBullet->TryMove(Vector2<double>{RIGHT});
 
@@ -431,7 +467,7 @@ void Stage01::SpawnBullets()
             (int)BULLET_SIZE
         };
 
-        Bullet* newBullet = new Bullet(startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
+        Bullet* newBullet = new Bullet(m_pPlayer, startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
 
         newBullet->TryMove(Vector2<double>{LEFT});
 
@@ -499,4 +535,37 @@ void Stage01::Exit()
     }
 
 
+}
+
+/*------------------------------------------
+|	Attempts to save the data to disk.		|
+|	Returns true if successful.				|
+-------------------------------------------*/
+bool Stage01::Save()
+{
+    // Get data reference.
+    SaveData* pSave = m_pOwner->GetSave();
+    SaveData::Data& saveData = pSave->GetData();
+
+    // Update the value that we want to save
+    saveData.m_playerPosition.m_x = m_pPlayer->GetTransform().x;
+    saveData.m_playerPosition.m_y = m_pPlayer->GetTransform().y;
+
+    // Save Enemies
+    for (auto& object : m_vpGameObjects)
+    {
+        // Save enemies position
+        if (object->GetStatus().m_type == (size_t)ObjectType::kEnemy)
+        {
+            Vector2<int> position{ object->GetTransform().x,object->GetTransform().y };
+            saveData.m_enemyPositions.push_back(position);
+            saveData.m_enemySprite.push_back(object->GetTextureName());
+        }
+    }
+
+
+    // Perform the save operation.
+
+
+    return pSave->Save();
 }

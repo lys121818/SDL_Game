@@ -81,6 +81,8 @@ public:
 	// Cleans up the state
 	void Exit() override;
 
+	// Attempts to the save the game state.
+	bool Save();
 private:
 	// Init Game settings
 	void InitGame();

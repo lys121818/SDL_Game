@@ -55,6 +55,8 @@ private:
 	// Controlls the UI
 	InGameUI* m_pInGameUI;
 
+	InGameUI* m_pBossUI;
+
 public:
 	BossStage(Platformer* pOwner);
 	~BossStage();

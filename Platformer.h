@@ -2,6 +2,7 @@
 #include "GameStateMachine.h"
 #include "BackgroundMusicComponent.h"
 #include <SDL_ttf.h>
+#include "SaveData.h"
 
 class GameDemo;
 class GameState;
@@ -31,6 +32,9 @@ private:
 
 	BackgroundMusicComponent m_musicComponent;
 
+	// Stores the save data.
+	SaveData m_saveData;
+
 public:
 	Platformer(GameDemo* pOwner);
 	~Platformer();
@@ -58,6 +62,9 @@ public:
 	void SetBGMusic(const char* pFirstMusic, const char* pSecondMusic = nullptr) override;
 
 	void ToggleMusic();
+
+	// Get pointer to save data.
+	SaveData* GetSave() { return &m_saveData; }
 private:
 	// delete all the pointers
 	void Destory();

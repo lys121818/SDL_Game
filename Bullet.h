@@ -44,6 +44,7 @@ private:
 
 public:
     Bullet(
+        GameObject* pOwnerObject,
         SDL_Rect transform,
         CollisionReferee* pReferee,
         size_t type,

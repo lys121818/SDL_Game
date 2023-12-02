@@ -47,7 +47,12 @@
 #define ENEMY_ATTACK_POWER	10
 
 /*	BOSS	*/
+#define BOSS_DEFAULT_TIMER 3
+
 #define BOSS_MAX_HEALTH	200
+
+#define BOSS_PAGE01_SPEED 100
+#define BOSS_PAGE02_SPEED 200
 
 /*	BULLET	*/
 // * Transform
@@ -73,6 +78,8 @@
 /* UI */
 #define HEALTHBAR_POSITION	50, 50	// X, Y
 #define HEALTHBAR_SIZE		200		// X, (X / 4)
+
+
 
 /*=============== 
 || Calculation  ||	PLAYER
@@ -113,7 +120,7 @@
 || Calculation  ||	UI
 ||==============================================================================================================*/
 // * size																										||
-#define HEALTHBAR_WIDTH		HEALTHBAR_SIZE			// Width													||
+#define HEALTHBAR_WIDTH			HEALTHBAR_SIZE			// Width													||
 #define HEALTHBAR_HEIGHT		(HEALTHBAR_SIZE * 0.25)	// Height												||
 #define HEALTBARH_SIZE_VECTOR2	HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT	// Size in Vector2 form						||
 //==============================================================================================================//

@@ -79,6 +79,8 @@ void BossStage::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
         // Render UI
         m_pInGameUI->Render(pRenderer, pTextures);
+
+        m_pBossUI->Render(pRenderer, pTextures);
     }
 
 }
@@ -259,7 +261,7 @@ void BossStage::InitGame()
 
     AddGameObject(m_pPlayer);
 
-
+    // [BOSS]
     // Add GameObjects to m_vpGameObjects
     SDL_Rect objectTransform;
     objectTransform.w = (int)300;
@@ -272,14 +274,23 @@ void BossStage::InitGame()
     m_pBossEnemy->SetTargetObject(m_pPlayer);
     AddGameObject(m_pBossEnemy);
 
-    m_pBossEnemy->SetCallBack([this]()->void
+    m_pBossEnemy->SetCallBack("Attack", [this]()->void
         {
             SpawnBossBullet(m_pBossEnemy->GetRage(), m_pBossEnemy->GetTransform());
         });
 
+    m_pBossEnemy->SetCallBack("Defeat", [this]()->void
+        {
+            m_pOwner->LoadScene(Platformer::SceneName::kVictory);
+        });
+
     // UI
     m_pInGameUI = new InGameUI(m_pPlayer, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
-    m_pInGameUI->InitUI();
+    m_pInGameUI->AddHealthBar(Vector2<double> {HEALTHBAR_POSITION}, Vector2<double> {HEALTBARH_SIZE_VECTOR2});
+
+    m_pBossUI = new InGameUI(m_pBossEnemy, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
+    m_pBossUI->AddHealthBar(Vector2<double> {WINDOWHEIGHT / 2}, Vector2<double> {400, 80});
+
 }
 
 void BossStage::DestoryGameObjects()
@@ -297,7 +308,7 @@ void BossStage::DestoryGameObjects()
 
     if (m_vpBossBullets.empty() != true)
     {
-        for (auto& element : m_vpBullets)
+        for (auto& element : m_vpBossBullets)
             delete element;
     }
 
@@ -354,7 +365,7 @@ void BossStage::SpawnBullets()
             (int)BULLET_SIZE,
             (int)BULLET_SIZE
         };
-        Bullet* newBullet = new Bullet(startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
+        Bullet* newBullet = new Bullet(m_pPlayer, startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
 
         newBullet->TryMove(Vector2<double>{RIGHT});
 
@@ -371,7 +382,7 @@ void BossStage::SpawnBullets()
             (int)BULLET_SIZE
         };
 
-        Bullet* newBullet = new Bullet(startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
+        Bullet* newBullet = new Bullet(m_pPlayer, startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
 
         newBullet->TryMove(Vector2<double>{LEFT});
 
@@ -390,7 +401,7 @@ void BossStage::SpawnBossBullet(bool isAutoLock, SDL_Rect spawnTransform)
         (int)BULLET_SIZE
     };
 
-    Bullet* newBullet = new Bullet(startingTransform, &m_collisionReferee, (size_t)ObjectType::kEnemeyBullet,m_pPlayer,isAutoLock);
+    Bullet* newBullet = new Bullet(m_pBossEnemy, startingTransform, &m_collisionReferee, (size_t)ObjectType::kEnemeyBullet,m_pPlayer,isAutoLock);
 
     newBullet->TryMove();
 
@@ -401,6 +412,9 @@ void BossStage::UpdateGameObjects(double deltaTime)
 {
     // Update GameObjects
     std::vector<GameObject*>::iterator iter;
+    
+    m_pInGameUI->UpdateUI();
+    m_pBossUI->UpdateUI();
 
     iter = m_vpGameObjects.begin();
 
