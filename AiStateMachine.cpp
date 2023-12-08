@@ -46,7 +46,6 @@ void AiStateMachine::ChangeToState(StateName state)
 		delete m_pCurrentState;
 	}
 
-	// TODO: allocate the new state
 	switch (state)
 	{
 		case AiStateMachine::kNone:
