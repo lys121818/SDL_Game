@@ -30,8 +30,11 @@ ColliderComponent::~ColliderComponent()
 // Change position of Collider
 void ColliderComponent::SetPosition(Vector2<double> newPosition)
 {
+	m_position = newPosition;
+
 	m_transform.x = (int)newPosition.m_x;
 	m_transform.y = (int)newPosition.m_y;
+
 }
 
 // Change Size of the Collider

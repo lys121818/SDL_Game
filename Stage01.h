@@ -36,6 +36,17 @@ private:
 	// Game Playing Timer
 	double m_CurrentTime;
 
+	double m_loadingTime;
+
+	// number of times the file has been overwrite
+	size_t m_saves;
+
+	// togle for pause game
+	bool m_isPause;
+
+	// file to load
+	size_t m_fileIndex;
+
 	// Enemy count
 	int m_enemyCount = s_kMaxGameObjectCount;
 
@@ -64,7 +75,7 @@ private:
 	InGameUI* m_pInGameUI;
 
 public:
-	Stage01(Platformer* pOwner);
+	Stage01(Platformer* pOwner, size_t fileIndex = 0);
 	~Stage01();
 	// Initializes the scene.
 	void Enter() override;
@@ -81,8 +92,7 @@ public:
 	// Cleans up the state
 	void Exit() override;
 
-	// Attempts to the save the game state.
-	bool Save();
+
 private:
 	// Init Game settings
 	void InitGame();
@@ -100,6 +110,8 @@ private:
 	// Add additional gameobject to vector
 	void AddGameObject(GameObject* object);
 
+	void CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* spriteName, int health = 0);
+
 	// returns true if the game is over
 	bool UpdateGamestate(double deltaTime);
 
@@ -107,5 +119,14 @@ private:
 
 	void UpdateGameObjects(double deltaTime);
 
+	// Attempts to the save the game state.
+	virtual bool Save(size_t index) override;
+
+	// fuctions to save actual data into files
+	bool SaveDataIntoFiles(const char* folderName);
+
+	virtual bool Load(size_t index) override;
+
+	bool LoadDataFromFiles(const char* folderName);
 };
 

@@ -18,7 +18,6 @@ private:
 
 	ImageObject m_winImage;
 
-	ButtonObject* m_pHoverButton;
 
 	bool isOnAction;
 

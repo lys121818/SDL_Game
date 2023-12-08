@@ -4,8 +4,10 @@
 
 #define SEED -1
 
-#define SAVE_FOLDER	"saves\\"
-#define SAVE_FILE	"savedata.save"
+#define SAVE_FILE_DEFAULT	"savedata_default.save"
+#define SAVE_FILE_1	"savedata_1.save"
+#define SAVE_FILE_2	"savedata_2.save"
+#define SAVE_FILE_3	"savedata_3.save"
 
 /// COLOR
 #define BLACK   0,0,0,SDL_ALPHA_OPAQUE

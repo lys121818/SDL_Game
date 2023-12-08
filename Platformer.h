@@ -18,7 +18,8 @@ public:
 		kVictory,
 		kLoss,
 		kCredit,
-		kBoss
+		kBoss,
+		kLoadFile
 	}m_currentScene;
 private:
 	// GameDemo object that is running this state machine.
@@ -55,7 +56,7 @@ public:
 	void ChangeState(GameState* pNewState) override;
 
 	// Load the given scene.
-	void LoadScene(SceneName scene);
+	void LoadScene(SceneName scene, size_t fileNumber = 0);
 
 	size_t GetScene() override { return (size_t)m_currentScene; }
 
@@ -64,7 +65,7 @@ public:
 	void ToggleMusic();
 
 	// Get pointer to save data.
-	SaveData* GetSave() { return &m_saveData; }
+	SaveData* GetSaveData() { return &m_saveData; }
 private:
 	// delete all the pointers
 	void Destory();

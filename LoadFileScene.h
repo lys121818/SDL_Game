@@ -3,48 +3,40 @@
 #include "ImageObject.h"
 #include "ButtonObject.h"
 
-
 class Platformer;
 
-class LossScreen : public GameState
+class LoadFileScene : public GameState
 {
-	static constexpr int s_kFirstButtonY = 200;
-	static constexpr int s_kDistanceBetweenButtons = 80;
-
 private:
 	Platformer* m_pOwner;
 
-	ImageObject m_Background;
+	ImageObject m_background_1;
+	ImageObject m_background_2;
 
-	ImageObject m_lossImage;
-
+	// Vectors of buttons
 	std::vector<ButtonObject*> m_vpButtons;
-
-
-	bool isOnAction;
 
 	// Index of selected button
 	int m_keyboardButtonIndex;
 
+	size_t loadIndex;
 public:
-	LossScreen(Platformer* pOwner);
-	~LossScreen();
+	LoadFileScene(Platformer* pOwner);
+	~LoadFileScene();
 
-	// Initializes the scene.
-	virtual void Enter() override;
+	void Enter() override;
 
 	// Update the scene
-	virtual void Update(double deltaTime) override;
+	void Update(double deltaTime) override;
 
 	// Render the scene.
-	virtual void Render(SDL_Renderer* pRenderer, Textures* pTextures) override;
+	void Render(SDL_Renderer* pRenderer, Textures* pTextures) override;
 
 	// Handles the event in the context of this scene.
-	virtual bool HandleEvent(SDL_Event* pEvent) override;
-
+	bool HandleEvent(SDL_Event* pEvent) override;
 
 	// Cleans up the state
-	virtual void Exit() override;
+	void Exit() override;
 
 private:
 	// PROCESSING EVENT
@@ -53,12 +45,23 @@ private:
 	// Every events using keyboards works here
 	bool ProcessKeyboardEvent(SDL_KeyboardEvent* pData);
 
+	// Button Settings
 	void SetButtons();
+
+	// Updates for background
+	void BackgroundUpdates(double deltaTime);
+
+	void ButtonUpdates(double deltaTime);
 
 	// Destory the pointers
 	void Destory();
 
 	// Changes button focus when using keyboard
 	void ChangeButtonFocus(int direction);
+
+	void SetSceneOnLoad(size_t level, size_t fileNumber);
+
+	// Load Data
+	size_t LoadSaveFile(size_t index);
 };
 

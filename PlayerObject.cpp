@@ -352,6 +352,16 @@ void PlayerObject::Damaged(int amount)
 		m_mpTriggers[HEALTHBAR_UI_FUNCTION]();
 }
 
+void PlayerObject::SetPosition(Vector2<double> position)
+{
+	m_transform.x = position.m_x; 
+	m_transform.y = position.m_y;
+
+	m_movingComponent.SetPosition(position);
+
+	m_collider.SetPosition(position);
+}
+
 
 /*-----------
 // PRIVATE //

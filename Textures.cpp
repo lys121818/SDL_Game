@@ -49,6 +49,7 @@ void Textures::PreloadTextures(size_t sceneNumber)
 
             // UI SPRITES
             AddImagesToTexture(HEALTHUI);
+            AddImagesToTexture(BUTTONS);
             break;
         }
 
@@ -75,6 +76,7 @@ void Textures::PreloadTextures(size_t sceneNumber)
 
             break;
         }
+        // BOSS
         case 5:
         {
             AddImagesToTexture(BACKGROUND);
@@ -86,9 +88,18 @@ void Textures::PreloadTextures(size_t sceneNumber)
             AddImagesToTexture(PLAYER);
             AddImagesToTexture(BOSS);
             AddImagesToTexture(BULLET);
+            AddImagesToTexture(BUTTONS);
 
             AddImagesToTexture(HEALTHUI);
 
+            break;
+        }
+        // Loading Scene
+        case 6:
+        {
+            AddImagesToTexture(BACKGROUND);
+            AddImagesToTexture(BUTTONS);
+            AddImagesToTexture(TEXT_BAR);
             break;
         }
     default:

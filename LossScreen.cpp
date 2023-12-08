@@ -8,7 +8,6 @@ LossScreen::LossScreen(Platformer* pOwner)
 	:
 	m_pOwner(pOwner),
 	m_Background(Vector2<double>{ 0,0 }, Vector2<double>{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND,0, 0, "LossState"),
-	m_pHoverButton(nullptr),
 	m_lossImage(Vector2<double>{ 200,20 }, Vector2<double>{ 400,500 }, nullptr, LOSS_STATE, 0, 0, "Loss"),
 	m_keyboardButtonIndex(-1)
 {

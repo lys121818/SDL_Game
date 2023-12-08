@@ -16,7 +16,6 @@
 //==================================================================================================//
 
 class Platformer; 
-struct _Mix_Music;
 
 class MainMenu : public GameState
 {
@@ -29,8 +28,6 @@ private:
 
 	// Vectors of buttons
 	std::vector<ButtonObject*> m_vpButtons;
-
-	ButtonObject* m_pHoverButton;
 
 	// Index of selected button
 	int m_keyboardButtonIndex;
@@ -70,9 +67,6 @@ private:
 
 	// UI settings
 	void SetUI();
-
-	// Music Settings
-	void SetMusic();
 
 	// Updates for background
 	void BackgroundUpdates(double deltaTime);

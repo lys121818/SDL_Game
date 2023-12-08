@@ -44,6 +44,7 @@
     <ClCompile Include="ImageComponent.cpp" />
     <ClCompile Include="ImageObject.cpp" />
     <ClCompile Include="InGameUI.cpp" />
+    <ClCompile Include="LoadFileScene.cpp" />
     <ClCompile Include="LossScreen.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="ImageDirectory.h" />
     <ClInclude Include="ImageObject.h" />
     <ClInclude Include="InGameUI.h" />
+    <ClInclude Include="LoadFileScene.h" />
     <ClInclude Include="LossScreen.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MainMenuUI.h" />
@@ -104,6 +106,7 @@
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="RNG.h" />
     <ClInclude Include="SaveData.h" />
+    <ClInclude Include="SaveFileDirectory.h" />
     <ClInclude Include="SoundComponent.h" />
     <ClInclude Include="SoundDirectory.h" />
     <ClInclude Include="Stage01.h" />

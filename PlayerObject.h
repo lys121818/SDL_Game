@@ -128,6 +128,7 @@ public:
     // Return Name of the object texture directory
     const char* GetTextureName() override { return m_pSpriteName; }
 
+    virtual const char* GetName() override { return m_status.m_name.c_str(); }
 
     // Check if it's able to move
     virtual void TryMove(Vector2<double> deltaDirection) override;
@@ -147,7 +148,12 @@ public:
 
     void Damaged(int amount) override;
 
-    virtual void SetActive(bool active) { m_status.m_isActive = active; }
+    virtual void SetHealth(int value) override { m_status.m_health = value; }
+
+    virtual void SetActive(bool active) override { m_status.m_isActive = active; }
+
+    virtual void SetPosition(Vector2<double> position) override;
+
 
     // Moving
     // Sprint

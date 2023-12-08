@@ -6,18 +6,20 @@
 #include "SoundDirectory.h"
 #include "Bullet.h"
 
+#include <assert.h>
 #include <iomanip>
 
-BossStage::BossStage(Platformer* pOwner)
+BossStage::BossStage(Platformer* pOwner, size_t fileIndex)
 	:
+    m_fileIndex(fileIndex),
 	m_pOwner(pOwner),
 	m_pInGameUI(nullptr),
+    m_pBossUI(nullptr),
 	m_pBackground(nullptr),
 	m_pPlayer(nullptr),
 	m_pTiledMap(nullptr)
 {
 	m_CurrentTime = 0.0;
-
 }
 
 BossStage::~BossStage()
@@ -26,18 +28,39 @@ BossStage::~BossStage()
 
 void BossStage::Enter()
 {
-	InitGame();
+    assert(m_fileIndex < 4);
+
+    Load(m_fileIndex);
+
+    InitGame();
+    m_pInGameUI->InitUI();
+    m_pBossUI->InitUI();
+
+    m_pOwner->SetBGMusic(BOSS_STAGE_SOUND);
 }
 
 void BossStage::Update(double deltaTime)
 {
-	m_CurrentTime += deltaTime;
-	if (m_CurrentTime < LOADINGTIME)
-		std::cout << "Game Starts in " << std::setprecision(1) << (LOADINGTIME - m_CurrentTime) << std::endl;
-	else if (m_CurrentTime > LOADINGTIME)
-	{
-		UpdateGamestate(deltaTime);
-	}
+    if (m_loadingTime <= LOADINGTIME)
+        m_loadingTime += deltaTime;
+
+    if (m_loadingTime > LOADINGTIME && !m_isPause)
+    {
+        // current time
+        if (m_isPause == false)
+            m_CurrentTime += deltaTime;
+
+        std::cout << "My Saved Times: " << m_saves << std::endl;
+
+        std::cout << m_CurrentTime << std::endl;
+
+        UpdateGamestate(deltaTime);
+    }
+    if (m_isPause)
+    {
+        m_pInGameUI->UpdateUI(deltaTime);
+        m_pBossUI->UpdateUI(deltaTime);
+    }
 }
 
 void BossStage::Render(SDL_Renderer* pRenderer, Textures* pTextures)
@@ -45,7 +68,7 @@ void BossStage::Render(SDL_Renderer* pRenderer, Textures* pTextures)
     m_pBackground->Render(pRenderer, pTextures->GetTexture(m_pBackground->GetTextureName()));
 
     // loading 
-    if (m_CurrentTime > LOADINGTIME)
+    if (m_loadingTime > LOADINGTIME)
     {
 
 
@@ -87,8 +110,19 @@ void BossStage::Render(SDL_Renderer* pRenderer, Textures* pTextures)
 
 bool BossStage::HandleEvent(SDL_Event* pEvent)
 {
-    if (m_CurrentTime > LOADINGTIME)
+    if (m_loadingTime > LOADINGTIME)
     {
+
+        // UI Button event
+        if (m_isPause)
+        {
+            if (!m_pInGameUI->HandleEvent(pEvent))
+                m_isPause = !m_isPause;
+
+            if (!m_pBossUI->HandleEvent(pEvent))
+                m_isPause = !m_isPause;
+        }
+
         switch ((int)pEvent->type)
         {
             // KeyBoard Event
@@ -114,7 +148,6 @@ bool BossStage::HandleEvent(SDL_Event* pEvent)
             break;
         }
     }
-
     return false;
 }
 
@@ -133,6 +166,9 @@ bool BossStage::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
         // pasue
         case SDLK_p:
         {
+            m_isPause = !m_isPause;
+            m_pInGameUI->TogglePause();
+            m_pBossUI->TogglePause();
             break;
         }
         // Run
@@ -226,69 +262,70 @@ void BossStage::InitGame()
     // Set GameTime to 0sec
     m_CurrentTime = (double)0.0;
 
+    m_loadingTime = (double)0.0;
+
     /// TILEMAP
     m_pTiledMap = new TiledMap(BOSSMAP);
     m_pTiledMap->Init(&m_collisionReferee);
 
     /// GAMEOBJECT
 
-    Vector2<double> position;
-    Vector2<double> size;
+    // transform info
+    SDL_Rect objectTransform;
 
-    position.m_x = 0;
-    position.m_y = 0;
-    size.m_x = WINDOWWIDTH;
-    size.m_y = WINDOWHEIGHT;
-
-    m_pBackground = new ImageObject(position, size, nullptr, BACKGROUND, 0, (size_t)ObjectType::kBackGround, "BackGround");
-
-
-    // Set Player Object
-    // Player ColliderBox Setting
-    SDL_Rect playerTransform{
-        (int)200, // X position of collider box
-        (int)100, // Y position of collider box
-        (int)s_kPlayerStartingSize.m_x,      // Width of collider box
-        (int)s_kPlayerStartingSize.m_y       // Height of collider box
+                /*---------------
+                    BACKGROUND
+                ---------------*/
+    objectTransform =
+    {
+        0,
+        0,
+        WINDOWWIDTH,
+        WINDOWHEIGHT
     };
 
-    m_pPlayer = new PlayerObject(playerTransform, &m_collisionReferee, (size_t)ObjectType::kPlayer);
-    m_pPlayer->SetNameTag(
-        m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
-        SDL_Color(BLACK),
-        m_pOwner->GetGame()->GetRenderer()
-    );
+    CreateGameObject(objectTransform, (size_t)ObjectType::kBackGround, BACKGROUND);
 
-    AddGameObject(m_pPlayer);
+    if (m_fileIndex == 0)
+    {
+                                /*-----------
+                                    PLAYER
+                                -----------*/
 
-    // [BOSS]
-    // Add GameObjects to m_vpGameObjects
-    SDL_Rect objectTransform;
-    objectTransform.w = (int)300;
-    objectTransform.h = (int)300;
-
-    // Setting starting position of the enemy
-    objectTransform.x = 500;
-    objectTransform.y = 150;
-    m_pBossEnemy = new AiStateMachineEnemyBoss(m_pPlayer, objectTransform, &m_collisionReferee, BOSS, (size_t)ObjectType::kEnemy, "Boss");
-    m_pBossEnemy->SetTargetObject(m_pPlayer);
-    AddGameObject(m_pBossEnemy);
-
-    m_pBossEnemy->SetCallBack("Attack", [this]()->void
+        objectTransform =
         {
-            SpawnBossBullet(m_pBossEnemy->GetRage(), m_pBossEnemy->GetTransform());
-        });
+            (int)200, // X position of collider box
+            (int)100, // Y position of collider box
+            (int)s_kPlayerStartingSize.m_x,      // Width of collider box
+            (int)s_kPlayerStartingSize.m_y       // Height of collider box
+        };
 
-    m_pBossEnemy->SetCallBack("Defeat", [this]()->void
+        CreateGameObject(objectTransform, (size_t)ObjectType::kPlayer, PLAYER_SPRITE, PLAYER_MAX_HEALTH);
+
+
+                                    /*-----------
+                                        BOSS
+                                    -----------*/
+
+            objectTransform =
         {
-            m_pOwner->LoadScene(Platformer::SceneName::kVictory);
-        });
+            (int)500, // X position of collider box
+            (int)150, // Y position of collider box
+            (int)300,      // Width of collider box
+            (int)300       // Height of collider box
+        };
+
+        CreateGameObject(objectTransform, (size_t)ObjectType::kEnemy, BOSS, BOSS_MAX_HEALTH);
+
+
+    }
+
 
     // UI
-    m_pInGameUI = new InGameUI(m_pPlayer, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
+    m_pInGameUI = new InGameUI(this, m_pPlayer, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
     m_pInGameUI->AddHealthBar(Vector2<double> {HEALTHBAR_POSITION}, Vector2<double> {HEALTBARH_SIZE_VECTOR2});
 
-    m_pBossUI = new InGameUI(m_pBossEnemy, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
+    m_pBossUI = new InGameUI(this, m_pBossEnemy, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
     m_pBossUI->AddHealthBar(Vector2<double> {WINDOWHEIGHT / 2}, Vector2<double> {400, 80});
 
 }
@@ -314,6 +351,8 @@ void BossStage::DestoryGameObjects()
 
     delete m_pInGameUI;
 
+    delete m_pBossUI;
+
     delete m_pBackground;
 
     // Destory texture when game ends.
@@ -324,6 +363,70 @@ void BossStage::AddGameObject(GameObject* object)
 {
     // add the gameobject to vector
     m_vpGameObjects.push_back(object);
+}
+
+void BossStage::CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* spriteName, int health)
+{
+
+    switch (objectType)
+    {
+    case (size_t)ObjectType::kPlayer:
+    {
+        // create player
+        m_pPlayer = new PlayerObject(transform, &m_collisionReferee, objectType);
+
+        // name under player
+        m_pPlayer->SetNameTag(
+            m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
+            SDL_Color(BLACK),
+            m_pOwner->GetGame()->GetRenderer()
+        );
+
+
+        m_pPlayer->SetHealth(health);
+
+        // add to vector
+        AddGameObject(m_pPlayer);
+
+        break;
+    }
+    case (size_t)ObjectType::kEnemy:
+    {
+        m_pBossEnemy = new AiStateMachineEnemyBoss(m_pPlayer, transform, &m_collisionReferee, BOSS, objectType, "Boss");
+        m_pBossEnemy->SetTargetObject(m_pPlayer);
+        m_pBossEnemy->SetHealth(health);
+
+        m_pBossEnemy->SetCallBack("Attack", [this]()->void
+            {
+                SpawnBossBullet(m_pBossEnemy->GetRage(), m_pBossEnemy->GetTransform());
+            });
+
+        m_pBossEnemy->SetCallBack("Defeat", [this]()->void
+            {
+                m_pOwner->LoadScene(Platformer::SceneName::kVictory);
+            });
+
+        AddGameObject(m_pBossEnemy);
+
+        break;
+    }
+    case (size_t)ObjectType::kBackGround:
+    {
+        Vector2<double> position;
+        Vector2<double> size;
+
+        position.m_x = (double)transform.x;
+        position.m_y = (double)transform.y;
+
+        size.m_x = (double)transform.w;
+        size.m_y = (double)transform.h;
+
+        m_pBackground = new ImageObject(position, size, nullptr, BACKGROUND, 0, objectType, "BackGround");
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 bool BossStage::UpdateGamestate(double deltaTime)
@@ -467,14 +570,251 @@ void BossStage::UpdateGameObjects(double deltaTime)
         }
     }
 
-
-    if (m_pPlayer->GetActive() == false)
-        delete m_pPlayer;
-
 }
 
 void BossStage::Exit()
 {
     m_pTiledMap->Delete();
     DestoryGameObjects();
+}
+
+
+/*------------------------------------------
+|	Attempts to save the data to disk.		|
+|	Returns true if successful.				|
+-------------------------------------------*/
+bool BossStage::Save(size_t index)
+{
+    // check for save has been successfully done
+    bool isSaved = false;
+
+    switch (index)
+    {
+        // Save file 01
+    case 1:
+    {
+        isSaved = SaveDataIntoFiles(_SAVE_FOLDER_1);
+        break;
+    }
+    // Save file 02
+    case 2:
+    {
+        isSaved = SaveDataIntoFiles(_SAVE_FOLDER_2);
+        break;
+    }
+    // Save file 03
+    case 3:
+    {
+        isSaved = SaveDataIntoFiles(_SAVE_FOLDER_3);
+        break;
+    }
+    default:
+        break;
+    }
+
+    std::cout << "SAVE COMPLETE IN " << index << std::endl;
+
+    return isSaved;
+}
+
+/*=================
+    Save Data
+=================*/
+bool BossStage::SaveDataIntoFiles(const char* folderName)
+{
+    std::string path;
+
+    // Get data reference.
+    SaveData* pSave = m_pOwner->GetSaveData();
+
+    // save stage data to name
+    pSave->Load(folderName, _SAVE_STAGE);
+
+    /*-----------
+        STAGE
+    -----------*/
+
+    // Get data file to save
+    SaveData::Data& saveData = pSave->GetData();
+
+    // Save the Stage 01
+    saveData.m_stage = 2;
+
+    saveData.m_playTime = m_CurrentTime;
+
+    saveData.m_saves = ++m_saves;
+
+    // Player file load and save
+    pSave->Save(folderName, _SAVE_STAGE);
+
+
+    /*---------------
+        END STAGE
+    ---------------*/
+
+    /*-----------
+        PLAYER
+    -----------*/
+
+    SDL_Rect transformData = m_pPlayer->GetTransform();
+
+    strcpy_s(saveData.m_pSpriteName, m_pPlayer->GetTextureName());
+
+    strcpy_s(saveData.m_pPlayerName, m_pPlayer->GetName());
+
+    saveData.m_position.m_x = transformData.x;
+
+    saveData.m_position.m_y = transformData.y;
+
+    saveData.m_health = m_pPlayer->GetStatus().m_health;
+
+    pSave->Save(folderName, _SAVE_PLAYER);
+
+
+    /*---------------
+        END PLAYER
+    ---------------*/
+
+    /*-------------
+        ENEMIES
+    -------------*/
+
+    transformData = m_pBossEnemy->GetTransform();
+
+    strcpy_s(saveData.m_pSpriteName, m_pBossEnemy->GetTextureName());
+
+    strcpy_s(saveData.m_pPlayerName, m_pBossEnemy->GetName());
+
+    saveData.m_position.m_x = transformData.x;
+
+    saveData.m_position.m_y = transformData.y;
+
+    saveData.m_health = m_pBossEnemy->GetStatus().m_health;
+
+    pSave->Save(folderName, _SAVE_BOSS);
+
+
+    /*-----------------
+        END ENEMIES
+    -----------------*/
+
+    m_pOwner->LoadScene(Platformer::SceneName::kMainMenu);
+
+    return true;
+}
+
+/*=================
+    Load Data
+=================*/
+bool BossStage::Load(size_t index)
+{
+    bool isLoad = false;
+
+    switch (index)
+    {
+        // No load file
+    case 0:
+    {
+        isLoad = false;
+        break;
+    }
+
+    // Load file 1
+    case 1:
+    {
+        isLoad = LoadDataFromFiles(_SAVE_FOLDER_1);
+        assert(isLoad);
+        break;
+    }
+    // Load file 2
+    case 2:
+    {
+        isLoad = LoadDataFromFiles(_SAVE_FOLDER_2);
+        assert(isLoad);
+        break;
+    }
+    // Load file 3
+    case 3:
+    {
+        isLoad = LoadDataFromFiles(_SAVE_FOLDER_3);
+        assert(isLoad);
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    // can't be unloaded with valid index
+
+
+    return isLoad;
+}
+
+bool BossStage::LoadDataFromFiles(const char* folderName)
+{
+    bool isLoaded = false;
+
+    // Get the save data reference
+    SaveData* pSave = m_pOwner->GetSaveData();
+
+    isLoaded = pSave->Load(folderName, _SAVE_PLAYER);
+    assert(isLoaded);
+
+    SaveData::Data& loadData = pSave->GetData();
+
+
+    m_CurrentTime = loadData.m_playTime;
+    m_saves = loadData.m_saves;
+
+    /*-----------
+        PLAYER
+    -----------*/
+
+    // Transform
+    SDL_Rect transformData =
+    {
+        (int)loadData.m_position.m_x,
+        (int)loadData.m_position.m_y,
+        (int)PLAYER_WIDTH,
+        (int)PLAYER_HEIGHT
+    };
+
+    CreateGameObject(transformData, (size_t)ObjectType::kPlayer, PLAYER_SPRITE, loadData.m_health);
+
+    m_pPlayer->GetStatus().m_name = loadData.m_pPlayerName;
+    /*---------------
+        END PLAYER
+    ---------------*/
+
+
+    /*-------------
+        ENEMIES
+    -------------*/
+
+    // Enemy file name
+    std::string path;
+
+    size_t index = 1;
+
+    isLoaded = pSave->Load(folderName, _SAVE_BOSS);
+
+
+    transformData =
+    {
+        (int)500, // X position of collider box
+        (int)150, // Y position of collider box
+        (int)300,      // Width of collider box
+        (int)300       // Height of collider box
+    };
+
+    CreateGameObject(transformData, (size_t)ObjectType::kEnemy, BOSS, loadData.m_health);
+
+
+    /*-----------------
+        END ENEMIES
+    -----------------*/
+
+
+    return isLoaded;
 }

@@ -1,25 +1,29 @@
 #include "Stage01.h"
 #include "AiStateMachineEnemy.h"
 #include "ImageDirectory.h"
+#include "SaveFileDirectory.h"
 #include "Platformer.h"
 #include "GameDemo.h"
 #include "SoundDirectory.h"
 #include "Bullet.h"
 #include "SaveData.h"
+#include <assert.h>
+
 
 #include <iomanip>
 
-Stage01::Stage01(Platformer* pOwner)
+Stage01::Stage01(Platformer* pOwner, size_t fileIndex)
     :
+    m_fileIndex(fileIndex),
     m_pOwner(pOwner),
     m_pInGameUI(nullptr),
     m_pBackground(nullptr),
     m_pPlayer(nullptr),
-    m_pTiledMap(nullptr)
+    m_pTiledMap(nullptr),
+    m_isPause(false)
 {
     m_CurrentTime = 0.0;
-
-    // GameObject and Tiles Setting
+    m_saves = 0;
 }
 
 Stage01::~Stage01()
@@ -28,49 +32,35 @@ Stage01::~Stage01()
 
 void Stage01::Enter()
 {
-    // Get the save data reference
-    SaveData* pSave = m_pOwner->GetSave();
-    SaveData::Data& data = pSave->GetData();
+    assert(m_fileIndex < 4);
 
-    pSave->Load();
-    // Check if it has been loaded.
-    if (pSave->GetIsLoaded() == false)
-    {
-        // set default data
-        std::cout << "Load Fail";
-    }
-
-    std::cout << "Player Position X: " << data.m_playerPosition.m_x << std::endl;
-    std::cout << "Player Position Y: " << data.m_playerPosition.m_y << std::endl;
-
-    //for (std::vector<Vector2<int>>::iterator iter = data.m_enemyPositions.begin(); iter < data.m_enemyPositions.end(); ++iter)
-    //{
-    //    int index = 0;
-    //    std::cout << "Enemy Position X: " << (*iter).m_x << std::endl;
-    //    std::cout << "Enemy Position Y: " << (*iter).m_y << std::endl;
-    //    
-    //    std::cout << "Sprite Name: " << data.m_enemySprite[index] << std::endl;
-    //    ++index;
-    //}
-    // If it has not, we need to write some default data.
-
+    Load(m_fileIndex);
 
     InitGame();
+    m_pInGameUI->InitUI();
     m_pOwner->SetBGMusic(GAMEPLAY_SOUND);
+
 }
 
 void Stage01::Update(double deltaTime)
 {
-    // current time
-    m_CurrentTime += deltaTime;
-    //if (m_CurrentTime < LOADINGTIME)
-    //    std::cout << "Game Starts in " << std::setprecision(1) << (LOADINGTIME - m_CurrentTime) << std::endl;
-    if (m_CurrentTime > LOADINGTIME)
-    {
-        UpdateGamestate(deltaTime);
-        
-    }
+    if(m_loadingTime <= LOADINGTIME)
+        m_loadingTime += deltaTime;
 
+    if (m_loadingTime > LOADINGTIME && !m_isPause)
+    {
+        // current time
+        if (m_isPause == false)
+            m_CurrentTime += deltaTime;
+
+        std::cout << "My Saved Times: " << m_saves << std::endl;
+
+        std::cout << m_CurrentTime << std::endl;
+
+        UpdateGamestate(deltaTime);
+    }
+    if (m_isPause)
+        m_pInGameUI->UpdateUI(deltaTime);
 }
 
 // Rendering any objects in the game.
@@ -79,10 +69,8 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
     m_pBackground->Render(pRenderer, pTextures->GetTexture(m_pBackground->GetTextureName()));
 
     // loading 
-    if (m_CurrentTime > LOADINGTIME)
+    if (m_loadingTime > LOADINGTIME)
     {
-
-
         //Render GameObjects
         for (auto& element : m_vpGameObjects)
         {
@@ -110,48 +98,57 @@ void Stage01::Render(SDL_Renderer* pRenderer, Textures* pTextures)
         // Render UI
         m_pInGameUI->Render(pRenderer, pTextures);
     }
-    
 
 }
 
 bool Stage01::HandleEvent(SDL_Event* pEvent)
 {
-    // Check if the game is over
-
-    switch ((int)pEvent->type)
+    // UI Button event
+    if (m_isPause)
     {
-        // KeyBoard Event
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
+        if (!m_pInGameUI->HandleEvent(pEvent))
+            m_isPause = !m_isPause;
+
+    }
+    if (m_loadingTime > LOADINGTIME)
+    {
+        // Check if the game is over
+        switch ((int)pEvent->type)
         {
-
-
-            if (ProcessKeyboardEvent(&pEvent->key) == true)
+            // KeyBoard Event
+            case SDL_KEYDOWN:
+            case SDL_KEYUP:
             {
-                return true;
+
+
+                if (ProcessKeyboardEvent(&pEvent->key) == true)
+                {
+                    return true;
+                }
+                break;
             }
+
+            // Mouse Event
+            // Quit when true returns
+            case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONUP:
+            {
+                if (ProcessMouseEvent(&pEvent->button) == true)
+                    return true;
+                break;
+            }
+
+            // Window Event
+            case SDL_WINDOWEVENT:
+            {
+                if (ProcessWindowEvent(&pEvent->window) == true)
+                    return true;
+                break;
+            }
+        default:
             break;
         }
 
-        // Mouse Event
-        // Quit when true returns
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-        {
-            if (ProcessMouseEvent(&pEvent->button) == true)
-                return true;
-            break;
-        }
-
-        // Window Event
-        case SDL_WINDOWEVENT:
-        {
-            if (ProcessWindowEvent(&pEvent->window) == true)
-                return true;
-            break;
-        }
-    default:
-        break;
     }
 
 	return false;
@@ -170,17 +167,11 @@ bool Stage01::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
                 SpawnBullets();
                 break;
             }
-            // pasue
+            // togle pasue
             case SDLK_p:
             {
-                m_CurrentTime = 0.0;
-                bool success = true;
-
-                if (success)
-                    std::cout << "[Stage01] Saved successfully" << std::endl;
-                else
-                    std::cout << "[Stage01] Failed to Save" << std::endl;
-
+                m_isPause = !m_isPause;
+                m_pInGameUI->TogglePause();
                 break;
             }
                 // Run
@@ -313,8 +304,9 @@ void Stage01::InitGame()
 
     // Temperary gameobject
     GameObject* stationary;
-    // Set GameTime to 0sec
-    m_CurrentTime = (double)0.0;
+
+    // Set loading to 0sec
+    m_loadingTime = 0.0;
 
     /// TILEMAP
     m_pTiledMap = new TiledMap(TILEMAP);
@@ -322,52 +314,71 @@ void Stage01::InitGame()
 
     /// GAMEOBJECT
 
-    Vector2<double> position;
-    Vector2<double> size;
+    // transform info
+    SDL_Rect objectTransform;
 
-    position.m_x = 0;
-    position.m_y = 0;
-    size.m_x = WINDOWWIDTH;
-    size.m_y = WINDOWHEIGHT;
-
-    m_pBackground = new ImageObject(position,size, nullptr, BACKGROUND, 0, (size_t)ObjectType::kBackGround, "BackGround");
-
-
-    // Set Player Object
-    // Player ColliderBox Setting
-    SDL_Rect playerTransform{
-        (int)s_kPlayerStartingPoisition.m_x, // X position of collider box
-        (int)s_kPlayerStartingPoisition.m_y, // Y position of collider box
-        (int)s_kPlayerStartingSize.m_x,      // Width of collider box
-        (int)s_kPlayerStartingSize.m_y       // Height of collider box
+                        /*---------------
+                            BACKGROUND
+                        ---------------*/
+    objectTransform =
+    {
+        0,
+        0,
+        WINDOWWIDTH,
+        WINDOWHEIGHT
     };
 
-    m_pPlayer = new PlayerObject(playerTransform, &m_collisionReferee, (size_t)ObjectType::kPlayer);
-    m_pPlayer->SetNameTag(
-        m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
-        SDL_Color(BLACK),
-        m_pOwner->GetGame()->GetRenderer()
-    );
+    CreateGameObject(objectTransform, (size_t)ObjectType::kBackGround, BACKGROUND);
+
+    // new file
+    if (m_fileIndex == 0)
+    {
+                            /*-----------
+                                PLAYER
+                            -----------*/
+
+        objectTransform =
+        {
+            (int)s_kPlayerStartingPoisition.m_x, // X position of collider box
+            (int)s_kPlayerStartingPoisition.m_y, // Y position of collider box
+            (int)s_kPlayerStartingSize.m_x,      // Width of collider box
+            (int)s_kPlayerStartingSize.m_y       // Height of collider box
+        };
     
-    // Add GameObjects to m_vpGameObjects
-    SDL_Rect objectTransform;
-    objectTransform.w = (int)ENEMY_WIDTH;
-    objectTransform.h = (int)ENEMY_HEIGHT;
+        CreateGameObject(objectTransform, (size_t)ObjectType::kPlayer, PLAYER_SPRITE, PLAYER_MAX_HEALTH);
 
-    // Setting starting position of the enemy
-    objectTransform.x = 100;
-    objectTransform.y = 50;
-    stationary = new AiStateMachineEnemy(m_pPlayer, objectTransform, &m_collisionReferee, ZOMBIEFEMALE, (size_t)ObjectType::kEnemy, "Zombie_Female");
-    stationary->SetTargetObject(m_pPlayer);
-    AddGameObject(stationary);
 
-    objectTransform.x = 650; // X
-    objectTransform.y = 50; // Y
-    stationary = new AiStateMachineEnemy(m_pPlayer, objectTransform, &m_collisionReferee, ZOMBIEMALE, (size_t)ObjectType::kEnemy, "Zombie_Male");
-    stationary->SetTargetObject(m_pPlayer);
-    AddGameObject(stationary);
+                            /*-------------
+                                ENEMIES
+                            -------------*/
 
-    m_pInGameUI = new InGameUI(m_pPlayer, m_pOwner->GetGame()->GetFonts(),m_pOwner->GetGame()->GetRenderer());
+        objectTransform =
+        {
+            (int)100,               // X position of collider box
+            (int)50,                // Y position of collider box
+            (int)ENEMY_WIDTH,       // Width of collider box
+            (int)ENEMY_HEIGHT       // Height of collider box
+        };
+
+        CreateGameObject(objectTransform, (size_t)ObjectType::kEnemy, ZOMBIEMALE, 100);
+
+        objectTransform =
+        {
+            (int)650,               // X position of collider box
+            (int)50,                // Y position of collider box
+            (int)ENEMY_WIDTH,       // Width of collider box
+            (int)ENEMY_HEIGHT       // Height of collider box
+        };
+
+        CreateGameObject(objectTransform, (size_t)ObjectType::kEnemy, ZOMBIEFEMALE, 100);
+
+    }
+
+                        /*-----------
+                             U I
+                        -----------*/
+
+    m_pInGameUI = new InGameUI(this, m_pPlayer, m_pOwner->GetGame()->GetFonts(),m_pOwner->GetGame()->GetRenderer());
     m_pInGameUI->AddHealthBar(Vector2<double> {HEALTHBAR_POSITION}, Vector2<double> {HEALTBARH_SIZE_VECTOR2});
 
     m_pPlayer->SetTriggerFunction(HEALTHBAR_UI_FUNCTION, [this]()->void
@@ -375,7 +386,6 @@ void Stage01::InitGame()
             m_pInGameUI->UpdateUI();
         });
 
-    AddGameObject(m_pPlayer);
 
 }
 
@@ -409,6 +419,72 @@ void Stage01::AddGameObject(GameObject* object)
         return;
     // add the gameobject to vector
     m_vpGameObjects.push_back(object);
+}
+
+void Stage01::CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* spriteName, int health)
+{
+
+
+    switch (objectType)
+    {
+        case (size_t)ObjectType::kPlayer:
+        {
+            // create player
+            m_pPlayer = new PlayerObject(transform, &m_collisionReferee, objectType);
+
+            // name under player
+            m_pPlayer->SetNameTag(
+                m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
+                SDL_Color(BLACK),
+                m_pOwner->GetGame()->GetRenderer()
+            );
+
+
+            m_pPlayer->SetHealth(health);
+
+            // add to vector
+            AddGameObject(m_pPlayer);
+
+            break;
+        }
+        case (size_t)ObjectType::kEnemy:
+        {
+            GameObject* enemyObject;
+
+            if (std::string(spriteName).compare(ZOMBIEFEMALE) == 0)
+            {
+                enemyObject = new AiStateMachineEnemy(m_pPlayer, transform, &m_collisionReferee, ZOMBIEFEMALE, objectType, "Zombie_Female");
+                enemyObject->SetTargetObject(m_pPlayer);
+                enemyObject->SetHealth(health);
+                AddGameObject(enemyObject);
+            }
+            else if (std::string(spriteName).compare(ZOMBIEMALE) == 0)
+            {
+                enemyObject = new AiStateMachineEnemy(m_pPlayer, transform, &m_collisionReferee, ZOMBIEMALE,objectType, "Zombie_Male");
+                enemyObject->SetTargetObject(m_pPlayer);
+                enemyObject->SetHealth(health);
+                AddGameObject(enemyObject);
+            }
+
+            break;
+        }
+        case (size_t)ObjectType::kBackGround:
+        {
+            Vector2<double> position;
+            Vector2<double> size;
+
+            position.m_x = (double)transform.x;
+            position.m_y = (double)transform.y;
+
+            size.m_x = (double)transform.w;
+            size.m_y = (double)transform.h;
+
+            m_pBackground = new ImageObject(position, size, nullptr, BACKGROUND, 0, objectType, "BackGround");
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 bool Stage01::UpdateGamestate(double deltaTime)
@@ -526,6 +602,7 @@ void Stage01::UpdateGameObjects(double deltaTime)
 
 }
 
+
 void Stage01::Exit()
 {
     // Delete the vectors I've created
@@ -541,31 +618,273 @@ void Stage01::Exit()
 |	Attempts to save the data to disk.		|
 |	Returns true if successful.				|
 -------------------------------------------*/
-bool Stage01::Save()
+bool Stage01::Save(size_t index)
 {
+    // check for save has been successfully done
+    bool isSaved = false;
+
+    switch (index)
+    {
+        // Save file 01
+        case 1:
+        {
+            isSaved = SaveDataIntoFiles(_SAVE_FOLDER_1);
+            break;
+        }
+        // Save file 02
+        case 2:
+        {
+            isSaved = SaveDataIntoFiles(_SAVE_FOLDER_2);
+            break;
+        }
+        // Save file 03
+        case 3:
+        {
+            isSaved = SaveDataIntoFiles(_SAVE_FOLDER_3);
+            break;
+        }
+    default:
+        break;
+    }
+
+    std::cout << "SAVE COMPLETE IN " << index << std::endl;
+
+    return isSaved;
+}
+
+/*=================
+    Save Data
+=================*/
+bool Stage01::SaveDataIntoFiles(const char* folderName)
+{
+    std::string path;
+
     // Get data reference.
-    SaveData* pSave = m_pOwner->GetSave();
+    SaveData* pSave = m_pOwner->GetSaveData();
+
+    // save stage data to name
+    pSave->Load(folderName,_SAVE_STAGE);
+
+                /*-----------
+                    STAGE
+                -----------*/
+
+    // Get data file to save
     SaveData::Data& saveData = pSave->GetData();
 
-    // Update the value that we want to save
-    saveData.m_playerPosition.m_x = m_pPlayer->GetTransform().x;
-    saveData.m_playerPosition.m_y = m_pPlayer->GetTransform().y;
+    // Save the Stage 01
+    saveData.m_stage = 1;
 
-    // Save Enemies
+    saveData.m_playTime = m_CurrentTime;
+
+    saveData.m_saves = ++m_saves;
+
+    // Player file load and save
+    pSave->Save(folderName, _SAVE_STAGE);
+
+
+                /*---------------
+                    END STAGE 
+                ---------------*/
+
+                /*-----------
+                    PLAYER
+                -----------*/
+
+    SDL_Rect transformData = m_pPlayer->GetTransform();
+
+    strcpy_s(saveData.m_pSpriteName, m_pPlayer->GetTextureName());
+
+    strcpy_s(saveData.m_pPlayerName, m_pPlayer->GetName());
+
+    saveData.m_position.m_x = transformData.x;
+
+    saveData.m_position.m_y = transformData.y;
+
+    saveData.m_health = m_pPlayer->GetStatus().m_health;
+
+    pSave->Save(folderName, _SAVE_PLAYER);
+
+
+                /*---------------
+                    END PLAYER
+                ---------------*/
+
+                /*-------------
+                    ENEMIES
+                -------------*/
+
+    size_t index = 1;
     for (auto& object : m_vpGameObjects)
     {
-        // Save enemies position
+        // Save existing enemies
         if (object->GetStatus().m_type == (size_t)ObjectType::kEnemy)
         {
-            Vector2<int> position{ object->GetTransform().x,object->GetTransform().y };
-            saveData.m_enemyPositions.push_back(position);
-            saveData.m_enemySprite.push_back(object->GetTextureName());
+            transformData = object->GetTransform();
+
+            strcpy_s(saveData.m_pSpriteName, object->GetTextureName());
+
+            saveData.m_position.m_x = transformData.x;
+            saveData.m_position.m_y = transformData.y;
+
+            saveData.m_health = object->GetStatus().m_health;
+
+            // name of the enemy file
+            path = std::string("/enemy_0") + std::to_string(index) + std::string(".save");
+
+            pSave->Save(folderName, path.c_str());
+            ++index;
+
         }
     }
 
+    // Set dead enemies health to 0
+    if (index <= 3)
+    {
+        for (index; index < 4; ++index)
+        {
+            saveData.m_health = 0;
+            strcpy_s(saveData.m_pSpriteName, "NULL");
+            saveData.m_position = { 0,0 };
+            path = std::string("/enemy_0") + std::to_string(index) + std::string(".save");
+            pSave->Save(folderName, path.c_str());
 
-    // Perform the save operation.
+        }
+    }
+
+                    /*-----------------
+                        END ENEMIES
+                    -----------------*/
+    
+    m_pOwner->LoadScene(Platformer::SceneName::kMainMenu);
+
+    return true;
+}
+
+/*=================
+    Load Data
+=================*/
+bool Stage01::Load(size_t index)
+{
+    bool isLoad = false;
+
+    switch (index)
+    {
+        // No load file
+        case 0:
+        {
+            isLoad = false;
+            break;
+        }
+
+        // Load file 1
+        case 1:
+        {
+            isLoad = LoadDataFromFiles(_SAVE_FOLDER_1);
+            assert(isLoad);
+            break;
+        }
+        // Load file 2
+        case 2:
+        {
+            isLoad = LoadDataFromFiles(_SAVE_FOLDER_2);
+            assert(isLoad);
+            break;
+        }
+        // Load file 3
+        case 3:
+        {
+            isLoad = LoadDataFromFiles(_SAVE_FOLDER_3);
+            assert(isLoad);
+            break;
+        }
+
+    default:
+        break;
+    }
+
+    // can't be unloaded with valid index
+    
+
+    return isLoad;
+}
+
+bool Stage01::LoadDataFromFiles(const char* folderName)
+{
+    bool isLoaded = false;
+
+    // Get the save data reference
+    SaveData* pSave = m_pOwner->GetSaveData();
+
+    isLoaded = pSave->Load(folderName, _SAVE_PLAYER);
+    assert(isLoaded);
+
+    SaveData::Data& loadData = pSave->GetData();
 
 
-    return pSave->Save();
+    m_CurrentTime = loadData.m_playTime;
+    m_saves = loadData.m_saves;
+
+                /*-----------
+                    PLAYER
+                -----------*/
+
+    // Transform
+    SDL_Rect transformData =
+    {
+        (int)loadData.m_position.m_x,
+        (int)loadData.m_position.m_y,
+        (int)PLAYER_WIDTH,
+        (int)PLAYER_HEIGHT
+    };
+
+    CreateGameObject(transformData, (size_t)ObjectType::kPlayer, PLAYER_SPRITE, loadData.m_health);
+
+    m_pPlayer->GetStatus().m_name = loadData.m_pPlayerName;
+                /*---------------
+                    END PLAYER
+                ---------------*/
+
+
+                /*-------------
+                    ENEMIES
+                -------------*/
+
+    // Enemy file name
+    std::string path;
+
+    size_t index = 1;
+
+    for (index; index < 4; ++index)
+    {
+        path = std::string("/enemy_0") + std::to_string(index) + std::string(".save");
+
+        // Save existing enemies
+        isLoaded = pSave->Load(folderName, path.c_str());
+
+        // if enemy does not exist anymore
+        if (loadData.m_health <= 0)
+            break;
+
+        transformData =
+        {
+            (int)loadData.m_position.m_x,
+            (int)loadData.m_position.m_y,
+            (int)ENEMY_WIDTH,
+            (int)ENEMY_HEIGHT
+        };
+
+        std::cout << loadData.m_pSpriteName << std::endl;
+
+        CreateGameObject(transformData, (size_t)ObjectType::kEnemy, loadData.m_pSpriteName, loadData.m_health);
+
+
+    }
+
+                /*-----------------
+                    END ENEMIES
+                -----------------*/
+
+
+    return isLoaded;
 }

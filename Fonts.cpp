@@ -65,6 +65,16 @@ void Fonts::PreloadFonts(size_t sceneNumber)
             AddTTFToFonts(FONT2, 35);
             break;
         }
+        // LoadFileScene
+        case 6:
+        {
+            AddTTFToFonts(FONT1, 50);
+            AddTTFToFonts(FONT2, 40);
+            AddTTFToFonts(FONT3, 40);
+            AddTTFToFonts(SANS, 40);
+            break;
+        }
+
     default:
         break;
     }

@@ -58,6 +58,8 @@ public:
 
 	virtual void SetActive(bool) {}
 
+	virtual void SetHealth(int) {}
+
 private:
 	virtual void AddSound(const char*, const char*) {}
 };

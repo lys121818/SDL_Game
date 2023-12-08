@@ -9,6 +9,7 @@
 #include "ImageDirectory.h"
 #include "CreditsScene.h"
 #include "SoundDirectory.h"
+#include "LoadFileScene.h"
 
 Platformer::Platformer(GameDemo* pOwner)
     : 
@@ -89,7 +90,7 @@ void Platformer::ChangeState(GameState* pNewState)
     pNewState->Enter();
 }
 
-void Platformer::LoadScene(SceneName scene)
+void Platformer::LoadScene(SceneName scene, size_t fileNumber)
 {
     switch (scene)
     {
@@ -101,13 +102,13 @@ void Platformer::LoadScene(SceneName scene)
         }
         case SceneName::kGamePlay:
         {
-            m_pNextState = new Stage01(this);
+            m_pNextState = new Stage01(this, fileNumber);
             m_currentScene = SceneName::kGamePlay;
             break;
         }
         case SceneName::kBoss:
         {
-            m_pNextState = new BossStage(this);
+            m_pNextState = new BossStage(this, fileNumber);
             m_currentScene = SceneName::kBoss;
             break;
         }
@@ -127,6 +128,12 @@ void Platformer::LoadScene(SceneName scene)
         {
             m_pNextState = new CreditsScene(this);
             m_currentScene = SceneName::kCredit;
+            break;
+        }
+        case SceneName::kLoadFile:
+        {
+            m_pNextState = new LoadFileScene(this);
+            m_currentScene = SceneName::kLoadFile;
             break;
         }
         default:

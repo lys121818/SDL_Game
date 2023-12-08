@@ -48,6 +48,8 @@ public:
 	// [SETTERS]
 	virtual void Damaged(int amount) override { m_status.m_health -= amount; }
 
+	virtual void SetHealth(int amount) override { m_status.m_health = amount; }
+
 	// Trigger Enter
 	virtual void OnOverlapBegin(ColliderComponent* pCollider) override;
 

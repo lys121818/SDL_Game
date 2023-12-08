@@ -4,6 +4,7 @@
 #define MAINMENU1_SOUND	"assets/Sounds/BackGround/MainMenu_1.wav"
 #define MAINMENU2_SOUND	"assets/Sounds/BackGround/MainMenu_2.mp3"
 #define GAMEPLAY_SOUND	"assets/Sounds/BackGround/GamePlay.wav"
+#define BOSS_STAGE_SOUND "assets/Sounds/BackGround/BossStage.wav"
 
 // [PLAYER]
 #define JUMP_SOUND	"assets/Sounds/Player/PlayerJump.wav"

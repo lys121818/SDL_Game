@@ -6,6 +6,7 @@
 /// A Game State / Scene interface
 //==================================================================================================//
 class Textures;
+class GameStateMachine;
 
 class GameState
 {
@@ -23,6 +24,10 @@ public:
 
 	// Handles the event in the context of this scene.
 	virtual bool HandleEvent(SDL_Event*) { return false; }
+
+	virtual bool Load(size_t) { return false; }
+
+	virtual bool Save(size_t) { return false; }
 
 	// Cleans up the state
 	virtual void Exit() {}

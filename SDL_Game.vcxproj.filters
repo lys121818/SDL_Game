@@ -221,6 +221,9 @@
     <ClCompile Include="SaveData.cpp">
       <Filter>source files</Filter>
     </ClCompile>
+    <ClCompile Include="LoadFileScene.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h">
@@ -384,6 +387,12 @@
     </ClInclude>
     <ClInclude Include="SaveData.h">
       <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadFileScene.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveFileDirectory.h">
+      <Filter>header files\SDL_Game\Defines</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,7 +16,6 @@ MainMenu::MainMenu(Platformer* pOwner)
 	m_pOwner(pOwner),
 	m_background_1(Vector2<double>{ 0,0 }, Vector2<double>{WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
 	m_background_2(Vector2<double>{ WINDOWWIDTH,0 }, Vector2<double>{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "BackGround"),
-	m_pHoverButton(nullptr),
 	m_keyboardButtonIndex(-1),
 	m_pMainMenuUI(nullptr),
 	isSetUI(false)
@@ -41,6 +40,12 @@ void MainMenu::Enter()
 	SetUI();
 
 	m_pOwner->SetBGMusic(MAINMENU1_SOUND, MAINMENU2_SOUND);
+
+	SaveData* save = m_pOwner->GetSaveData();
+	SaveData::Data& pData = save->GetData();
+
+	if (pData.m_pSpriteName == "")
+		isSetUI = true;
 }
 
 void MainMenu::Update(double deltaTime)
@@ -133,7 +138,8 @@ bool MainMenu::HandleEvent(SDL_Event* pEvent)
 				}
 				break;
 			}
-
+		default:
+			break;
 		}
 	}
 
@@ -272,11 +278,11 @@ void MainMenu::SetButtons()
 	button = new ButtonObject(buttonTransform, BUTTONS, Button_State::kNormal, "Load");
 
 
-	button->SetTextInButton(font, "LOAD", SDL_Color(GRAY), m_pOwner->GetGame()->GetRenderer());
+	button->SetTextInButton(font, "LOAD", SDL_Color(BLUE), m_pOwner->GetGame()->GetRenderer());
 
 	button->SetCallback([this]()->void
 		{
-			m_pOwner->GetSave()->Load();
+			m_pOwner->LoadScene(Platformer::SceneName::kLoadFile);
 		});
 
 	m_vpButtons.push_back(button);
@@ -331,12 +337,6 @@ void MainMenu::SetUI()
 	m_pMainMenuUI->InitUI();
 
 }
-
-void MainMenu::SetMusic()
-{
-
-}
-
 
 /// <summary>
 /// Updates for Background
