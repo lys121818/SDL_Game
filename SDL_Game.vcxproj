@@ -50,6 +50,7 @@
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MainMenuUI.cpp" />
     <ClCompile Include="MovingComponent.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Platformer.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="RGN.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="MainMenuUI.h" />
     <ClInclude Include="MovingComponent.h" />
     <ClInclude Include="ObjectType.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Platformer.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="RNG.h" />

@@ -7,6 +7,7 @@
 #include "SoundDirectory.h"
 #include "Bullet.h"
 #include "SaveData.h"
+#include "ParticleSystem.h"
 #include <assert.h>
 
 
@@ -23,6 +24,7 @@ Stage01::Stage01(Platformer* pOwner, size_t fileIndex)
     m_isPause(false)
 {
     m_CurrentTime = 0.0;
+    m_loadingTime = 0.0;
     m_saves = 0;
 }
 
@@ -300,10 +302,8 @@ bool Stage01::ProcessWindowEvent(SDL_WindowEvent* pData)
 
 void Stage01::InitGame()
 {
-    //m_vpBullets.reserve(s_kMaxBulletCount);
-
-    // Temperary gameobject
-    GameObject* stationary;
+    // reserve with max bulletCount
+    m_vpBullets.reserve(s_kMaxBulletCount);
 
     // Set loading to 0sec
     m_loadingTime = 0.0;
@@ -374,12 +374,15 @@ void Stage01::InitGame()
 
     }
 
+    // ParticleSystem* particle = new ParticleSystem(Vector2<float>{200, 200}, 50, 20, 30, false);
+    // AddGameObject(particle);
                         /*-----------
                              U I
                         -----------*/
 
     m_pInGameUI = new InGameUI(this, m_pPlayer, m_pOwner->GetGame()->GetFonts(),m_pOwner->GetGame()->GetRenderer());
     m_pInGameUI->AddHealthBar(Vector2<double> {HEALTHBAR_POSITION}, Vector2<double> {HEALTBARH_SIZE_VECTOR2});
+    m_pInGameUI->UpdateUI();
 
     m_pPlayer->SetTriggerFunction(HEALTHBAR_UI_FUNCTION, [this]()->void
         {
@@ -387,6 +390,9 @@ void Stage01::InitGame()
         });
 
 
+    ParticleSystem* particle;
+    particle = new ParticleSystem(Vector2<float>{400, 400}, 300, 50, 100, true);
+    AddGameObject(particle);
 }
 
 // Destory the elements in vector of GameObject
@@ -421,67 +427,106 @@ void Stage01::AddGameObject(GameObject* object)
     m_vpGameObjects.push_back(object);
 }
 
-void Stage01::CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* spriteName, int health)
+void Stage01::CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* pSpriteName, int health, const char* pPlayerName)
 {
 
 
     switch (objectType)
     {
-        case (size_t)ObjectType::kPlayer:
-        {
-            // create player
-            m_pPlayer = new PlayerObject(transform, &m_collisionReferee, objectType);
-
-            // name under player
-            m_pPlayer->SetNameTag(
-                m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
-                SDL_Color(BLACK),
-                m_pOwner->GetGame()->GetRenderer()
-            );
-
-
-            m_pPlayer->SetHealth(health);
-
-            // add to vector
-            AddGameObject(m_pPlayer);
-
-            break;
-        }
-        case (size_t)ObjectType::kEnemy:
-        {
-            GameObject* enemyObject;
-
-            if (std::string(spriteName).compare(ZOMBIEFEMALE) == 0)
+            case (size_t)ObjectType::kPlayer:
             {
-                enemyObject = new AiStateMachineEnemy(m_pPlayer, transform, &m_collisionReferee, ZOMBIEFEMALE, objectType, "Zombie_Female");
-                enemyObject->SetTargetObject(m_pPlayer);
-                enemyObject->SetHealth(health);
-                AddGameObject(enemyObject);
+                // create player
+                m_pPlayer = new PlayerObject(transform, &m_collisionReferee, objectType, pSpriteName, pPlayerName);
+
+                // name under player
+                m_pPlayer->SetNameTag(
+                    m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
+                    SDL_Color(BLACK),
+                    m_pOwner->GetGame()->GetRenderer()
+                );
+
+
+                m_pPlayer->SetHealth(health);
+
+                // add to vector
+                AddGameObject(m_pPlayer);
+
+                break;
             }
-            else if (std::string(spriteName).compare(ZOMBIEMALE) == 0)
+            case (size_t)ObjectType::kEnemy:
             {
-                enemyObject = new AiStateMachineEnemy(m_pPlayer, transform, &m_collisionReferee, ZOMBIEMALE,objectType, "Zombie_Male");
-                enemyObject->SetTargetObject(m_pPlayer);
-                enemyObject->SetHealth(health);
-                AddGameObject(enemyObject);
+                GameObject* enemyObject;
+
+                if (std::string(pSpriteName).compare(ZOMBIEFEMALE) == 0)
+                {
+                    enemyObject = new AiStateMachineEnemy(m_pPlayer, transform, &m_collisionReferee, ZOMBIEFEMALE, objectType, "Zombie_Female");
+                    enemyObject->SetTargetObject(m_pPlayer);
+                    enemyObject->SetHealth(health);
+                    AddGameObject(enemyObject);
+                }
+                else if (std::string(pSpriteName).compare(ZOMBIEMALE) == 0)
+                {
+                    enemyObject = new AiStateMachineEnemy(m_pPlayer, transform, &m_collisionReferee, ZOMBIEMALE,objectType, "Zombie_Male");
+                    enemyObject->SetTargetObject(m_pPlayer);
+                    enemyObject->SetHealth(health);
+                    AddGameObject(enemyObject);
+                }
+
+                break;
             }
+            case (size_t)ObjectType::kBackGround:
+            {
+                Vector2<double> position;
+                Vector2<double> size;
 
-            break;
-        }
-        case (size_t)ObjectType::kBackGround:
-        {
-            Vector2<double> position;
-            Vector2<double> size;
+                position.m_x = (double)transform.x;
+                position.m_y = (double)transform.y;
 
-            position.m_x = (double)transform.x;
-            position.m_y = (double)transform.y;
+                size.m_x = (double)transform.w;
+                size.m_y = (double)transform.h;
 
-            size.m_x = (double)transform.w;
-            size.m_y = (double)transform.h;
+                m_pBackground = new ImageObject(position, size, nullptr, BACKGROUND, 0, objectType, "BackGround");
+                break;
+            }
+            case (size_t)ObjectType::kPlayerBullet:
+            {
+                Bullet* newBullet = new Bullet(m_pPlayer, transform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
 
-            m_pBackground = new ImageObject(position, size, nullptr, BACKGROUND, 0, objectType, "BackGround");
-            break;
-        }
+                if(m_pPlayer->GetStatus().m_isRight)
+                    newBullet->TryMove(Vector2<double>{RIGHT});
+                else
+                    newBullet->TryMove(Vector2<double>{LEFT});
+
+                newBullet->SetCallback([this](size_t type, Vector2<float> position)->void 
+                    {
+
+                        SDL_Color color;
+                        switch (type)
+                        {
+                            case (size_t)ObjectType::kEnemy:
+                            case (size_t)ObjectType::kPlayer:
+                            {
+                                color = { RED };
+                                break;
+                            }
+                            case (size_t)ObjectType::kWall:
+                            {
+                                color = { GRAY };
+                                break;
+                            }
+                            default:
+                                color = { BLACK };
+                                break;
+                        }
+
+                        AddParticleEffect(position, 1, 50, 20, 30, false, nullptr, color);
+
+                    });
+
+                m_vpBullets.push_back(newBullet);
+
+                break;
+            }
         default:
             break;
     }
@@ -514,43 +559,30 @@ void Stage01::SpawnBullets()
 
     SDL_Rect playerTransform = m_pPlayer->GetTransform();
 
-
+    SDL_Rect startingTransform;
 
     // moving right
     if (m_pPlayer->GetStatus().m_isRight)
     {
-        SDL_Rect startingTransform
+        startingTransform =
         {
             playerTransform.x + (playerTransform.w),
             playerTransform.y + (playerTransform.h / 2),
             (int)BULLET_SIZE,
             (int)BULLET_SIZE
         };
-        Bullet* newBullet = new Bullet(m_pPlayer, startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
-
-        newBullet->TryMove(Vector2<double>{RIGHT});
-
-        m_vpBullets.push_back(newBullet);
     }
-    // moving left
     else
     {
-        SDL_Rect startingTransform
+        startingTransform =
         {
             playerTransform.x - (playerTransform.w / 2) ,
             playerTransform.y + (playerTransform.h / 2),
             (int)BULLET_SIZE,
             (int)BULLET_SIZE
         };
-
-        Bullet* newBullet = new Bullet(m_pPlayer, startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
-
-        newBullet->TryMove(Vector2<double>{LEFT});
-
-        m_vpBullets.push_back(newBullet);
     }
-
-
+    CreateGameObject(startingTransform, (size_t)ObjectType::kPlayerBullet, BULLET);
 
 }
 
@@ -599,6 +631,8 @@ void Stage01::UpdateGameObjects(double deltaTime)
 
     if (m_pPlayer->GetActive() == false)
         delete m_pPlayer;
+
+    
 
 }
 
@@ -838,9 +872,8 @@ bool Stage01::LoadDataFromFiles(const char* folderName)
         (int)PLAYER_HEIGHT
     };
 
-    CreateGameObject(transformData, (size_t)ObjectType::kPlayer, PLAYER_SPRITE, loadData.m_health);
+    CreateGameObject(transformData, (size_t)ObjectType::kPlayer, PLAYER_SPRITE, loadData.m_health, loadData.m_pPlayerName);
 
-    m_pPlayer->GetStatus().m_name = loadData.m_pPlayerName;
                 /*---------------
                     END PLAYER
                 ---------------*/
@@ -887,4 +920,18 @@ bool Stage01::LoadDataFromFiles(const char* folderName)
 
 
     return isLoaded;
+}
+
+void Stage01::AddParticleEffect(Vector2<float> position, int size, int particleCount, float particleSpeed, float radious, bool loop, const char* textureName, SDL_Color color)
+{
+    ParticleSystem* particleEffect = new ParticleSystem(position, particleCount, particleSpeed, radious, loop);
+
+    if (textureName != nullptr)
+        particleEffect->SetTextureName(textureName);
+    else
+        particleEffect->SetColor(color);
+
+    particleEffect->SetSize(size);
+
+    AddGameObject(particleEffect);
 }

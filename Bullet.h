@@ -5,6 +5,8 @@
 #include "AnimationComponent.h"
 #include "MovingComponent.h"
 #include "SoundComponent.h"
+#include "RNG.h"
+#include <functional>
 
 class Bullet : public GameObject
 {
@@ -18,6 +20,8 @@ private:
         kOnShoot,
         kMuzzle
     } m_currentState;
+
+    RNG m_rng;
 
     SDL_Rect m_transform;
 
@@ -41,6 +45,8 @@ private:
     Vector2<double> m_targetDirection;
 
     bool m_isAutoLock = false;
+
+    std::function<void(size_t,Vector2<float>)> m_callback;
 
 public:
     Bullet(
@@ -77,6 +83,7 @@ public:
 
     virtual void SetActive(bool active) override { m_status.m_isActive = active; }
 
+    void SetCallback(std::function<void(size_t, Vector2<float>)> func) { m_callback = func; }
 private:
     /// ANIMATION EVENTS
     // All the update function for Animation events runs here

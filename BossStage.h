@@ -102,14 +102,14 @@ private:
 	// Add additional gameobject to vector
 	void AddGameObject(GameObject* object);
 
-	void CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* spriteName, int health = 0);
+	void CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* pSpriteName, int health = 0, const char* pPlayerName = "");
 
 	// returns true if the game is over
 	bool UpdateGamestate(double deltaTime);
 
 	void SpawnBullets();
 
-	void SpawnBossBullet(bool isAutoLock,SDL_Rect spawnTransform);
+	void SpawnBossBullet(SDL_Rect spawnTransform);
 
 	void UpdateGameObjects(double deltaTime);
 
@@ -122,5 +122,8 @@ private:
 	virtual bool Load(size_t index) override;
 
 	bool LoadDataFromFiles(const char* folderName);
+
+	void AddParticleEffect(Vector2<float> position, int size, int particleCount, float particleSpeed, float radious, bool loop, const char* textureName = nullptr, SDL_Color color = { BLACK });
+
 };
 

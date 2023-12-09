@@ -145,7 +145,7 @@ void Platformer::LoadScene(SceneName scene, size_t fileNumber)
 
 void Platformer::SetBGMusic(const char* pFirstMusic, const char* pSecondMusic)
 {
-    m_musicComponent.SetBGMusic(pFirstMusic, pSecondMusic);
+    //m_musicComponent.SetBGMusic(pFirstMusic, pSecondMusic);
 }
 
 void Platformer::ToggleMusic()

@@ -2,15 +2,18 @@
 #include "ImageDirectory.h"
 #include "Platformer.h"
 #include "GameDemo.h"
+#include "SoundDirectory.h"
 #include <assert.h>
 
 LossScreen::LossScreen(Platformer* pOwner)
 	:
 	m_pOwner(pOwner),
-	m_Background(Vector2<double>{ 0,0 }, Vector2<double>{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND,0, 0, "LossState"),
-	m_lossImage(Vector2<double>{ 200,20 }, Vector2<double>{ 400,500 }, nullptr, LOSS_STATE, 0, 0, "Loss"),
+	m_Background(Vector2<double>{ 0, 0 }, Vector2<double>{ WINDOWWIDTH, WINDOWHEIGHT }, nullptr, BACKGROUND, 0, 0, "LossState"),
+	m_lossImage(Vector2<double>{ 200, 20 }, Vector2<double>{ 400, 500 }, nullptr, LOSS_STATE, 0, 0, "Loss"),
 	m_keyboardButtonIndex(-1)
 {
+	m_pSound.AddSoundChunk(DEAD_SOUND);
+
 	isOnAction = true;
 }
 
@@ -23,6 +26,7 @@ void LossScreen::Enter()
 	SetButtons();
 	m_lossImage.SetAction(ImageActionComponent::ActionState::kPoping);
 	m_pOwner->ToggleMusic();
+	m_pSound.PlayChunk();
 }
 
 void LossScreen::Update(double deltaTime)

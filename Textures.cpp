@@ -109,8 +109,8 @@ void Textures::PreloadTextures(size_t sceneNumber)
 
 SDL_Texture* Textures::GetTexture(const char* name)
 {
-    if (m_mpTextures[name] == nullptr)
-        std::cout << "[Textures] There are no Texture with name: " << name << std::endl;
+    //if (m_mpTextures[name] == nullptr)
+    //    std::cout << "[Textures] There are no Texture with name: " << name << std::endl;
 
     return m_mpTextures[name];
 }

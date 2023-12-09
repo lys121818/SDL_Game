@@ -98,10 +98,11 @@ private:
 public:
     PlayerObject
     (
-        SDL_Rect transform, 
-        CollisionReferee* pReferee, 
+        SDL_Rect transform,
+        CollisionReferee* pReferee,
         size_t type = (size_t)ObjectType::kPlayer,
-        const char* directory = PLAYER_SPRITE
+        const char* directory = PLAYER_SPRITE,
+        const char* name = ""
     );
     ~PlayerObject();
     

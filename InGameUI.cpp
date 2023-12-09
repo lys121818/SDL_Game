@@ -13,7 +13,8 @@ InGameUI::InGameUI(GameState* pOwner, GameObject* pObject, Fonts* pFonts, SDL_Re
 	m_pFont(pFonts),
 	m_pRenderer(pRenderer),
 	m_keyboardButtonIndex(-1),
-	m_isPause(false)
+	m_isPause(false),
+	m_menuBox(SDL_Rect{0,0,0,0})
 {
 }
 
@@ -287,6 +288,11 @@ void InGameUI::ChangeButtonFocus(int direction)
 void InGameUI::Destory()
 {
 	for (auto& element : m_vpUIObjects)
+	{
+		delete element;
+	}
+
+	for (auto& element : m_vpButtons)
 	{
 		delete element;
 	}

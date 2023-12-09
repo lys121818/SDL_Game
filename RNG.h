@@ -10,7 +10,8 @@ class RNG
 	*/
 public:
 	// able to insert the seed on create
-	RNG(unsigned int seed = -1);
+	RNG();
+	RNG(unsigned int seed);
 	~RNG();
 	
 

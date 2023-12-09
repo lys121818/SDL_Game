@@ -1,4 +1,5 @@
 #include "Bullet.h"
+#include <iostream>
 
 Bullet::Bullet(GameObject* pOwnerObject, SDL_Rect transform, CollisionReferee* pReferee,size_t type, GameObject* pTarget,bool isAutoLock, const char* directory)
 	:
@@ -23,6 +24,8 @@ Bullet::Bullet(GameObject* pOwnerObject, SDL_Rect transform, CollisionReferee* p
 	m_status.m_type = type;
 
 	m_status.m_name = "Bullet";
+
+	m_status.m_cirtChace = pOwnerObject->GetStatus().m_cirtChace;
 
 	m_animation.AddAnimationSequence("onShoot", Vector2<int>{170, 139}, Vector2<int>{5, 0}, 5);
 	m_animation.AddAnimationSequence("muzzle", Vector2<int>{170, 139}, Vector2<int>{5, 1}, 5, 1.0f, false);
@@ -88,7 +91,6 @@ void Bullet::Update(double deltaTime)
 
 void Bullet::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
-	m_collider.DrawColliderBox(pRenderer);
 	m_animation.Render(pRenderer, pTexture, m_status.m_isRight);
 }
 
@@ -104,6 +106,30 @@ void Bullet::OnOverlapBegin(ColliderComponent* pCollider)
 			{
 				m_collider.SetCollider(false);
 				m_currentState = AnimationState::kMuzzle;
+
+				if (objectType == (size_t)ObjectType::kEnemy)
+				{
+					bool isCirt = false;
+					int damage = BULLET_POWER;
+
+					// get crit chance
+					if (m_rng.GetRand(0,10) < m_status.m_cirtChace)
+						isCirt = true;
+					
+					// set damage
+					if (isCirt)
+					{
+						std::cout << "CRIT";
+						damage *= 2;
+					}
+
+					m_callback((size_t)ObjectType::kEnemy,Vector2<float>{(float)m_transform.x,(float)m_transform.y});
+
+					pCollider->GetOwner()->Damaged(damage);
+				}
+
+				m_callback((size_t)ObjectType::kWall, Vector2<float>{(float)m_transform.x, (float)m_transform.y});
+
 			}
 			break;
 		}
@@ -113,6 +139,30 @@ void Bullet::OnOverlapBegin(ColliderComponent* pCollider)
 			{
 				m_collider.SetCollider(false);
 				m_currentState = AnimationState::kMuzzle;
+
+				if (objectType == (size_t)ObjectType::kPlayer)
+				{
+					bool isCirt = false;
+					int damage = BULLET_POWER;
+
+					// get crit chance
+					if (m_rng.GetRand(0, 10) < m_status.m_cirtChace)
+						isCirt = true;
+
+					// set damage
+					if (isCirt)
+					{
+						std::cout << "CRIT";
+						damage *= 2;
+					}
+
+					m_callback((size_t)ObjectType::kPlayer, Vector2<float>{(float)m_transform.x, (float)m_transform.y});
+
+					pCollider->GetOwner()->Damaged(damage);
+				}
+
+				m_callback((size_t)ObjectType::kWall, Vector2<float>{(float)m_transform.x, (float)m_transform.y});
+
 			}
 			break;
 		}

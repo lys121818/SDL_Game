@@ -6,7 +6,7 @@
 #include "SoundDirectory.h"
 #include <fstream>
 
-PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_t type, const char* directory)
+PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_t type, const char* directory, const char* name)
 	:
 	 m_transform(transform),
 	 m_isGame(false),
@@ -18,10 +18,16 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 	 m_movingComponent(&m_transform, Vector2<double>{(double)transform.x,(double)transform.y}, & m_collider),
 	 m_nameText(&m_transform)
 {
-	// Get Name from the file
-	std::ifstream file(PLAYER_INFO);
-	file >> m_status.m_name;
-	file.close();
+	// no saved file
+	if (name == "")
+	{
+		// Get Name from the file
+		std::ifstream file(PLAYER_INFO);
+		file >> m_status.m_name;
+		file.close();
+	}
+	else
+		m_status.m_name = name;
 
 	// Set NameText to under player
 	m_nameText.SetTextPlacement(TextComponent::Placement::kBottm);
@@ -60,8 +66,6 @@ PlayerObject::PlayerObject(SDL_Rect transform, CollisionReferee* pReferee, size_
 	
 	/// SOUNDS
 	AddSound(JUMP_SOUND, "Jump");
-	AddSound(DEAD_SOUND, "GameOver");
-	AddSound(WIN_SOUND, "Victory");
 	AddSound(FOOTSTEP_SOUND, "Step");
 	AddSound(HURT_SOUND, "Hurt");
 }
@@ -91,8 +95,6 @@ void PlayerObject::Update(double deltaTime)
 void PlayerObject::Render(SDL_Renderer* pRenderer, SDL_Texture* pTexture)
 {
 	int blink = (int)(m_immuneTime * 100);
-
-	m_collider.DrawColliderBox(pRenderer);
 
 	// Blink when it's on Immune
 	if(!m_isImmune ||( (blink % 2) != 0))
@@ -249,8 +251,6 @@ void PlayerObject::OnOverlapBegin(ColliderComponent* pCollider)
 			if(m_mpSounds["Step"]->GetActiveChannel() != -1)
 				m_mpSounds["Step"]->StopChunk();	// stop loop playing
 
-			m_mpSounds["Victory"]->PlayChunk();
-
 			m_isGame = true;
 			break;
 		}
@@ -263,21 +263,9 @@ void PlayerObject::OnOverlapBegin(ColliderComponent* pCollider)
 			}
 			break;
 		}
-		case (size_t)ObjectType::kEnemeyBullet:
-		{
-			if (!m_isImmune)
-			{
-				Damaged(BULLET_POWER);
-				std::cout << "Health: " << m_status.m_health << std::endl;
-				break;
-			}
-		}
 
 	default:
-	{
 		break;
-	}
-	break;
 	}
 }
 
@@ -335,7 +323,6 @@ void PlayerObject::Damaged(int amount)
 	// Game Over
 	if (m_status.m_health <= 0)
 	{
-		m_mpSounds["GameOver"]->PlayChunk();
 		std::cout << "You died \n";
 		m_isGame = true;
 

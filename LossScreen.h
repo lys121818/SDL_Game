@@ -2,6 +2,7 @@
 #include "GameState.h"
 #include "ImageObject.h"
 #include "ButtonObject.h"
+#include "SoundComponent.h"
 
 
 class Platformer;
@@ -20,6 +21,7 @@ private:
 
 	std::vector<ButtonObject*> m_vpButtons;
 
+	SoundComponent m_pSound;
 
 	bool isOnAction;
 

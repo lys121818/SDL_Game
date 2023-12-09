@@ -25,7 +25,7 @@ private:
 	static constexpr int s_kMaxEnemyObjectCount = 2;
 
 	// Max value of gameobject to be create
-	static constexpr size_t s_kMaxGameObjectCount = MAX_GAMEOBJECT;
+	static constexpr size_t s_kMaxGameObjectCount = 100;
 
 	static constexpr size_t s_kMaxBulletCount = MAX_BULLET;
 
@@ -110,7 +110,7 @@ private:
 	// Add additional gameobject to vector
 	void AddGameObject(GameObject* object);
 
-	void CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* spriteName, int health = 0);
+	void CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* pSpriteName, int health = 0, const char* pPlayerName = "");
 
 	// returns true if the game is over
 	bool UpdateGamestate(double deltaTime);
@@ -128,5 +128,7 @@ private:
 	virtual bool Load(size_t index) override;
 
 	bool LoadDataFromFiles(const char* folderName);
+
+	void AddParticleEffect(Vector2<float> position, int size, int particleCount, float particleSpeed, float radious, bool loop, const char* textureName = nullptr, SDL_Color color = { BLACK });
 };
 

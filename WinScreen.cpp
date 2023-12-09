@@ -3,6 +3,7 @@
 #include "Platformer.h"
 #include "GameDemo.h"
 #include <SDL.h>
+#include "SoundDirectory.h"
 #include <assert.h>
 
 WinScreen::WinScreen(Platformer* pOwner)
@@ -12,6 +13,7 @@ WinScreen::WinScreen(Platformer* pOwner)
 	m_winImage(Vector2<double>{ 200,-10 }, Vector2<double>{400,500} , nullptr, WIN_STATE, 0, 0, "Win"),
 	m_keyboardButtonIndex(-1)
 {
+	m_pSound.AddSoundChunk(WIN_SOUND);
 	isOnAction = true;
 }
 
@@ -24,6 +26,7 @@ void WinScreen::Enter()
 	SetButtons();
 	m_winImage.SetAction(ImageActionComponent::ActionState::kPoping);
 	m_pOwner->ToggleMusic();
+	m_pSound.PlayChunk();
 }
 
 void WinScreen::Update(double deltaTime)

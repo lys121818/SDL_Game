@@ -5,6 +5,7 @@
 #include "GameDemo.h"
 #include "SoundDirectory.h"
 #include "Bullet.h"
+#include "ParticleSystem.h"
 
 #include <assert.h>
 #include <iomanip>
@@ -17,9 +18,13 @@ BossStage::BossStage(Platformer* pOwner, size_t fileIndex)
     m_pBossUI(nullptr),
 	m_pBackground(nullptr),
 	m_pPlayer(nullptr),
-	m_pTiledMap(nullptr)
+    m_pBossEnemy(nullptr),
+	m_pTiledMap(nullptr),
+    m_isPause(false)
 {
 	m_CurrentTime = 0.0;
+    m_loadingTime = 0.0;
+    m_saves = 0;
 }
 
 BossStage::~BossStage()
@@ -34,7 +39,6 @@ void BossStage::Enter()
 
     InitGame();
     m_pInGameUI->InitUI();
-    m_pBossUI->InitUI();
 
     m_pOwner->SetBGMusic(BOSS_STAGE_SOUND);
 }
@@ -49,10 +53,6 @@ void BossStage::Update(double deltaTime)
         // current time
         if (m_isPause == false)
             m_CurrentTime += deltaTime;
-
-        std::cout << "My Saved Times: " << m_saves << std::endl;
-
-        std::cout << m_CurrentTime << std::endl;
 
         UpdateGamestate(deltaTime);
     }
@@ -118,9 +118,6 @@ bool BossStage::HandleEvent(SDL_Event* pEvent)
         {
             if (!m_pInGameUI->HandleEvent(pEvent))
                 m_isPause = !m_isPause;
-
-            if (!m_pBossUI->HandleEvent(pEvent))
-                m_isPause = !m_isPause;
         }
 
         switch ((int)pEvent->type)
@@ -129,7 +126,6 @@ bool BossStage::HandleEvent(SDL_Event* pEvent)
         case SDL_KEYDOWN:
         case SDL_KEYUP:
         {
-
 
             if (ProcessKeyboardEvent(&pEvent->key) == true)
             {
@@ -168,7 +164,6 @@ bool BossStage::ProcessKeyboardEvent(SDL_KeyboardEvent* pData)
         {
             m_isPause = !m_isPause;
             m_pInGameUI->TogglePause();
-            m_pBossUI->TogglePause();
             break;
         }
         // Run
@@ -259,6 +254,9 @@ bool BossStage::ProcessWindowEvent(SDL_WindowEvent* pData)
 
 void BossStage::InitGame()
 {
+    // reserve with max bulletCount
+    m_vpBullets.reserve(s_kMaxBulletCount);
+
     // Set GameTime to 0sec
     m_CurrentTime = (double)0.0;
 
@@ -324,9 +322,11 @@ void BossStage::InitGame()
     // UI
     m_pInGameUI = new InGameUI(this, m_pPlayer, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
     m_pInGameUI->AddHealthBar(Vector2<double> {HEALTHBAR_POSITION}, Vector2<double> {HEALTBARH_SIZE_VECTOR2});
+    m_pInGameUI->UpdateUI();
 
     m_pBossUI = new InGameUI(this, m_pBossEnemy, m_pOwner->GetGame()->GetFonts(), m_pOwner->GetGame()->GetRenderer());
     m_pBossUI->AddHealthBar(Vector2<double> {WINDOWHEIGHT / 2}, Vector2<double> {400, 80});
+    m_pBossUI->UpdateUI();
 
 }
 
@@ -365,65 +365,139 @@ void BossStage::AddGameObject(GameObject* object)
     m_vpGameObjects.push_back(object);
 }
 
-void BossStage::CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* spriteName, int health)
+void BossStage::CreateGameObject(const SDL_Rect& transform, size_t objectType, const char* pSpriteName, int health, const char* pPlayerName)
 {
 
     switch (objectType)
-    {
-    case (size_t)ObjectType::kPlayer:
-    {
-        // create player
-        m_pPlayer = new PlayerObject(transform, &m_collisionReferee, objectType);
+        {
+        case (size_t)ObjectType::kPlayer:
+        {
+            // create player
+            m_pPlayer = new PlayerObject(transform, &m_collisionReferee, objectType,pSpriteName,pPlayerName);
 
-        // name under player
-        m_pPlayer->SetNameTag(
-            m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
-            SDL_Color(BLACK),
-            m_pOwner->GetGame()->GetRenderer()
-        );
+            // name under player
+            m_pPlayer->SetNameTag(
+                m_pOwner->GetGame()->GetFonts()->GetFont(ARIAL),
+                SDL_Color(BLACK),
+                m_pOwner->GetGame()->GetRenderer()
+            );
 
 
-        m_pPlayer->SetHealth(health);
+            m_pPlayer->SetHealth(health);
 
-        // add to vector
-        AddGameObject(m_pPlayer);
+            // add to vector
+            AddGameObject(m_pPlayer);
 
-        break;
-    }
-    case (size_t)ObjectType::kEnemy:
-    {
-        m_pBossEnemy = new AiStateMachineEnemyBoss(m_pPlayer, transform, &m_collisionReferee, BOSS, objectType, "Boss");
-        m_pBossEnemy->SetTargetObject(m_pPlayer);
-        m_pBossEnemy->SetHealth(health);
+            break;
+        }
+        case (size_t)ObjectType::kEnemy:
+        {
+            m_pBossEnemy = new AiStateMachineEnemyBoss(m_pPlayer, transform, &m_collisionReferee, BOSS, objectType, "Boss");
+            m_pBossEnemy->SetTargetObject(m_pPlayer);
+            m_pBossEnemy->SetHealth(health);
 
-        m_pBossEnemy->SetCallBack("Attack", [this]()->void
-            {
-                SpawnBossBullet(m_pBossEnemy->GetRage(), m_pBossEnemy->GetTransform());
-            });
+            m_pBossEnemy->SetCallBack("Attack", [this]()->void
+                {
+                    SpawnBossBullet(m_pBossEnemy->GetTransform());
+                });
 
-        m_pBossEnemy->SetCallBack("Defeat", [this]()->void
-            {
-                m_pOwner->LoadScene(Platformer::SceneName::kVictory);
-            });
+            m_pBossEnemy->SetCallBack("Defeat", [this]()->void
+                {
+                    m_pOwner->LoadScene(Platformer::SceneName::kVictory);
+                });
 
-        AddGameObject(m_pBossEnemy);
+            AddGameObject(m_pBossEnemy);
 
-        break;
-    }
-    case (size_t)ObjectType::kBackGround:
-    {
-        Vector2<double> position;
-        Vector2<double> size;
+            break;
+        }
+        case (size_t)ObjectType::kBackGround:
+        {
+            Vector2<double> position;
+            Vector2<double> size;
 
-        position.m_x = (double)transform.x;
-        position.m_y = (double)transform.y;
+            position.m_x = (double)transform.x;
+            position.m_y = (double)transform.y;
 
-        size.m_x = (double)transform.w;
-        size.m_y = (double)transform.h;
+            size.m_x = (double)transform.w;
+            size.m_y = (double)transform.h;
 
-        m_pBackground = new ImageObject(position, size, nullptr, BACKGROUND, 0, objectType, "BackGround");
-        break;
-    }
+            m_pBackground = new ImageObject(position, size, nullptr, BACKGROUND, 0, objectType, "BackGround");
+            break;
+        }
+        case (size_t)ObjectType::kPlayerBullet:
+        {
+            Bullet* newBullet = new Bullet(m_pPlayer, transform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
+
+            if (m_pPlayer->GetStatus().m_isRight)
+                newBullet->TryMove(Vector2<double>{RIGHT});
+            else
+                newBullet->TryMove(Vector2<double>{LEFT});
+
+            newBullet->SetCallback([this](size_t type, Vector2<float> position)->void
+                {
+
+                    SDL_Color color;
+                    switch (type)
+                    {
+                    case (size_t)ObjectType::kEnemy:
+                    case (size_t)ObjectType::kPlayer:
+                    {
+                        color = { RED };
+                        break;
+                    }
+                    case (size_t)ObjectType::kWall:
+                    {
+                        color = { GRAY };
+                        break;
+                    }
+                    default:
+                        color = { BLACK };
+                        break;
+                    }
+
+                    AddParticleEffect(position, 1, 50, 20, 30, false, nullptr, color);
+
+                });
+
+            m_vpBullets.push_back(newBullet);
+
+            break;
+        }
+        case (size_t)ObjectType::kEnemeyBullet:
+        {
+            Bullet* newBullet = new Bullet(m_pBossEnemy, transform, &m_collisionReferee, (size_t)ObjectType::kEnemeyBullet, m_pPlayer, m_pBossEnemy->GetRage());
+
+            newBullet->TryMove();
+
+            newBullet->SetCallback([this](size_t type, Vector2<float> position)->void
+                {
+
+                    SDL_Color color;
+                    switch (type)
+                    {
+                    case (size_t)ObjectType::kEnemy:
+                    case (size_t)ObjectType::kPlayer:
+                    {
+                        color = { RED };
+                        break;
+                    }
+                    case (size_t)ObjectType::kWall:
+                    {
+                        color = { GRAY };
+                        break;
+                    }
+                    default:
+                        color = { BLACK };
+                        break;
+                    }
+
+                    AddParticleEffect(position, 1, 50, 20, 30, false, nullptr, color);
+
+                });
+
+            m_vpBossBullets.push_back(newBullet);
+            break;
+        }
     default:
         break;
     }
@@ -457,44 +531,34 @@ void BossStage::SpawnBullets()
     SDL_Rect playerTransform = m_pPlayer->GetTransform();
 
 
+    SDL_Rect startingTransform;
 
     // moving right
     if (m_pPlayer->GetStatus().m_isRight)
     {
-        SDL_Rect startingTransform
+        startingTransform =
         {
             playerTransform.x + (playerTransform.w),
             playerTransform.y + (playerTransform.h / 2),
             (int)BULLET_SIZE,
             (int)BULLET_SIZE
         };
-        Bullet* newBullet = new Bullet(m_pPlayer, startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
-
-        newBullet->TryMove(Vector2<double>{RIGHT});
-
-        m_vpBullets.push_back(newBullet);
     }
-    // moving left
     else
     {
-        SDL_Rect startingTransform
+        startingTransform =
         {
             playerTransform.x - (playerTransform.w / 2) ,
             playerTransform.y + (playerTransform.h / 2),
             (int)BULLET_SIZE,
             (int)BULLET_SIZE
         };
-
-        Bullet* newBullet = new Bullet(m_pPlayer, startingTransform, &m_collisionReferee, (size_t)ObjectType::kPlayerBullet);
-
-        newBullet->TryMove(Vector2<double>{LEFT});
-
-        m_vpBullets.push_back(newBullet);
     }
+    CreateGameObject(startingTransform, (size_t)ObjectType::kPlayerBullet, BULLET);
 
 }
 
-void BossStage::SpawnBossBullet(bool isAutoLock, SDL_Rect spawnTransform)
+void BossStage::SpawnBossBullet(SDL_Rect spawnTransform)
 {
     SDL_Rect startingTransform
     {
@@ -504,11 +568,9 @@ void BossStage::SpawnBossBullet(bool isAutoLock, SDL_Rect spawnTransform)
         (int)BULLET_SIZE
     };
 
-    Bullet* newBullet = new Bullet(m_pBossEnemy, startingTransform, &m_collisionReferee, (size_t)ObjectType::kEnemeyBullet,m_pPlayer,isAutoLock);
+    CreateGameObject(startingTransform, (size_t)ObjectType::kEnemeyBullet, BULLET);
 
-    newBullet->TryMove();
-
-    m_vpBossBullets.push_back(newBullet);
+    
 }
 
 void BossStage::UpdateGameObjects(double deltaTime)
@@ -780,9 +842,8 @@ bool BossStage::LoadDataFromFiles(const char* folderName)
         (int)PLAYER_HEIGHT
     };
 
-    CreateGameObject(transformData, (size_t)ObjectType::kPlayer, PLAYER_SPRITE, loadData.m_health);
+    CreateGameObject(transformData, (size_t)ObjectType::kPlayer, PLAYER_SPRITE, loadData.m_health, loadData.m_pPlayerName);
 
-    m_pPlayer->GetStatus().m_name = loadData.m_pPlayerName;
     /*---------------
         END PLAYER
     ---------------*/
@@ -794,8 +855,6 @@ bool BossStage::LoadDataFromFiles(const char* folderName)
 
     // Enemy file name
     std::string path;
-
-    size_t index = 1;
 
     isLoaded = pSave->Load(folderName, _SAVE_BOSS);
 
@@ -817,4 +876,19 @@ bool BossStage::LoadDataFromFiles(const char* folderName)
 
 
     return isLoaded;
+}
+
+void BossStage::AddParticleEffect(Vector2<float> position, int size, int particleCount, float particleSpeed, float radious, bool loop, const char* textureName, SDL_Color color)
+{
+    ParticleSystem* particleEffect = new ParticleSystem(position, particleCount, particleSpeed, radious, loop);
+
+    if (textureName != nullptr)
+        particleEffect->SetTextureName(textureName);
+    else
+        particleEffect->SetColor(color);
+
+    particleEffect->SetSize(size);
+
+    AddGameObject(particleEffect);
+
 }

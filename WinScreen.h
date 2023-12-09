@@ -2,6 +2,9 @@
 #include "GameState.h"
 #include "ImageObject.h"
 #include "ButtonObject.h"
+#include "SoundComponent.h"
+
+
 class Platformer;
 
 class WinScreen : public GameState
@@ -18,6 +21,7 @@ private:
 
 	ImageObject m_winImage;
 
+	SoundComponent m_pSound;
 
 	bool isOnAction;
 

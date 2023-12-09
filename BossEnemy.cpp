@@ -55,22 +55,6 @@ void BossEnemy::OnOverlapBegin(ColliderComponent* pCollider)
 
 	switch (targetStaus.m_type)
 	{
-		case (size_t)ObjectType::kPlayerBullet:
-		{
-			RNG rng(SEED);
-
-			// crit hit!
-			if (rng.GetRand(0, 10) < targetStaus.m_cirtChace)
-			{
-				std::cout << "CRIT ";
-				Damaged(BULLET_POWER * 2);
-			}
-			else
-				Damaged(BULLET_POWER);
-
-			std::cout << m_status.m_health << std::endl;
-			break;
-		}
 	default:
 		break;
 	}

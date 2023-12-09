@@ -40,10 +40,10 @@ public:
 	virtual const char* GetName() { return "UnNamed"; }
 
 	// Return the Status of the gameobject
-	virtual Status GetStatus() = 0;
+	virtual Status GetStatus() { return Status(); }
 
 	// Return transform of object
-	virtual SDL_Rect GetTransform() = 0;
+	virtual SDL_Rect GetTransform() { return SDL_Rect(); }
 
 	// Get if the game object is active in game (dead/destroy or live)
 	virtual bool GetActive() { return true; }

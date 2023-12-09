@@ -215,14 +215,17 @@
     <ClCompile Include="AiStateAttack.cpp">
       <Filter>source files\SDL_Game\Game_State\GameObjects\Enemy\Mob\AIControl</Filter>
     </ClCompile>
-    <ClCompile Include="RGN.cpp">
-      <Filter>source files</Filter>
+    <ClCompile Include="LoadFileScene.cpp">
+      <Filter>source files\SDL_Game\Game_State\Game_Scene</Filter>
     </ClCompile>
     <ClCompile Include="SaveData.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
       <Filter>source files</Filter>
     </ClCompile>
-    <ClCompile Include="LoadFileScene.cpp">
-      <Filter>source files</Filter>
+    <ClCompile Include="RGN.cpp">
+      <Filter>source files\SDL_Game\Game_State\GameFeatures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -382,17 +385,20 @@
     <ClInclude Include="Bullet.h">
       <Filter>header files\SDL_Game\Game_State\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="RNG.h">
-      <Filter>source files</Filter>
-    </ClInclude>
-    <ClInclude Include="SaveData.h">
-      <Filter>header files</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadFileScene.h">
-      <Filter>header files</Filter>
-    </ClInclude>
     <ClInclude Include="SaveFileDirectory.h">
       <Filter>header files\SDL_Game\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadFileScene.h">
+      <Filter>header files\SDL_Game\Game_State\Game_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveData.h">
+      <Filter>header files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="RNG.h">
+      <Filter>header files\SDL_Game\Game_State\GameFeatures</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>header files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

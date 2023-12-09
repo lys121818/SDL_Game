@@ -34,6 +34,15 @@ struct Vector2
 
 		return vec;
 	}
+	Vector2 operator *(const DataType right) const
+	{
+		Vector2 vec;
+
+		vec.m_x = m_x * right;
+		vec.m_y = m_y * right;
+
+		return vec;
+	}
 
 	static float Distance (const Vector2& object_A, const Vector2& object_B)
 	{

@@ -11,9 +11,6 @@
 
 int main(int argc, char* argv[])
 {
-    RNG rand;
-    RNG rand1;
-
     GameDemo game;
     
     Platformer stateMachine(&game);   // Choosing game to play
